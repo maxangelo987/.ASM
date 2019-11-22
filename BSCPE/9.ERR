@@ -1,0 +1,4 @@
+@DATA in 9.asm
+SETTEXTCOLOR in 9.asm
+EDX in 9.asm
+WRITESTRING in 9.asm

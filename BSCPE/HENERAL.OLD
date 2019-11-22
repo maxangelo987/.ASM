@@ -1,0 +1,36 @@
+.model small
+.code
+org 100h
+jmp main
+
+s1 db 'Zecel Grace Pelino$'
+
+string1 label byte
+max1 db 50
+act1 db ?
+kybd1 db 51 dup ('$')
+
+main proc near
+
+lea bx, string
+mov cx, 15
+
+a:
+	mov ah, [bx]
+	cmp ah, 41h
+	jb b
+	cmp ah, 5ah
+	ja b
+	xor ah, 00100000b
+	mov [bx], ah
+
+b:
+
+	inc bx
+	loop a
+
+	mov ah, 09h
+	lea dx, s1
+	int 21h
+	
+	int 20h

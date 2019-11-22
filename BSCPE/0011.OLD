@@ -1,0 +1,53 @@
+.mode small
+.code
+org 100h
+jmp main                     ; jump to main
+
+plist1 label word
+maxlen dw 22
+actlen dw ?
+kybd dw 23 dup (''),'$'
+
+strlen1 dw $-kybd            ; strlen1
+word3 dw 23 dup (''),'$'     ; 
+word1 db 'ENTER STRING: ','$'
+word4 db 23 dup (''),'$'
+
+space1 db '',0ah,0dh
+       db '$'
+
+main proc near
+  mov ax, 03h                ; clrscr
+  int 10h
+ 
+  mov ah, 09h                ; printing Assembly
+  lea dx, word1   
+  int 21h
+   
+  mov ah, 0ah
+  lea dx, plist1
+  int 21h     
+
+  mov bx, 12h
+
+  mov bp, 0h
+
+  mov cx, kybd[bx]      
+  mov word3[bp], cx
+  mov word4[bp], cx
+  inc bp
+  mov word4[bp], ch
+
+  mov ax, 03h
+  int 10h
+                             ; inc di/ mov dl,'$' /mov [di], dl
+  Print:                     
+  mov ah, 09h                ; 
+  lea dx, word4
+  int 21h
+
+  mov ax,4c00h               ; terminator
+  int 21h
+
+main endp
+end main

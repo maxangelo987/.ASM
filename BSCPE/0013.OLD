@@ -1,0 +1,53 @@
+.model small
+.code
+org 100h
+jmp main
+
+pathname db 'C:\MAX',00h
+pathname1 db 'C:\MAX\PERIN.jpeg,00h
+filhand dw ?
+
+
+word1 db 'Folder created. ','$'
+word2 db 'Folder not created. ','$'
+
+main proc near
+ mov ax, 03h
+ int 10h
+
+ mov ah, 39h
+ lea dx, pathname
+ int 21h
+ jc error1
+ 
+ mov ah, 3ch
+ mov cx, 00
+ lea dx, pathname1
+ int 21h
+ jc error1
+ mov filhand, ax
+ 
+
+ jmp s1
+
+
+
+error1:
+ mov ah, 09h
+ lea dx,  word2
+ int 21h 
+ jmp stop
+
+s1:
+ mov ah, 09h
+ lea dx,  word1
+ int 21h
+ jmp stop
+
+stop:
+ mov ax, 4c00h
+ int 21h
+
+
+main endp
+end main

@@ -1,0 +1,489 @@
+escape equ 01h            ;scan code
+up     equ 48h
+down   equ 50h
+right  equ 4dh
+left   equ 4bh
+data segment
+speed db 70,55,40,25,10   ;speed of game
+level db 0
+color db 0
+msg db 'Nibbling Snake Ver1.0',0ah,0dh
+    db '  1.Easier',0ah,0dh
+    db '  2.Easy',0ah,0dh
+    db '  3.Normal',0ah,0dh
+    db '  4.Hard',0ah,0dh
+    db '  5.Harder',0ah,0dh
+    db 'Choose your level:','$'
+sx db 200 dup(0)          ;position of snake
+sy db 200 dup(0)
+fx db 0                   ;position of food
+fy db 0
+x db 20                   ;position of temparary head of snake
+y db 20
+dee db right                ;direction
+dtemp db right            ;temparary direction
+ls db 4                   ;length of the snake
+lord db 1                 ;living of dead
+N1 DB 29
+N2 DB 217
+N3 DB 40
+SEED DB 0                 ;random number
+data ends
+code segment
+assume cs:code,ds:data
+go:
+     mov  ax,data         ;load data segment
+     mov  ds,ax
+     mov  ah,0            ;clear screen
+     mov  al,4
+     int  10h
+     mov  ah,0
+     mov  al,3
+     int  10h
+     mov  ah,9            ;output messege
+     mov  dx,offset msg
+     int  21h
+     mov  ah,1            ;input level
+     int  21h
+     mov  level,al
+     sub  level,30h
+     mov  ah,0            ;screen mode:320*200*4
+     mov  al,4
+     int  10h
+     mov  ah,0bh          ;No.0 color panel
+     mov  bh,1
+     mov  bl,0
+     int  10h
+     mov  bh,0            ;black background
+     int  10h
+     mov  sx[1],20        ;initial four node
+     mov  sy[1],17
+     mov  sx[2],20
+     mov  sy[2],18
+     mov  sx[3],20
+     mov  sy[3],19
+     mov  sx[4],20
+     mov  sy[4],20
+     mov  dx,4
+     mov  cx,4
+ground:                   ;draw red background
+     mov  ah,0ch          ;(4,4)->(163,163)
+     mov  al,2
+     int  10h
+     inc  cx
+     cmp  cx,164
+     jne  ground
+     mov  cx,4
+     inc  dx
+     cmp  dx,164
+     jne  ground
+newfood:
+     mov  ah,0            ;read the time of system
+     int  1ah
+     mov  seed,dl         ;move to seed
+     call food            ;draw new food
+     call score           ;output score
+direct:
+     call direction       ;get new direction
+     call liveordie       ;judge whether the snake is living or dead
+     cmp  lord,0          ;if lord==0,game over
+     je   quit
+draw:                     
+     mov  bl,4            ;push position of new head into stack
+     mov  al,x
+     mul  bl
+     push ax
+     mov  al,y
+     mul  bl
+     push ax
+     mov  color,1         ;green color
+     call pix             ;draw new snake head
+     mov  ah,0            ;judge whether snake has eaten food
+     mov  al,fx
+     cmp  x,al
+     jne  tail            ;no,go to erase tail
+     mov  al,fy
+     cmp  y,al
+     je   inclength       ;yes,go to increase length
+tail:
+     call newsnake        ;modify every node of the snake,erase tail
+     call delay           ;keep screen for some time
+     jmp  direct          ;get next direction
+inclength:
+     inc  ls              ;increase length
+     lea  si,sx           ;load effective address of position
+     lea  di,sy
+     mov  ah,0
+     mov  al,ls
+     add  si,ax
+     add  di,ax
+     mov  al,x            ;move new position to new head
+     mov  [si],al
+     mov  al,y
+     mov  [di],al
+     call delay           ;keep screen for some time
+     jmp  newfood         ;go to crease new food
+quit:
+     mov  ah,1            ;press any key to exit
+     int  21h
+     mov  ah,0            ;screen mode:text
+     mov  al,3
+     int  10h
+     mov  ah,4ch
+     int  21h
+pix proc near             ;two parameters
+     push bp              ;save bp,ax,bx,cx,dx
+     push ax
+     push bx
+     push cx
+     push dx
+     mov  bp,sp           ;get parameter from stack
+     mov  dx,[bp+14]
+     mov  cx,[bp+12]
+line:                     ;draw a 4*4 square
+     mov  ah,0ch
+     mov  al,color        ;color
+     int  10h
+     inc  cx
+     mov  ax,[bp+12]
+     add  ax,4
+     cmp  cx,ax
+     jne  line
+     mov  cx,[bp+12]
+     inc  dx
+     mov  ax,[bp+14]
+     add  ax,4
+     cmp  dx,ax
+     jne  line
+     pop  dx
+     pop  cx
+     pop  bx
+     pop  ax
+     pop  bp
+     ret  4               ;two parameters=4 bytes
+pix endp
+foodpix proc near
+     push bp
+     push ax
+     push cx
+     push dx
+     mov  bp,sp
+     mov  dx,[bp+12]
+     mov  cx,[bp+10]
+     inc  cx
+     mov  ah,0ch
+     mov  al,color
+     int  10h
+     inc  cx
+     int  10h
+     inc  cx
+     inc  dx
+     int  10h
+     inc  dx
+     int  10h
+     inc  dx
+     dec  cx
+     int  10h
+     dec  cx
+     int  10h
+     dec  cx
+     dec  dx
+     int  10h
+     dec  dx
+     int  10h
+     pop  dx
+     pop  cx
+     pop  ax
+     pop  bp
+     ret  4
+foodpix endp
+delay proc near
+     push ax
+     push bx
+     push si
+     push dx
+     mov  ah,2ch          ;read time saved by DOS,1/100s
+     int  21h
+     mov  bx,dx
+     lea  si,speed        ;load EA of speed
+     mov  al,level
+     mov  ah,0
+     add  si,ax           ;point to certain speed chosen by user
+     dec  si
+time:mov  ah,2ch          ;read time again
+     int  21h
+     sub  dl,bl           ;subtract old time
+     jns  compare
+     add  dl,100          ;if negtive,carry 1s=add 100
+compare:
+     cmp  dl,[si]         ;compare to speed
+     jl   time            ;if less,time is not up
+     pop  dx
+     pop  si
+     pop  bx
+     pop  ax
+     ret
+delay endp
+rand proc near            ;time as one parameter,return random number
+     push ax
+     push bx
+     push cx              ;seed=(seed*N1+N2) mod N3
+     MOV CX,10
+     MOV AL,SEED
+     MOV BL,N1
+     MUL BL
+     MOV BL,N2
+     MOV BH,0
+     ADD AX,BX
+     DIV N3
+     MOV SEED,AH
+     pop cx
+     pop bx
+     pop ax
+     ret
+rand endp
+food proc near
+     push ax
+     push bx
+     push cx
+     push si
+     push di
+food1:
+     call rand            ;get new position of food
+     mov  al,seed
+     mov  fx,al
+     inc  fx
+     call rand
+     mov  al,seed
+     mov  fy,al
+     inc  fy
+     mov  bx,1
+     lea  si,sx
+     lea  di,sy
+effect:
+     mov  al,[si+bx]
+     cmp  al,fx
+     jne  next1
+     mov  al,[di+bx]
+     cmp  al,fy
+     je   food1           ;if new food is on snake,go to get new position
+next1:
+     inc  bl
+     cmp  bl,ls
+     jle  effect
+drawfood:
+     mov  bl,4
+     mov  al,fx
+     mul  bl
+     push ax
+     mov  al,fy
+     mul  bl
+     push ax
+     mov  color,1
+     call foodpix
+     pop  di
+     pop  si
+     pop  cx
+     pop  bx
+     pop  ax
+     ret
+food endp
+direction proc near       ;return new direction and new head
+     push ax
+     push si
+     push di
+     lea  si,sx
+     lea  di,sy
+     mov  ah,0
+     mov  al,ls
+     add  si,ax
+     add  di,ax
+     mov  al,[si]
+     mov  x,al            ;move old head to x and y
+     mov  al,[di]
+     mov  y,al     
+     mov  ah,1            ;scan keyboard
+     int  16h
+     jz   kup             ;no input,go to kup,use old derection
+     mov  al,dee            ;save old direction to dtemp
+     mov  dtemp,al
+     mov  dee,ah
+     cmp  d,escape        ;want to escape?
+     je   nodirection     ;yes,escape
+     cmp  dtemp,up        ;if new direction is oppisite to the old,go back
+     jne  ndown
+     cmp  d,down
+     je   back
+ndown:
+     cmp  dtemp,down
+     jne  nleft
+     cmp  d,up
+     je   back
+nleft:
+     cmp  dtemp,left
+     jne  nright
+     cmp  d,right
+     je   back
+nright:
+     cmp  dtemp,right
+     jne  kup
+     cmp  d,left
+     jne  kup
+back:mov  al,dtemp        ;use old direction
+     mov  d,al
+kup: cmp  d,up            ;create new head according to new direction
+     jne  kdown
+     dec  x
+     jmp  dend
+kdown:
+     cmp  d,down
+     jne  kleft
+     inc  x
+     jmp  dend
+kleft:
+     cmp  d,left
+     jne  kright
+     dec  y
+     jmp  dend
+kright:
+     cmp  d,right
+     jne  back
+     inc  y
+     jmp  dend
+nodirection:              ;if input is escape,game over
+     mov  d,0
+dend:
+     mov  ah,0ch          ;clear keyboard buffer
+     mov  al,6
+     mov  dl,0ffh
+     int  21h
+     pop  di
+     pop  si
+     pop  ax
+     ret
+direction endp
+newsnake proc near
+     push ax
+     push bx
+     push si
+     push di
+     mov  bl,4
+     mov  al,sx[1]
+     mul  bl
+     push ax
+     mov  al,sy[1]
+     mul  bl
+     push ax
+     mov  color,2         ;red,same to background
+     call pix             ;erase tail
+     mov  bl,1
+     lea  si,sx
+     lea  di,sy
+     inc  si
+     inc  di
+news:                     ;save preceding node to succeeding
+     cmp  bl,ls
+     je   newhead
+     mov  al,[si+1]
+     mov  [si],al
+     mov  al,[di+1]
+     mov  [di],al
+     inc  bl
+     inc  si
+     inc  di
+     jmp  news
+newhead:                  ;save temparary head to head
+     mov  al,x
+     mov  [si],al
+     mov  al,y
+     mov  [di],al
+     pop  di
+     pop  si
+     pop  bx
+     pop  ax
+     ret
+newsnake endp
+liveordie proc near
+     push ax
+     push bx
+     push si
+     push di
+     cmp  d,0             ;if press escape,game over
+     je   die
+     cmp  x,0             ;if(x==0||y==0||x==41||y==41)
+     je   die             ;out of range
+     cmp  x,41            ;game over
+     je   die
+     cmp  y,0
+     je   die
+     cmp  y,41
+     je   die
+     mov  bx,1
+     lea  si,sx
+     lea  di,sy
+itself:                   ;if new head is on itself,game over
+     mov  al,[si+bx]
+     cmp  al,x
+     jne  next2
+     mov  al,[di+bx]
+     cmp  al,y
+     je   die
+next2:
+     inc  bl
+     cmp  bl,ls
+     jl   itself
+     jmp  ldend
+die:
+     mov  lord,0
+ldend:
+     pop  di
+     pop  si
+     pop  bx
+     pop  ax
+     ret
+liveordie endp
+score proc near           ;output score
+     push ax
+     push bx
+     push cx
+     push dx
+     mov  ah,2
+     mov  dh,5
+     mov  dl,22
+     mov  bh,0
+     int  10h
+     mov  al,ls
+     sub  al,4
+     mul  level
+     mov  cx,ax
+     mov  dl,0
+L1:  cmp  cx,100
+     jnae L2
+     inc  dl
+     sub  cx,100
+     jmp  L1
+L2:  add  dl,30h
+     mov  ah,2
+     int  21h
+     mov  dl,0
+L3:  cmp  cx,10
+     jnae L4
+     inc  dl
+     sub  cx,10
+     jmp  L3
+L4:  add  dl,30h
+     mov  ah,2
+     int  21h
+     mov  dl,cl
+     add  dl,30h
+     mov  ah,2
+     int  21h
+     pop  dx
+     pop  cx
+     pop  bx
+     pop  ax
+     ret
+score endp
+code ends
+end go
+ ...

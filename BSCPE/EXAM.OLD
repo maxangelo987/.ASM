@@ -1,0 +1,35 @@
+.model small
+.code
+org 100h
+
+jmp main
+	parlist label byte
+	maxnlen db 20
+	actulen db ?
+	kbname db 21 dup(' ')
+	prompt db 'enter string','$'
+	
+main proc near
+	mov ax,03h
+	int 10h
+	
+	
+	mov ah,09h
+	lea dx,prompt
+	int 21h
+	
+	call c10input
+	
+c10input proc near
+	mov ah,0ah
+	lea dx,parlist
+	int 21h
+	
+process:
+	mov ah,0ah
+	mov bh,00
+	mov cx,
+	
+	
+	
+	

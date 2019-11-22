@@ -1,0 +1,37 @@
+.model small
+.code
+org 100h
+jmp main
+;===========
+input db "LASER-12 SYSTEM",'$'
+;===========
+main proc near
+
+LEA ax,input
+MOV di,ax
+MOV cx,15
+INC di
+procedure:
+MOV bx,41H
+cmp [di],bx
+JB increment
+MOV bx,5AH
+cmp [di],bx
+JA increment
+;===========
+MOV bx,20H
+XOR [di],bx
+;===========
+increment:
+INC di
+LOOP procedure
+;===========
+MOV ah,0aH
+LEA dx,input
+int 21H
+;===========
+MOV 4c00H
+int 21H
+;===========
+main endp
+end main

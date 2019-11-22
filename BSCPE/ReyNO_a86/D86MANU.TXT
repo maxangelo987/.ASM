@@ -1,0 +1,2732 @@
+D86 debugger package   V4.05             January 14, 2000
+
+The entire package is Copyright 2000 Eric Isaacson. All
+rights reserved.
+
+PLEASE read Chapter 1 for legal terms and conditions, how to
+register for the package, and an overview of the debugger.
+
+The D86 package consists of the two programs D86.COM, A86.COM, a
+source file HEXOUT.8 used by the demonstration in Chapter 2, and
+this manual D86MANU.TXT.
+
+
+TABLE OF CONTENTS
+
+
+1 INTRODUCTION AND LEGAL TERMS   3
+
+Introduction                     3
+
+2 D86 DEMONSTRATION   6
+
+3 REQUIREMENTS AND OPERATION           9
+
+System Requirements for D86            9
+Invoking D86                           9
+Finding the Program File               9
+Finding the Symbols File               9
+BIOS Switching                        10
+The D86 Environment Variable          10
+Two-Screen Debugging with +V          10
+The D86 Screen Display                10
+D86 Commands                          11
+Immediate Assembly Language Commands  11
+Entering Instructions Into Memory     11
+Entering Data into 8086 Memory        12
+Adding Symbols to a Program           12
+
+4 D86 CONTROL KEYS                            13
+
+Display Control Keys                          13
+Instruction Pointer Positioning Control Keys  13
+Program Execution Control Keys                14
+Special Action Control Keys                   15
+
+5 COMMAND LANGUAGE                     16
+
+General Operands to Debugger Commands  16
+Format of Debugger Command Examples    16
+The Debugger Command Set               16
+
+6 MEMORY DISPLAY OPTIONS              21
+
+Memory Display Windows                21
+Single-Line Memory Windows            21
+Erasing Memory Display Lines          21
+Continuation Lines                    22
+Mixed Format Specification            22
+Numbers in a Format Specification     22
+Spacing Between Memory Display Units  22
+                                                               2
+
+Special-Action Format Specifiers      23
+The Data Memory Window                25
+
+7 FLOATING POINT DEBUGGING                26
+
+The Floating Point Display Window         26
+Exotic Flavors of Floating Point Numbers  27
+
+8 COMMONLY ASKED QUESTIONS  29
+
+Setting Registers           29
+Modifying Memory            29
+Debugging ROM               29
+
+9 RELEASE HISTORY AND FUTURE PLANS  30
+
+Release History of D86              30
+Future Plans                        30
+                                                               3
+
+
+CHAPTER 1   INTRODUCTION AND LEGAL TERMS
+
+
+Introduction
+
+
+D86 is a screen-oriented assembly language debugger for the
+IBM-PC, compatibles, and most not-so-compatibles (Wang-PC, TI-PC,
+Tandy 2000, Sanyo 55x, Zenith Z-100, and DEC Rainbow).  D86 is
+the finest debugger available, at any price under any conditions,
+for the following:
+
+1. Learning 8086 assembly language.
+
+2. Exploring the machine state of your computer (memory
+   structure, registers, etc.)
+
+3. Doing assembly language program development using my A86
+   assembler.
+
+4. Doing any kind of debugging involving the floating point
+   instruction set.
+
+
+In contrast to software firms who attempt to restrict the
+distribution of their software through protection schemes, I
+encourage free distribution, and trust that those who use my
+products will pay for them.  Please keep in mind the fundamental
+good spirit of free-distribution software as you endure the
+following barrage of legalities.  Then evaluate the outstanding
+value that the D86 package offers you.  I assure you that you
+will not be disappointed.
+
+
+Legal Terms and Conditions
+
+This package is provided to you under the following conditions:
+
+1. You may copy this entire package, and give it to anyone who
+   accepts these terms.  The copies you distribute must be
+   complete and unmodified.  You do not have to be registered to
+   distribute this package.
+
+2. Even if you have not yet obtained full execution rights, you
+   may execute the programs in this package, in order to evaluate
+   them.  If you decide that D86 is of use to you, you must
+   become a registered user.  There are two levels of
+   registration: the basic D86-only registration is $50 ($52 if
+   you are outside of North America).  The extended package,
+   including D86, the associated A86 assembler, and the 32-bit
+   programs A386 and D386, is $80 ($82 outside of North America).
+   If you wish the latest printed copy of this manual, add $10
+   ($15 outside of North America).  Send payment to:
+
+      Eric Isaacson
+      416 E. University Ave.
+      Bloomington, IN 47401-4739
+
+   For your convenience, I accept Visa, MasterCard and American
+   Express, by telephone or mail.  My voice number is
+   1-812-339-1811.  My fax number is 1-812-335-1611.
+
+   For the convenience of users in Great Britain, I have
+   authorized the firm Atlantic Coast Plc to collect
+   registrations for me.  We'll try to keep the prices about the
+   same whether you register through me or through them; it's
+   your choice.  Their address is Station Road, Colyton, Devon
+   EX13 6HA, telephone 01297 552222.
+
+   Your registration includes the latest diskette (3.5 inch) that
+   also includes the INSTALLD and MAPD86 tools available to
+   registered users only.  You may order further updates for $10
+   US, or $12 US if you are overseas.  Once you register for this
+   package, you are registered for all future versions -- you
+   have permanent rights to execute D86 on one computer.  As long
+   as I'm in business, you can get the latest version for just
+   the update fee.
+
+   Indiana residents need to add sales tax.  At the current rate
+   of 5%, the prices for Indiana residents are $52.50 for the
+   D86-only package, $63 D86-only with manual, $84 extended
+   package, $94.50 extended package with manual, $21 update and
+   manual if already registered.
+
+   Educational institutions and training facilities MUST be
+   registered in order to use D86 in courses.  Contact me for
+   special terms.
+
+   Companies and government agencies MUST be registered in order
+   to use D86 for their work.  Again, contact me for pricing if
+   you wish to register D86 on more than one computer.
+
+3. You may not sell this package to anyone.  If you distribute
+   this package on a diskette, any fees you collect must be
+   specified as materials/handling, and may not exceed $10 for
+   the diskette.
+
+4. You are completely responsible for determining the fitness or
+   usability of this package.  I will not be liable for any
+   damages, of any kind, arising from any failure of any programs
+                                                               4
+
+   in this package to perform as expected.
+
+
+Registration Benefits
+
+Thank you for enduring the legalities.  They are there to protect
+me, and also to convince you that this is my business, from which
+I expect to make a living.  I'll now return to a softer sell, to
+try to make you want to register for my products.
+
+There is a certain amount of ambiguity about when you're still
+evaluating D86, and when you're really using D86 and should
+register for it.  Some cases are clear (e.g., you're a school
+using D86 to teach a course); but many are not.  In practical
+reality, it up to you to decide: you are "on your honor". Also in
+practical reality, most users who ought to register haven't, yet.
+For most, it's not dishonesty but merely procrastination.  So I
+have provided some incentives, to prod you into registering.
+
+One incentive is the printed manual, which only registered users
+can purchase.  I haven't left anything out of the disk version of
+the manual, but the printed version is formatted and bound much
+more nicely than if you print it yourself.
+
+Another incentive, included if you register both A86 and D86, is
+the A386/D386 package, for 32-bit programming.  At this writing,
+A386 covers all instructions though the Pentium II, including
+MMX, AMD 3DNow, and the not-yet-released KNI instruction set.
+A386 also allows coding for USE32 and FLAT mode segments.
+
+Another incentive is a file REG_ONLY.ZIP containing extra tools
+that enhance D86's usefulness.  If you program in languages other
+than A86, and produce the program with a linker, you can use the
+tool MAPD86 to convert a link MAP listing into a SYM file
+readable by D86, so you can do symbolic debugging. If you have a
+386-based machine, you can add the D command to D86, allowing you
+to set memory breakpoints.
+
+Finally, there are the intangible incentives.  You know you've
+done the right thing.  You're letting me know that you appreciate
+what I've done.  You're letting the world know that quality
+software can succeed when distributed as shareware.
+
+
+Overview of D86
+
+D86 is a screen-oriented program that allows you to troubleshoot
+faulty computer programs written for the IBM-PC and all
+compatibles, Wang-PC, TI-PC, Tandy 2000, DEC Rainbow, and Sanyo
+computer.  It "freezes" the state of your program, and allows you
+to investigate the values of registers, flags, and memory.  You
+can monitor your program's execution by stepping it one
+instruction or procedure at a time; or you can start your program
+running, telling D86 to stop it when it reaches certain
+locations.  D86 recognizes the symbol-table output of the A86
+assembler, creating a symbolic disassembly of your A86 program,
+and allowing you to refer to locations and variables by name.
+
+The primary design criterion for D86 is ease of use.  This is
+reflected in the most notable features of D86:
+
+* You don't need to ask D86 what the values of registers and
+  flags are.  They are there, automatically, at a fixed location
+  on the screen.
+
+* You don't need to ask D86 where in your program you are
+  stopped.  A disassembly is always generated, at another fixed
+  location on the screen. The disassembly gives a hefty chunk of
+  your program, not just the single instruction you are at.  A
+  cursor next to the disassembly marks the current location.  The
+  disassembly chunk remains fixed as you step though it, allowing
+  you to follow the flow of the program much more easily.  If you
+  wrote the program using A86, the disassembly is symbolic,
+  giving instruction operands by name, and labelling disassembly
+  locations when possible.
+
+* You don't need to ask D86 what is on the machine stack. A
+  display of the top elements of the stack is always generated,
+  at yet another fixed location on the screen.
+
+* You can set up windows into memory, displaying memory contents
+  in a variety of types.  The types can even be mixed, to display
+  complicated structures. The windows will stay at the same
+  location until you turn them off, allowing you to watch what
+  your program is doing to those memory locations.
+
+* If you have an 8087 or 287 floating-point chip, D86 will
+  generate complete window of the 87 state.  The values of the
+  stack elements are in a readable decimal format, with
+  suppression of unneccessary zeroes, and scientific notation
+  only if necessary.
+
+* You can, at any time, enable a help-window, to guide you
+                                                               5
+
+  through debugger commands.  You will be astounded by the
+  sophistication of this help-facility, especially since other
+  debuggers offer no on-line help whatsoever.
+
+* All of the above-mentioned windows, except for the last two,
+  exist on the screen at the same time.  You don't have to switch
+  between them.
+
+* You can single-step your program with single keystrokes, rather
+  than sequences of arcane commands.  There are several flavors
+  of single-step keys, clustered together on the function-keypad.
+  This, combined with the automatic nature of the display, allows
+  you to single-step very quickly.  You feel like you are
+  actually watching your program run.
+
+* Much of D86's command language is simply the A86 assembly
+  language itself. You can type in any A86 instruction, to be
+  executed immediately.  You use this to set registers and
+  variables, perform arithmetic, jump to another location, etc.
+  The immediate-execution feature makes D86 the most effective
+  tool available for teaching 86 architecture: the student can
+  watch the effects of instructions on registers, flags, and
+  memory.
+
+* You can patch programs in memory, using the full power of the
+  A86 assembly language.
+
+
+How to Contact Me
+
+I have no plans to move from my present location at least through
+the millennium.  So you can write to:
+
+    Eric Isaacson Software
+    416 East University Ave.
+    Bloomington, IN 47401-4739
+
+or call (812)339-1811.
+
+Sorry, I can't guarantee to return everybody's long distance
+calls.  If you'd like to be SURE I'll get back to you, please
+invite me to call you back collect, or tell me to charge the cost
+of the call to your credit card.
+
+I also have a section on Compuserve: just type GO ZIPKEY to any !
+prompt.  (ZIPKEY is the name of my other product line, a pop-up
+zipcode directory.)  My Internet address is eric@eji.com .
+
+PLEASE contact me if you find bugs in my programs; I'll fix them!
+I accept bug reports from anyone, registered or non-registered,
+no questions asked.  It's very frustrating to hear about people
+telling each other about bugs, and not telling me.  I still await
+Greg Wettstein's bug list.
+
+
+This manual also covers the D386 debugger. D386 is the 32-bit
+version of the debugger, allowing you to use the full A386
+instruction set for immediate and patched commands, and showing
+you the 32-bit general register set. D386 is a DOS-based,
+real-mode debugger only: it cannot step into Protected Mode, and
+it cannot load Protected Mode programs (e.g., Windows programs).
+                                                               6
+
+
+CHAPTER 2   D86 DEMONSTRATION
+
+To demonstrate some of the powers of D86, let's walk through a
+D86 session.
+
+1. Make sure your current directory contains all the files
+   A86.COM, D86.COM, and HEXOUT.8.
+
+2. Assemble the HEXOUT program by typing the command A86
+   HEXOUT.8.  The A86 assembler will create the files HEXOUT.COM
+   and HEXOUT.SYM.  Look over the listing of the program, to get
+   acquainted with what it does.
+
+3. Type the command D86 HEXOUT 41 42 5A followed by the Enter
+   key. Everything following the "D86 " in the line you just
+   typed is what you would have typed if you had invoked HEXOUT
+   without the debugger-- 41 42 5A are the hex codes that HEXOUT
+   will turn into ABZ and send to the console. When the debugger
+   takes control, the screen should blank; and the D86 debugger
+   screen should appear.  The blinking cursor should be at the
+   bottom left.  A sign-on message should appear at the upper
+   right.  A disassembly of the HEXOUT program should be in the
+   upper left. The label HEXOUT should appear on the first line,
+   followed on the second line by the address 0100 and the
+   instruction MOV SI,TAIL_BUFF.  To the left of the address
+   should be a reverse video hash sign.
+
+4. Notice the display of register values in the lower left
+   corner. The values are all 4-digit hexadecimal.  At the top of
+   the second column of registers is a sequence of lower case
+   letters. This is the flags display.  Each small letter stands
+   for a flag whose value is currently TRUE.  The flags settings
+   are those that were handed to D86 by the operating system
+   starting the program; for MSDOS V3.1, the settings are "i z
+   e".  That display indicates that the interrupt flag "i", the
+   zero flag "z", and the parity-even flag "e" are all TRUE; the
+   other flags are FALSE. To the right of the registers are six
+   lines labelled 1: through 6:.  These are the memory window
+   lines. Since you haven't specified any memory windows yet,
+   they contain nothing but their numbers.  Below the memory
+   window lines is a line labelled 0:.  This is the stack display
+   line. The number 0: gives the number of words on the stack,
+   currently zero because nothing has been pushed onto the stack.
+
+5. Observe that the sign-on message tells you to press Alt-F10
+   for help.  Do so (that is, hold down the Alt key while
+   pressing the F10 key).  You are now in help mode, where you
+   will remain until you press Alt-F10 again.  D86 will keep
+   changing the help window, depending on what it thinks you are
+   doing. Right now you have a summary of the main function keys,
+   plus a few other things.  Press F10 (without the Alt), and
+   you'll get a summary of one-letter debugger commands.  Press
+   F10 a second time and you'll get more one-letter commands, and
+   some Ctrl-key commands, dealing with keystroke recording and
+   playback. Press F10 a third time and you'll get a summary of
+   the remaining Ctrl-key commands.  Finally, press F10 a fourth
+   time to return to the function-key help screen.
+
+6. Let's try an immediate assembly language instruction. Press
+   the "M" key, which is the first letter of the immediate
+   instruction MOV AX,123.  Note that the reverse video block
+   jumps from the hash sign within the disassembly, down to the
+   line just above the blinking cursor.  The block is the
+   debugger's cursor; the blinking cursor is the program's
+   console output cursor.  The debugger does not use the blinking
+   cursor because we do not want the program's output to
+   interfere with the debugger's output.  Also note that the help
+   window is now telling you that you are typing in an assembly
+   language line.
+
+7. Complete the line MOV AX,123 followed by the Enter key (from
+   now on I'll assume that you know that lines are followed by
+   the Enter key, and that any periods at the end of a line are
+   part of my sentence, and not part of what you type).  The
+                                                               7
+
+   debugger immediately executes the assembly language line you
+   just typed, setting the register AX.  Note that you did not
+   have to learn a debugger command for setting registers; if you
+   know A86, you already know how to set registers!  The value of
+   AX is now 007B, which may surprise you if you expected 0123.
+   A86's default base is 10, so 123 was taken as decimal; which
+   is hex 7B.  Type MOV AX,0123 instead, to get a value of hex
+   123.
+
+8. Let's now play with the flags display.  Type the line ADD
+   AL,05D, which changes AL (the last two digits of AX) to hex
+   80, and alters the flags to "o is a ".  The interrupt flag is
+   still on; but zero and parity-even are now off.  They have
+   been replaced by "o" overflow, "s" sign, and "a" auxiliary
+   carry.
+
+9. Type the line consisting of just CMC.  This is the Complement
+   Carry instruction.  Observe that the "c" appears.  Notice also
+   that the CMC that you typed remains on the screen.  Notice on
+   the help window the entry "F3 RepeatCmd".  This tells you that
+   the F3 key will repeat the last line command (not function
+   key) that you typed.  Press F3 several times, to see the carry
+   flag toggle on and off.  Isn't that the cleanest flags display
+   you've ever seen?
+
+10. Let's single step an instruction.  Press the F1 key.  This
+    executes the program instruction, loading the SI register
+    with TAIL_BUFF.  The disassembly cursor moves down to the
+    next instruction.  Observe that SI has changed to 0081, which
+    is the pointer to the invocation command tail, which should
+    contain the string typed after HEXOUT: " 41 42 5A" followed
+    by a carriage return code (hex 0D).
+
+11. Let's examine memory to verify that last assertion.  Press
+    the "1" key. The cursor jumps to the start of memory window
+    1, and the help window gives you a huge choice of memory
+    types to display.  The entry "ByteHex 2" tells us that "B"
+    will cause hex bytes to be displayed.  The "2" indicates that
+    the display occupies a fixed number of display bytes for
+    every memory unit, namely 2 hex digits.  Type B followed by a
+    comma, to indicate that you want nothing but hex bytes to be
+    displayed. Now the help window asks for a segment location.
+    Let's use the DS register: type DS followed by a comma. Now
+    the help window wants an offset within the segment: type SI.
+    Before typing the terminating Enter, backspace out what you
+    have typed, and watch the help windows regress appropriately.
+    Isn't that impressive?  Now retype the line, "B,DS,SI".  Note
+    that when you press Enter, the line fills out with hex
+    values: 20 34 31 20 34 32 20 35 41 0D etc.  (61 instead of 41
+    is OK; it means you typed the invocation in lower case.)
+
+12. Let's look at the same line, displayed as text.  Type "2",
+    moving to memory line 2, then type the line "T,SI".  This
+    time you specified type T for text, and you left out the
+    segment register specification.  D86 uses DS when you leave
+    out the segment register; so in this case you'll get the same
+    segment. This time the display starts with "41 42 5AM"; the
+    "M" is the carriage return, which is control-M, ambiguously
+    displayed. You can read Chapter 6 later on for descriptions
+    of all the types, including other text types allowing
+    non-ambiguous displays.
+
+13. Let's execute the next instruction, CALL GET_HEX.  Here we
+    have a choice, between executing the procedure all at once,
+    or stepping into the procedure to execute its instructions
+    one at a time.  Let's try stepping in first: type the F1 key.
+    The cursor jumps to location GET_HEX, on the same disassembly
+    screen.  The SP register decrements from FFFE to FFFC, and a
+    value 0106 appears on the stack.  This is the return address,
+    pointing to the instruction following CALL GET_HEX.
+
+14. Watch memory lines 1 and 2 as you press F1 again, single
+    stepping the LODSB instruction.  You had set up the lines to
+                                                               8
+
+    be pointed to by SI.  Since SI changes when LODSB is
+    executed, the memory displays advance to the next byte. Note
+    that the AL register contains the value hex 20, a blank.
+
+15. In a normal debugging session, we would continue stepping
+    within GET_HEX, but let's not do that right now.  Instead,
+    press the F6 "TrapRet" key, which starts the program going,
+    trapping at the return address on top of the stack, which was
+    0106.  The cursor jumps back up to location 0106, the value
+    is no longer on the stack, and SI and the memory displays
+    have advanced to 0084.
+
+16. Let's try the classic "G" command, common to all debuggers.
+    Type the line "G,0103", noticing the help windows as you go
+    along.  After you press Enter, the program runs until it gets
+    back to the trap address you provided, 0103. Note that the
+    program has called OUT_VALUE to output the "A" that
+    corresponds to your input hex 41.  The "A" appears on the
+    bottom line, and the blinking cursor advances.
+
+17. Let's execute the next CALL GET_HEX all at once, by pressing
+    the F2 ProcStep key.  SI advances again, and AL is loaded
+    with the next value 42.
+
+18. Notice that the disassembly is symbolic: the display is CALL
+    GET_HEX, not CALL 0112 as lesser debuggers might give you.
+    Let's try symbolic input: type the line "B,HEX_DIGIT?",
+    causing the debugger to set a fixed trap at location
+    HEX_DIGIT?.  Now set your program running with a simple G
+    followed by the Enter key.  The program traps at HEX_DIGIT?.
+    Since this location is not in the disassembly window, the
+    window is regenerated, and the cursor placed at HEX_DIGIT?.
+    The memory displays now point to the final number "5A".
+
+19. Press F3 to repeat the G-command.  The program traps at
+    HEX_DIGIT? again, with SI advanced to the "A".  Press F3
+    again; advancing SI to the final carriage return.
+
+20. Press F3 yet again.  Since HEX_DIGIT? is never reached again,
+    the program runs to its completion.  D86 automatically traps
+    at the EXIT instruction: in this case, it is INT 021 with the
+    AH register set to hex 4C, the function number for EXIT.  If
+    we try to start the program again from here, we will be
+    frozen here: we must issue the Q command to exit the session.
+    Don't do it yet, though.
+
+21. Before exiting, let's check out HEX_DIGIT? more thoroughly.
+    First, we clear the breakpoint we set, by typing "B" followed
+    by the Enter key.
+
+22. Type the command line "J 0200", jumping to a scratch-pad
+    memory area.  Then press the F7 key, entering Patch Memory
+    mode.  The cursor moves into the disassembled instruction,
+    signalling that whatever you type is clobbering it.
+
+23. Type in the lines "INC BL", "MOV AL,BL", and "JMP
+    HEX_DIGIT?".  Press Enter at the beginning of the fourth
+    line, exiting Patch Memory mode.  The cursor will return to
+    the left of the 0200 INC BL line.
+
+24. Type the immediate command "MOV BL,'0'-2".  The BL register
+    should change to the evaluated value, hex 2E.
+
+25. Execute the patch subroutine by typing the line "CALL 0200".
+    The value BL increments to 2F, which is one less than the
+    lowest digit, '0'.  The Carry flag is set, indicating that
+    HEX_DIGIT? has correctly judged 2F not to be a hex digit.
+    Now press F3 repeatedly, executing your patched subroutine
+    for each decimal digit.  The "c" will disappear as the values
+    advance; and AL will hold the correct binary value for each
+    hex digit BL.  When BL reaches 3A, the "c" comes back on
+    again, indicating that we are beyond the decimal digits.
+    When BL reaches 41, "c" goes off, and AL values of 10 through
+    15 are displayed.  When BL reaches "47" "c" comes on yet
+    again, because G is not a hex digit.  Type "MOV BL,05F",
+    followed by "CALL 0200", followed by F3 several more times to
+    verify correct action for the range of lower case 'a' through
+    'f'. You have, relatively quickly, done a thorough test of
+    HEX_DIGIT?.  How long would that have taken on a lesser
+    debugger?
+
+26. Type Q followed by Enter to exit the debugger.
+                                                               9
+
+
+CHAPTER 3   REQUIREMENTS AND OPERATION
+
+
+System Requirements for D86
+
+D86 currently requires either an IBM-PC or compatible computer, a
+Texas Instruments TI-PC, a Wang PC, a Tandy 2000, a DEC Rainbow,
+a Sirius/Vector 9000, a Zenith Z-100--ET-100, or a Sanyo 550 or
+555 computer.  The computer must be running MS-DOS V2.00 or
+later.  The IBM compatibility must exist at the BIOS and video
+interface levels: D86 calls the BIOS to obtain keystrokes and
+video status information; and, on an IBM-PC, D86 writes directly
+to video memory at segment 0B000 (if the BIOS says monochrome) or
+0B800 (if color).
+
+If your MS-DOS machine is not one of the above-mentioned specific
+models, chances are it's an IBM-compatible and you'll run D86
+just fine.  For example, all of the "clone" computers released in
+the last several years are IBM-compatible.  If it is one of the
+above non-IBM models, D86 has special BIOS code for your
+computer, invoked via the +B switch described the section "BIOS
+Switching" later in this Chapter.
+
+D86 is fairly flexible about memory management.  If there is
+enough memory, D86 will take the combined sizes of D86.COM and
+A86.COM (currently about 51K bytes), plus 64K bytes for its own
+stack, and leave the rest for the program being debugged.  If
+memory is tight, D86 will reduce the memory allocated to its own
+stack, down to a minimum of 16K bytes.  The segment occupied by
+the program being debugged will be similarly reduced.  If the
+program is a COM file, you can tell this by the initial SP value,
+which is 0FFFE if there is a full 64K, less if there isn't.
+Thus, D86 will work with as little as 70K bytes beyond the
+operating system; but the symbols capacity and the program's
+memory will be severely limited in that case.  It is best to have
+at least 166K bytes of memory available when D86 is running.
+
+
+Invoking D86
+
+You invoke D86 by issuing the command
+
+   D86 [+Bn] [+V] [progname [command-tail]]
+
+where progname is the name of the program you are debugging.  In
+other words, you type a program invocation line just as if you
+were about to execute the program without a debugger, except that
+you append D86 before the line.  The B and V switches can appear
+in either order.
+
+The following sections describe in detail the elements of the D86
+invocation line, and how D86 acts on them.
+
+
+Finding the Program File
+
+On most other debuggers, you have to give the full file name,
+with an explicit extension and a specific directory.  With D86,
+you don't: D86 uses almost the same algorithm for locating a
+program file that COMMAND.COM does:
+
+1. Look for COM, then EXE, then BAT in the current directory.
+
+2. Look for COM, then EXE, then BAT in each directory in turn
+   given in the PATH environment variable.
+
+The one difference is that D86 will look only for one extension
+if you give an explicit extension (and it doesn't have to be COM,
+EXE, or BAT).  COMMAND.COM ignores the extension you give -- I
+thought that was just too absurd, and didn't duplicate it.
+
+A strange feature that I did duplicate is COMMAND.COM's lack of
+concern for whether the program is named COM or EXE.  If the
+program file begins with a valid EXE header, it's treated as an
+EXE no matter what it is named.  If not, then it's treated as a
+COM file.
+
+D86 provides limited support for BAT files.  (That's better than
+other debuggers, which provide no support.)  If your program is a
+BAT file, D86 reads the first line of the file and pretends that
+that was what you typed following "D86" in your invocation.  The
+D86 status screen (gotten via Ctrl-S) gives you this line, and
+tells you what BAT file it came from.
+
+The BAT file limitations are that D86 doesn't skip over remark
+lines, doesn't substitute batch-file parameters, and doesn't
+perform console redirection specified in the batch-file line.
+
+You can also invoke D86 with no progname.  The debugger comes up
+with no program loaded, allowing you to simply poke around the
+machine.
+
+If D86 had a problem loading your program, you'll see all NOPs in
+memory instead of instructions.  You can type Ctrl-S to get the
+status screen that tells you what the problem was.
+
+
+Finding the Symbols File
+
+D86 is a symbolic debugger.  It uses a special .SYM file produced
+                                                              10
+
+in one of three ways:  First, if your program was produced by
+A86, then the .SYM file was produced by A86 at the same time.
+Second, if your program was produced by a high-level language
+such as Pascal or C, you can feed the linker's .MAP listing to
+the special MAPD86 tool, available to registered D86 users only.
+Third, you can "reverse engineer" a program by adding symbols
+while in D86's patch mode, then create a .SYM file with D86's W
+command.
+
+When invoked, D86 looks for a file with the program's name and a
+.SYM extension.  D86 first looks in the current directory for
+this file, and then in each directory specified in the PATH
+environment variable.  It is not necessary for the SYM file to
+exist.  If there is no SYM file, the debugger simply runs with no
+user symbols defined.  You'll also get no user symbols if the SYM
+file was not of a correct format (it wasn't produced in one of
+the ways mentioned in the previous paragraph, or it has been
+corrupted in some way).  If you were expecting symbols and didn't
+get any, you can press Ctrl-S to get the status screen that tells
+you what the problem was.
+
+
+BIOS Switching
+
+Some of the non-IBM computers named at the start of this chapter
+are automatically detected by D86, so you shouldn't need any
+special action to use D86 with them.  Others have no obvious
+identifying features to them, so that you need to tell D86 that
+you're using that computer.  You do so with the switch +B
+followed by a machine number, as follows:
+
+   +B4     for the IBM-PC      (automatic) +B5     for the
+   Wang-PC      (automatic) +B6     for the Texas Instruments PC
+   (automatic) +B7     for the Tandy 2000      (automatic) +B8
+   for the Sanyo 550 or 555 +B9     for the Sirius/Victor 9000
+   +B10    for the DEC Rainbow      (automatic) +B12    for the
+   Zenith Z-100 and ET-100
+
+Machines marked "automatic" are automatically detected by D86, so
+you shouldn't need the B switch for them (but I give one anyway
+just for safety).
+
+For example, if you're running on a Sanyo, you invoke D86 via
+
+   D86 +B8 progname
+
+Incidentally, the Sanyo interface is of interest because the BIOS
+is IBM-compatible but the video isn't.  So invoking +B8 causes
+all video output to go through the BIOS, which is slow but it
+works on all IBM compatibles as well.  So if D86 doesn't work on
+your BIOS-compatible machine, you can try the +B8 switch.
+
+
+The D86 Environment Variable
+
+You can make your +B setting (and, for that matter, a +V setting)
+automatic by placing it into a DOS environment variable called
+D86. For example, if you run on a Sanyo, you issue the command
+
+   SET D86=+B8
+
+to the DOS prompt.  You can make the setting permanent by placing
+the above line into the AUTOEXEC.BAT file on your system disk.
+
+
+Two-Screen Debugging with +V
+
+The +V option can be used if you have both a monochrome and a
+color monitor.  You invoke D86 when the operating system is on
+one monitor -- with the +V switch, the debugger will appear on
+the other monitor, and program console output will appear on the
+operating system's monitor.
+
+In order for the +V option to work, you must initialize both
+screens by MODEing to them sometime after powering up the
+machine. You should also make sure that the blinking cursor is at
+the bottom of the screen on which the debugger will appear (the
+simplest way to do this is to type Enter until the prompt gets to
+the bottom).  If you can suppress the blinking cursor, that's
+even better.  See in your DOS operating manual for instructions
+on how to use MODE to switch between screens.  D86 doesn't do the
+initialization, because I couldn't figure out how to get the BIOS
+to do so without blanking the screen, and you might not want the
+screen blanked every time you start a D86 session.
+
+
+The D86 Screen Display
+
+When D86 starts up, it generates a full-screen display, and
+awaits your debugger commands.
+
+In the top part of the screen is a symbolic disassembly of the
+A86 program, with the screen cursor positioned next to the
+instruction pointed to by the 8086 instruction pointer.
+
+In the lower left corner is a fixed display of the complete 8086
+register set.
+
+At the top of the second column of the register-set display is a
+                                                              11
+
+display of the 8086 flags.  Each flag displays as blank if the
+flag is off; a lower case letter if the flag is on:
+
+     o   for overflow,
+     d   for direction,
+     i   for interrupts enabled,
+     s   for sign,
+     z   for zero,
+     a   for auxiliary carry,
+     e   for parity even, and
+     c   for carry.
+
+Across the bottom line of the screen is a display of the contents
+of the user stack.  The display begins next to the SP register
+value, with the number of elements on the stack.  (The stack is
+assumed to have 0 elements when SP is at its original value,
+which is 0FFFE for COM files, and a value specified in the header
+record for EXE files). The number of elements is followed by a
+colon, followed by as many of the top stack elements as fits on
+the line.  The initial display will have zero elements; nothing
+is yet on the stack.
+
+To the right of the registers are 6 lines, numbered 1 through 6.
+On these lines, you can generate windows into 8086 memory,
+displaying bytes, words, or ASCII text in a variety of formats.
+The windows can be located either at absolute memory locations,
+or be pointed to by any of the 8086 registers.  The commands you
+issue to generate these windows are described in Chapter 6.
+
+
+D86 Commands
+
+There are 5 kinds of activities you perform in D86:
+
+   1. Issuing assembly language commands for immediate execution
+
+   2. Issuing debugger commands via lines that begin with a
+      single letter
+
+   3. Issuing debugger commands via the function, Ctrl, and
+      cursor-control keys on your keyboard
+
+   4. Setting up windows that display memory
+
+   5. Issuing assembly language commands to enter into memory
+      (PatchMem)
+
+
+Immediate Assembly Language Commands
+
+A primary part of the D86 command language is the A86 assembly
+language. With it, you can jump to different areas of your
+program, set your registers, perform arithmetic, and call any of
+the procedures of your program.  Simply type in any legal A86
+instruction, and it will be executed immediately.
+
+JMP and RET instructions cause the program counter (and thus also
+the disassembly) to move to the indicated destination.  CALL
+instructions cause the entire procedure to be executed.
+
+WARNING: The immediate-execution feature is a little tricky if
+you are in a multi-segment program, or if you jump to exotic
+parts of the 86 memory space (i.e., into MSDOS, ROM, video
+memory, or the interrupts table). This is because D86 needs a
+buffer in which to put the immediate-execution command.  The
+buffer should be in your program's CS segment, so that commands
+such as jumps and near calls execute correctly.  So D86 must
+always search in CS for a satisfactory buffer.  Here is how D86
+finds it:
+
+  1. If you declare a label D86_BUFFER, pointing to a buffer
+     within your program, then D86 will use that buffer as the
+     offset for its immediate instruction.
+
+  2. If not, then if the program's CS register is the same as its
+     SS register, D86 will use (SP-300) as its immediate buffer.
+     Thus, your stack should have plenty of room (a good practice
+     in general).
+
+  3. As a last resort, D86 uses offset 00E0, which points to the
+     last 32 bytes of the Program Segment Prefix (PSP).  In that
+     case, if you were to issue an immediate command that reads
+     from a disk file, you would be in trouble, because the
+     disk-read operation clobbers the PSP, and the command would
+     not be trapped back to the debugger.
+
+  In cases 1 and 3 above, the segment containing the buffer is
+  the program's CS segment, unless that is out of range (below
+  the program's original CS, or above the top of available
+  program memory).  If the program CS is out of range, the
+  program's original CS is used instead.  In that case, immediate
+  instructions such JMP, RET, and CALL will not work correctly.
+
+  Note that the above caveats do not apply to single stepping.
+
+
+Entering Instructions Into Memory
+
+D86 allows you to alter 8086 memory in two ways: first, you can
+issue immediate assembly language commands which, when executed,
+                                                              12
+
+store values in memory.  The other method is to enter a special
+mode, in which you enter instructions directly into 8086 memory.
+
+You enter this mode by typing the F7 (PatchMem) key. The screen
+cursor jumps from the left edge of the line at the current
+program counter, into the middle of the line where the
+instruction is.  You start typing over the instruction, to signal
+that you are clobbering the instruction that was there.  If you
+did not intend to enter this mode, you can backspace back to the
+start of the instruction, and type a carriage return.
+
+Each line you type in is checked for errors.  If there was an
+error, a message is displayed, the cursor remains at the same
+location, and you try again. If there was no error, the cursor
+moves beyond the newly-assembled line, and you can type in
+another line.
+
+To exit the memory programming mode, you type any of the control
+key commands at the beginning of the line.
+
+
+Entering Data into 8086 Memory
+
+You can deposit data into the 8086 memory space by using the
+programming mode described in the above section.  Simply enter DB
+and/or DW statements instead of instructions.  Note that ASCII
+strings can be entered with the DB instruction; and that arrays
+can be initialized via the DUP operator in a DB or DW statement.
+
+
+Adding Symbols to a Program
+
+Patch mode also allows you to do something that you cannot do in
+immediate execution mode: add symbols to the program.  You can do
+so by either:
+
+   1. Typing in a new symbol name, followed by a colon; or
+
+   2. Typing in an EQU directive.
+
+There are several uses for this.  First, you might want to create
+an abbreviation, by equating a short name to a long one, or to a
+hard-to-remember constant value.  Second, you might want to
+"reverse engineer" a program for which you have a .COM file, but
+not the A86 source code.  Each time you add a label, the
+disassembly becomes more readable.  Third, you might want to
+label code that you have added in patch mode.
+
+After you have added symbols to the table, you can save the
+resulting expanded table with the W command.  Simply type W
+followed by the Enter key at the main debugger command level.
+
+Forward referencing is allowed when you are in patch mode.  You
+must be careful, however, to resolve any forward references you
+have made, before leaving patch mode.
+                                                              13
+
+
+CHAPTER 4    D86 CONTROL KEYS
+
+D86 has a set of functions invoked by single keys.  Keys which
+switch the display (for example, to show a help screen) can be
+pressed in any context, to be acted upon immediately.  Other
+keys, such as the single-stepping keys, can be invoked any time
+D86 is awaiting the beginning of an assembly language command.
+
+
+Display Control Keys
+
+There are numerous keys that let you control the switchable
+window in the upper right corner of the screen.  The F10 and
+Alt-F10 keys let you toggle between windows, giving you a "tour"
+of what's available.  Various keys accessed by using the "Ctrl"
+key as a shift key let you move directly to the window of your
+choice.
+
+The keys in this section are acted upon in any debugger context,
+whether you are in the main command mode or in the middle of one
+of the other modes (typing in a debugger command, an
+immediate-execute line, a patch-memory line, or a memory window
+specification):
+
+Alt-F10   Toggles you between Help and Non-Help modes.  If the
+          window is showing you a help page, it will switch to
+          the last Non-Help page that was displayed.  If not, the
+          window switches to the last Help screen displayed for
+          the current context.
+
+F10       In non-help mode, toggles you between the available
+          non-help windows: the sign-on/second disassembly
+          window, the status window, the memory display window,
+          and, if you have a floating-point chip, the
+          floating-point display window.
+
+          In help mode, toggles you between the help windows
+          available in the current context.
+
+Ctrl-I    (or TAB) takes you from any other window directly to
+          the sign-on/second disassembly window.  This window
+          contains the D86 sign-on message until the first time
+          that the Instruction Pointer leaves the first
+          disassembly page.  From that point on, the sign-on
+          message is no longer available, and you get a second
+          disassembly page instead.
+
+Ctrl-S    Takes you from any other window directly to the
+          debugger status window.
+
+Ctrl-F    Takes you from any other window directly to the
+          floating point display window, if your machine has a
+          floating point chip in operation.  If not, this key is
+          ignored.
+
+
+If your CPU has the MMX, Pentium 3, and/or the AMD 3DNow
+instruction sets, you can see a display of the associated
+register sets by pressing Ctrl-F repeatedly: multiple pressings
+will rotate you through all the special-register displays
+available on your machine's processor.
+
+Ctrl-N    If you have a memory display window in sight, this key
+          advances to the Next window full of memory.
+
+          If you do not have a memory display window, but do have
+          at least one memory line specification, this key takes
+          you from any other window to the memory display window,
+          continuing from the end of the last line display.
+
+          If you have no memory line specifications set up, this
+          key is ignored.
+
+Ctrl-P    If you have a memory display window in sight, this key
+          retreats the pointer to memory displayed, by the amount
+          displayed in the window.  If all the memory formats
+          specified generate a fixed-size display (such as the
+          B,W,T formats), then this will effect a "Previous page"
+          function.  If there are formats producing a
+          variable-size display (such as the N,D,C,S,L formats),
+          then the retreat will be a probably imperfect
+          approximation to an appropriate "Previous page" amount.
+
+          If you do not have a memory display window, this key
+          will go to one, just like the Ctrl-N key.
+
+Ctrl-Q    If you are not displaying a help window, this key takes
+          you to the last help window that was displayed for the
+          current context.  If you are already displaying a help
+          window, this key toggles through all the help windows
+          available for this context.
+
+
+Instruction Pointer Positioning Control Keys
+
+All the remaining keys in this chapter can be invoked any time
+the debugger is in its main command mode, awaiting the first key
+                                                              14
+
+of a debugger command or immediate assembly line.  They change
+the value of the Instruction Pointer (IP register), and thus they
+change the disassembly display.
+
+None of the control keys in this section cause any program code
+to be executed, other than the equivalent of a JMP instruction,
+to the place that the disassembly cursor winds up.
+
+WARNING: On some debuggers, you can change the location of what
+is being disassembled without changing the IP register value.
+I've decided on a "what you see is what you get" philosophy,
+since you may well be moving the IP cursor to effect a jump in
+the program (for example, you might use the Down-Arrow key to
+experimentally skip over the execution of one or more
+instructions in the program).  If your intention was just to look
+around the program before continuing execution at the place you
+left off, you may use the Home key to return to the place where
+execution last halted.
+
+Down-Arrow   Jump to the instruction following the current one.
+             Visually, the disassembly cursor moves down by one
+             instruction line.
+
+Up-Arrow     Jump to the instruction preceding the current one.
+             Visually, the disassembly cursor moves up by one
+             instruction line.  NOTE that the implementation of
+             this function is a little tricky, since it's
+             impossible to reliably disassemble backwards.  What
+             D86 does is retreat a fixed, fair-sized distance,
+             disassemble forward until the current instruction is
+             reached, and take the instruction disassembled just
+             before the current one.  If there is non-instruction
+             code in memory shortly before the current position,
+             the synchronization may fail, and this instruction
+             may put you in the middle of a previous instruction
+             instead of the beginning.  If this happens, you may
+             adjust by using the Ctrl-D or Ctrl-U keys.
+
+Ctrl-D       This key is identical to the Down-Arrow key, except
+             the jump forward is just one byte, instead of a full
+             (usually multibyte) instruction.  (IP is
+             incremented.)  You use this key when you think
+             you've landed in the middle, rather than the start,
+             of an instruction.
+
+Ctrl-U       This key decrements IP, moving the cursor "Up" by
+             one byte's worth.  Like Ctrl-D, it is used to
+             manually synchronize disassembly.
+
+PgDn         Jump to the next disassembly page, at the memory
+             location immediately following this page.  Repeated
+             pressing of this key allows you to scan program code
+             quickly.
+
+PgUp         Jump to the previous disassembly page, ending with
+             the instruction just before the top instruction on
+             the current page.  NOTE the warning given with the
+             Up-Arrow description, about possible synchronization
+             problems, applies here as well.
+
+Home         If you have moved the IP cursor since the last
+             program instruction executed, then this key returns
+             IP to that spot.  If you are already at that spot,
+             this key returns you to the program's starting
+             location.  For COM files, this is always location
+             0100 in the original code segment.  For EXE files,
+             this location was derived from the EXE header
+             record.  Note that repeated pressing of Home will
+             cause IP to alternate between the two locations, so
+             you can't mess yourself up by pressing the key one
+             too many times -- just press it again.
+
+Ctrl-E       Jump to the End of the program, as determined when
+             it was loaded, and possibly advanced if the program
+             was patched from the end.
+
+
+Program Execution Control Keys
+
+Ctrl-X       Single step the current instruction.  If the
+             instruction is a call, go into the procedure to
+             single step it.  If you want the entire procedure
+             executed on a single keystroke, use the F2 key.
+
+F1           Single-step the current instruction just like the
+                                                              15
+
+             Ctrl-X key, except that INT instructions are
+             executed all at once, not stepped into.  This
+             exception was added with D86 V3.21, because stepping
+             into DOS or the BIOS is a hazardous operation,
+             likely to crash the computer.
+
+F2           Procedure step: same as single-step, except that if
+             the current instruction is a CALL, the procedure is
+             executed in one step; or if it is a repeated string
+             instruction, the operation is executed all in one
+             step.  In older versions of D86, the F2 key trapped
+             at the next instruction -- that is now done by the
+             F5 key.
+
+F4           Start the program, setting a trap at the destination
+             of the conditional jump instruction currently
+             pointed to.  If we are not pointing to a conditional
+             jump, then we single step.
+
+F5           Trap next: start program, trapping at the
+             instruction following the current one.  This can be
+             used as well as F2 to execute procedures and string
+             operations in one step.  But this command key, when
+             pressed at a LOOP or conditional jump instruction,
+             will also allow you to break out of a loop.
+
+F6           Start the program, setting a trap at the address on
+             top of the stack (hopefully a procedure return
+             address).
+
+F9           Go until here: Start the program from the point at
+             which it last stopped, setting a trap at the current
+             CS:IP location.  If you didn't move the IP cursor
+             since the program stopped, this will simply tell the
+             program to go until the next time this same point is
+             reached.  If you did change IP, (for example, if you
+             paged forward to find an interesting section of
+             code), this command saves you from having to go back
+             and single-step up to this point.
+
+
+Special Action Control Keys
+
+F3           Repeat the last typed-in assembly language or
+             debugger command
+
+F7           Enter the Patch Memory mode, described in Chapter 3.
+
+Shift-F7     Mark the current CS:IP memory location, for use by a
+             following F debugger line command.  F can either
+             return to this location, or find memory bytes that
+             match the ones at this location.
+
+Ctrl-M       Mark the current location in the keystroke-recording
+             file, so the next keystroke-save operation will
+             begin with the next keystrokes you type.  See the K
+             command in Chapter 5 for details.
+
+Ctrl-R       Re-do a previous keystroke retracted by a previous
+             Undo command (described in Chapter 5).
+
+Ctrl-T       Reset the debugger's internal Top-of-Stack pointer
+             to the current SP value.  This will cause the
+             current stack display to become empty, so that
+             subsequently pushed values will appear by themselves
+             on the stack display.
+
+Alt-x        Play back the ALTx.D8K keystrokes file.  See the K
+             command in Chapter 5 for details.
+                                                              16
+
+
+CHAPTER 5   COMMAND LANGUAGE
+
+In addition to immediate-execution assembly language commands,
+there is a set of commands recognized by the debugger.  They are
+identified by the first keyword on the line being a single letter
+(i.e., the second character of the line is a non-letter, usually
+a comma or Enter).
+
+
+General Operands to Debugger Commands
+
+Most of the debugger commands consist of their single-letter
+identifier, followed by a comma, followed by one or more general
+operands, separated by commas.  General operands can be one of
+the following:
+
+   a. a numeric constant, whose format is just as in the assembly
+      language (leading zero means default hex, otherwise default
+      decimal)
+
+   b. a register name
+
+   c. a user symbol from the assembly language program being
+      debugged.
+
+
+Format of Debugger Command Examples
+
+Many of the examples given below will be given in double quotes.
+Note that the double quotes are not part of the command.  You are
+encouraged to try out the example on the debugger, by typing the
+string within the quotes, not including the quotes, and always
+followed by the Enter key. Note further that the double-quoted
+string may be broken across two lines of this manual, but that
+does not mean you should type an Enter where the string is broken
+-- debugger commands always consist of a single line, always
+terminated by Enter.
+
+
+The Debugger Command Set
+
+Following is a description of the debugger commands recognized:
+
+B  sets and clears the fixed breakpoints of the program.  The
+   debugger has four breakpoints.  Two are transitory; they are
+   automatically cleared after each return from the program to
+   the debugger.  They can be set by the G command. The other two
+   are fixed -- they will remain in effect until you explicitly
+   clear them.  The fixed breakpoints are controlled by this B
+   command.
+
+   You follow the B with zero, one, or two general operands.  If
+   there are zero operands (the B is followed immediately by an
+   Enter), then both fixed breakpoints are cleared.  If there are
+   one or two operands, then the fixed breakpoints are set to the
+   operands.
+
+   Note that previously-set breakpoints can be implicitly
+   cleared, by overwriting them with other breakpoints.  If your
+   B command has one operand, and there was one breakpoint
+   previously set, the debugger sets the unused breakpoint, so
+   that both remain in effect.  If your B command has one
+   operand, and both breakpoints were previously set, the most
+   recently set breakpoint is saved, and the older breakpoint is
+   overwritten.
+
+   The status screen, displayed by typing Ctrl-S, shows you the
+   B-command breakpoints in effect.
+
+   Examples: if you type "b,numout", the debugger will set a
+   breakpoint at location NUMOUT, which should be a label in the
+   program being debugged. You may start and stop the program
+   many times, and the breakpoint will stay there.  You may even
+   allow the program to stop at NUMOUT repeatedly; the breakpoint
+   is not cleared even if the program stops there.  If you
+   subsequently type the command "b,01000", then there will be
+   breakpoints at both NUMOUT and location hex 01000.  If you
+   then type "b,01200", the first breakpoint NUMOUT is
+   overwritten; the two breakpoints now in effect are 01000 and
+   01200.  The 01000 breakpoint will be next in line to be
+   overwritten.  You may clear both breakpoints by typing "b".
+   There is no way to clear one breakpoint at a time.
+
+
+D  sets or clears a data breakpoint.  This command is available
+   only to registered D86 users running on a 386-or-later
+   machine. A data breakpoint causes the program to trap to the
+   debugger whenever a specified memory location is accessed.
+   The trap occurs after the instruction causing the access, so
+   you should press the Up-arrow key to see the instruction.
+
+   You follow the "D" with a comma, followed by a specification
+   parameter.  The parameter consists of up to three characters,
+                                                              17
+
+   at most one each from the following categories:
+
+   1. A letter giving the size of the memory element being
+      checked: B for byte, W for word, D for doubleword, or a
+      minus sign if you are clearing the breakpoint.  Default is
+      B.
+
+   2. The letter R if you wish to trap if the memory location is
+      either written to or read from.  If you leave the R out,
+      the trap will occur only if the memory location is written
+      to.
+
+   3. A digit, (0,1,2, or 3) giving the number of the 386
+      breakpoint register you are using to set the trap.  Default
+      is 0.
+
+   You terminate the specification parameter with a comma, then
+   provide one or two numbers to specify the memory location you
+   are trapping. If you provide two numbers, the first is the
+   segment register value and the second is the offset.  If you
+   provide only one number, it is the offset -- the value of DS
+   is used as the segment register value. As with all value
+   parameters in D86, you can give a register name or a label
+   instead of a number.  You can also leave out the address
+   entirely, to preserve the previous address setting of that
+   breakpoint register.
+
+   Note that the 386 requires Word and Doubleword breakpoints to
+   be aligned in memory.  If you provide an odd address for a
+   Word breakpoint, the 386 will ignore the bottom bit of your
+   address.  Similarly, the 386 will ignore the bottom two bits
+   of your address for a Doubleword breakpoint.
+
+   Examples: D,R1,ES,0400 sets a byte data read-or-write
+   breakpoint, using the 386's register number 1, at memory
+   location ES:0400.  D,-1 would clear that breakpoint.  D,R1
+   would set it again with its previous value.  D,W,MY_VAR sets a
+   Word breakpoint, using the 386's register number 0, at
+   location DS:MY_VAR -- the trap will occur if either byte of
+   the variable MY_VAR is written to (but MY_VAR should be
+   aligned to an even address for this to work).
+
+   If the D command is enabled, you'll get a one-line display of
+   the data breakpoint registers in the status window (invoked
+   via Ctrl-S).  The registers are presented in order: 0,1,2,3.
+   The breakpoint type is given, followed by the 5-digit absolute
+   memory address of the breakpoint.
+
+
+F  finds a string of memory bytes.  The memory to be searched
+   starts at the current CS:IP location.  The string being sought
+   is contained in memory at the CS:IP location marked with the
+   last Shift-F7 command.  The number of bytes in the target
+   string is given as the first operand to the F command.  For
+   example, "F,1" finds the next instance of a single byte value
+   after the current CS:IP.  If the marked location points to a
+   NOP, "F,1" will find the next NOP code.
+
+   If you provide a second operand to F, it is a "retreat
+   number".  For example, "F 2,10" assumes that you are looking
+   for a 2-byte sequence, and you have retreated 10 bytes from
+   the starting location for your search.  When the string is
+   found, F will retreat 10 bytes from that string.  That way you
+   can view the instructions that preceded the found string.  I
+   use this feature when I am searching for BIOS and DOS
+   interrupt calls in a program.  I want to retreat before the
+   calls, to see what function numbers were loaded into
+   registers.  I can use the F3 key to repeat the searches,
+   giving me a sequence of disassembly displays with the
+   interrupt in the middle.
+
+   F with no operands returns CS:IP to the marked location, in
+   case you want to use F7 to deposit another string to be
+   searched.
+
+   If you have never pressed Shift-F7 in this session, the marked
+   location is 0C000 of the program's starting segment.  That's
+   often a good "scratchpad" area for small programs, far from
+   both the program and the stack.
+
+
+G  starts the user program.  You can give one or two operands to
+   G, specifying locations within the program at which you wish
+   to return to the debugger.  These are "transitory
+   breakpoints"; both of them are cleared when the program
+                                                              18
+
+   returns to the debugger for any reason.
+
+   Whenever you start the program, at least one instruction from
+   the program will be executed, even if there is a breakpoint at
+   the current instruction pointer location.  This means you can
+   set a breakpoint at the current location; instructing the
+   program to return to the debugger the next time it gets back
+   to the current location.
+
+
+J  jumps to the location indicated by the operand, within the
+   current code segment.  J is useful when you are exploring
+   memory outside of your program's memory area.  In that case,
+   the immediate JMP command is executed from a buffer within
+   your program's original code segment.  JMP would therefore
+   return you to that segment.  J will keep you in the distant
+   segment.
+
+
+K  allows you to save and play back D86 keystroke scripts.  D86
+   records in memory all keystrokes (up to a limit of 1024) you
+   type to the debugger, and lets you save those keystrokes in
+   files, and recall them, in several different ways.  All D86
+   keystroke script files have the extension D8K in their names.
+   If D86 finds a script file whose root name is the same as the
+   program being debugged, D86 will automatically play back that
+   script as soon as it starts up.  You can use this feature to
+   set up files (with the S command), set up memory displays, and
+   step to the area of your program you are concentrating on,
+   avoiding repetition every time you enter the debugger.  If you
+   specify D86 without a program name, D86 will look for a script
+   named NULL.D8K.  In either case, if D86 does not find the
+   progname.D8K file, it will look for a file named D86.D8K and
+   run that.  This allows you to set up a global-default
+   keystroke script, to be used to start every debugging session.
+   During a debugging session, you can play back keystroke
+   scripts from the debugger command line with the K,P command
+   described shortly, or at any time by pressing the Alt key
+   together with any letter key. For example, Alt-L pressed at
+   any time will play back the ALTL.D8K script.
+
+   You can mark the beginning of the keystrokes to be saved in
+   one of several ways.  The K,F command will flush all recorded
+   keystrokes from D86's memory buffer, letting you "start
+   fresh".  The S,F command also does this; it resets the entire
+   debugging session as well (cancelling the effects of any
+   default scripts or manually-typed keystrokes).  The Ctrl-M key
+   can be typed in any debugger context to mark the beginning of
+   keystrokes to be saved by the next save command, without
+   actually flushing the previous keystrokes -- the debugger
+   remains in whatever context it was in, the marker will revert
+   to the start of the session after the next keystroke-save
+   operation, and the Undo command will play back from the start
+   of the session.
+
+   The command K,S,filename will save debugger keystrokes in a
+   file named filename.D8K ("filename" can be any name you wish,
+   and you do not need to explicitly give the D8K extension in
+   the command).  The file will begin with keystrokes marked by
+   the last command described in the above paragraph; if no such
+   specification was given, the file starts at the beginning of
+   the entire debugger session. Commands and keys dealing with
+   keystroke scripts are not themselves recorded.  If you issued
+   a previous playback command, or if a playback occurred by
+   default, the keystrokes from those playbacks are included as
+   if you had typed them manually.
+
+   Alternatively, you can save ALTx.D8K files from any debugger
+   context by pressing the Ctrl-K key, followed by the Alt-key
+   you wish to associate with the key sequence.  For example,
+   suppose you wish to save the keystroke sequence for the
+   memory-window specification for a complicated structure.  You
+   wish the sequence to include the format of the structure, but
+                                                              19
+
+   not its location-specification.  You can do this by pressing
+   Ctrl-M to mark the beginning of the recording, the digit 0 to
+   move to the beginning of the first free memory window, the
+   specification (e.g., B3WB1,), the Ctrl-K key, and the Alt-S
+   key.  The debugger silently saves the keystroke sequence in a
+   file called ALTS.D8K.  From now on, whenever you type the
+   Alt-S key, the keystrokes 0B3WB1, will be played back, leaving
+   you ready to type only the location where you want the memory
+   structure to be displayed.
+
+   The command K,P,filename will play back the keystroke script
+   file filename.D8K that you previously saved.  This form, while
+   more cumbersome to invoke, allows you to use a greater variety
+   of file names.  All keystroke playback files can be either in
+   the current directory, or any directory named in your PATH
+   environment variable.
+
+
+L  creates a disassembly listing, with addresses, hex bytes, and
+   disassembled code.  You can output either the entire COM
+   program, or a section of memory beginning with the current
+   CS:IP location.  You omit the first operand if you want the
+   entire COM program.  If you want a section of memory, you
+   provide the offset beyond the memory section as the first
+   operand.  You give the name of the output file for the listing
+   as the second operand.  If you omit the second operand, the
+   listing goes to the printer.  Examples: L,,FOO.LST outputs the
+   entire COM program to FOO.LST.  L,0200,SEG.LST outputs the
+   section of memory from CS:IP up to CS:0200 to SEG.LST.
+
+
+O  sets a special fixed breakpoint.  Whenever your program calls
+   MSDOS via INT 021, the debugger will monitor the function
+   number passed in the AH register.  If the function number
+   falls within the range specified by this command, the program
+   will trap back to the debugger.  If you give two operands to
+   O, the operands are the lower and upper bounds for the range
+   of trapped functions.  If you give one operand, only that
+   function number will be trapped.  If you give no operands, any
+   previous O-trap setting is cleared.
+
+   For example, note that function 3F hex is the READ function
+   for MSDOS version 2.  If you want to trap whenever this READ
+   function is invoked, you can issue the command O,03F and then
+   start up your program with the G command.  Another example:
+   suppose you want to insure that a program does not make any of
+   the new Version 3 DOS calls, 59 hex and above.  You can issue
+   the command O,059,0FF and then start your program.
+
+   NOTE: if the second operand is less than the first, then the
+   range wraps around through zero.  For example, O,059,030 traps
+   on 059 through 0FF, and also 0 through 030-- both version 3
+   and version 1 calls.
+
+   SECOND NOTE: The EXIT function, hex 4C is always trapped by
+   D86, regardless of your O-command settings.  The only way you
+   should be able to exit from D86 is via the Q-command.  (If you
+   do succeed in exiting some other way, I want to hear about it.
+   In that case, D86 will become very confused if you reinvoke it
+   before rebooting the computer.)
+
+
+Q  exits the debugger and goes back to the operating system.
+
+
+S  performs system functions, letting you bring your computer to
+   a known state before debugging.  If the program you are
+   debugging changes the contents of files on your computer, you
+   may wish to begin your debugging session by restoring modified
+   files from backup copies, and deleting any newly-created files
+   from previous debugging sessions.  You can then save these
+   commands in a keystroke script (see the K command), or perform
+   an Undo command.
+
+   The command S,C,srcfile,destfile copies the file named
+   "srcfile" to the file named "destfile".  The command
+   S,D,filename deletes the file named "filename".  The command
+   S,R resets the debugging session: all open user files are
+   closed, standard input and output are "rewound" if they had
+   been redirected to disk files, the current drive and directory
+   are restored, the debugged program is is reloaded from the
+                                                              20
+
+   disk, and the default keystroke script, if any, is rerun.  The
+   command S,F does the same as S,R except the keystroke script
+   is not rerun: this allows you to redefine what your starting
+   script will be.
+
+
+U  performs an "Undo" command by resetting and replaying your
+   entire debugging session, except for the last commands.  The
+   command U without any operands will retract a single command.
+   The command U,number will retract the number of commands
+   indicated.  For the purposes of this count, each full line
+   typed to the debugger counts as a single command.  If you give
+   a number bigger than the number of commands thus far issued,
+   D86 will retract to the beginning of the debugging session.
+   Retracted keystrokes can be replayed by pressing the Ctrl-R
+   key (R stands for "Redo") repeatedly.
+
+
+W  writes the program (if it was a COM format) and the symbol
+   table back to the disk.  In this present version, you don't
+   have any options as to what to name the files.  The program
+   name given when D86 was invoked is always used, except that
+   the files are always written to the current directory.  The
+   program file has the same extension as the file that was
+   loaded, and the symbols file has the SYM extension.
+
+   D86 writes the program from location 0100 in the original code
+   segment, up to the end-of-file location saved when the program
+   was loaded, and possibly extended by a patch-memory operation
+   while at the end of the program.  Any symbols added while in
+   the patch-memory mode are saved in the symbols file, so that
+   you can "reverse engineer" programs for which you do not have
+   source, and save the symbol table results you have gleaned.
+                                                              21
+
+
+CHAPTER 6   MEMORY DISPLAY OPTIONS
+
+
+Memory Display Windows
+
+The debugger allows you to set up windows into your program
+memory space. Using these windows, you can view memory in a
+variety of formats.  The windows will remain in effect until you
+cancel them; updating themselves automatically if the memory
+changes.
+
+There are six single-line memory windows always present, in the
+lower right portion of the screen.  In addition, you can have the
+upper-right window display a 14-line page of memory values.
+
+
+Single-Line Memory Windows
+
+A single-line memory window line consists of a specification,
+typed in by you, followed by a display, supplied by the debugger.
+
+To type in a specification on any one of window lines 1 through
+6, simply type the associated digit, 1 through 6, when the
+debugger is in its main command mode.  You can also specify the
+first blank window line by typing the digit 0 (providing some
+flexibility for keystroke scripts).  The cursor will jump to the
+beginning of the memory-window line you are specifying.  You then
+type in a display format specification, followed by the address
+of memory you want displayed.
+
+The simplest form of the display format specification is a single
+letter, signifying one of the display types available.  The
+choices are:
+
+   B       for hexadecimal bytes
+   W       for hexadecimal words
+   N       for decimal bytes
+   D       for decimal words
+   Q       for octal bytes
+   O       for octal words
+   T       for text; each byte reduced to one ASCII display character
+   A       for ASCII text, each byte occupying 2 display characters (the
+                    exact display is spelled out later in this chapter)
+   C       for ASCII text, occupying 2 bytes if needed, otherwise one
+
+A format specification of one of the above letters will cause the
+debugger to display the array of bytes starting at the address
+you specify, in the format indicated by the letter, as long as
+there is room on the line. All letters in a format specification
+(or in any other context in the debugger) can be typed in either
+upper or lower case.
+
+The format specification should be terminated by a comma.  After
+the comma (and an optional space), you type the address of memory
+you want displayed. This consists of two values, the segment
+followed by the offset.  The values should be separated by a
+comma. You can omit the segment value if you wish: in that case,
+the current value of DS is used. The debugger reminds you that
+you have specified this option by following what you type with 2
+commas instead of one.
+
+The value you type can take one of the following forms:
+
+   a. a numeric constant, whose format is just as in the assembly
+      language (leading zero means default hex, otherwise default
+      decimal)
+
+   b. a register name (IP is now accepted as a register name)
+
+   c. a user symbol from the assembly language program being
+      debugged.
+
+After you type the address specification, you hit the Enter key,
+and the debugger fills out the rest of the line with the memory
+display.
+
+For example, if you want to display hex bytes starting at 01000
+hex on display line 2, you type 2b,01000<Enter>. The cursor jumps
+to the line immediately when you type the 2, and it displays the
+b,01000 on the line as you type it.  The b says you want hex
+bytes, and the 01000 has a leading zero to signify a hexadecimal
+address, not decimal.  When you press the Enter key, the debugger
+displays two commas, followed by the hex bytes.  If the memory is
+zeroed, you will see 00 00 00 00 00 etc. to the end of the
+display line.
+
+
+Erasing Memory Display Lines
+
+Any memory display window that you specify will remain in effect,
+always updated to show the latest memory contents, until you
+explicitly erase it. To erase a window, you type the number of
+the window, followed by a blank.  The line will also be erased if
+                                                              22
+
+you start typing a format specification, and you hit the Enter
+key before you get to your address specification.
+
+In the coming sections, many of the examples assume (and they say
+so) that your display is blank before you type in the example.
+You can always get a blank display by typing in each number
+followed by a blank: "1 2 3 4 5 6 ".
+
+If you accidentally type a digit and DON'T want to erase the line
+your cursor has jumped to, press the Esc key to return to the
+main command mode.
+
+
+Continuation Lines
+
+You may continue a memory display window onto the next line, by
+placing a double quote mark " at the beginning of the next line.
+You may do this in one of two ways: you may type the number of
+the next line, followed by the double quote mark; or you may
+simply type the double quote mark at the command level.  The
+first method allows you to specify which window line you want
+continued, if there is more than one.  The second method is more
+convenient to use.  It places the quote mark on the last blank
+line that immediately follows a non-blank line.
+
+You may continue placing " marks on as many lines as you have,
+creating a multi-line display.
+
+The debugger follows the " mark with the address of memory being
+displayed, followed by the memory, according to the start of the
+type specification of the line being continued.  The memory
+display is aligned with the display of above line.
+
+If you are creating a multi-line display, and your specification
+is a long one, you may wish to start the display at the beginning
+of the next line, rather than after the specification on the
+first line.  This will often give you more room.  You do this by
+terminating the format specification with a slash / instead of a
+comma.  For example, to display many hex bytes at the array
+BYTE_ARRAY, type 1b/byte_array<Enter> followed by five double
+quote marks, when the memory display is empty.
+
+
+Mixed Format Specification
+
+Instead of having all your bytes or words on a line displayed in
+the same format, you can mix your formats.  You do this by
+providing more than one letter in your format specification.  The
+debugger will display one memory unit for each letter-type you
+specify.  The line will be filled out with the last type given.
+For example, if you type 3nwb,01000<Enter>, you will get a
+display on memory line 3 of the decimal byte at 01000, the hex
+word at 01001, and an array of hex bytes starting at 01003.
+
+
+Numbers in a Format Specification
+
+You may precede any letter in a format specification with a
+number up to 255. The effect is the same as if you had repeated
+the letter the given number of times.  For example, if you type 1
+to go to memory line 1, followed by 4w10tb,02000<Enter>, you will
+get 4 hex words at 02000, 10 text characters at 02008, and an
+array of hex bytes from 02012 filling out the rest of the line.
+
+You may also end your format specification with a number up to
+255.  This will cause the entire specification to be repeated the
+given number of times. If there is room on the line for the full
+number given, the display will stop there -- there will be no
+repeating of the last type byte.  If there is not room on the
+line for the full number of global iterations, the debugger will
+stop at the end of the last iteration that would fit.  For
+example, the specification b8 causes 8 hex bytes to be displayed,
+and the remainder of the display line to be blank.  The
+specification b3w9 will cause the debugger to try to output 9
+records, each consisting of a hex byte followed by 3 hex words.
+After putting out 2 such records, the debugger will see that
+there is not room for a third full record, so it will stop.  This
+stopping at the record boundary allows you to continue the
+display, with correct alignment, on subsequent lines.
+
+
+Spacing Between Memory Display Units
+
+In general, the debugger provides a space between each unit (byte
+or word) it displays.  There is an exception, however: the
+debugger will not space between adjacent text characters (A,C, or
+T specifications).
+
+There are special specifiers G, J, and M, described in the
+                                                              23
+
+section below, that allow you to override the debugger's spacing
+policies.
+
+
+Special-Action Format Specifiers
+
+In addition to the 9 letters already mentioned that specify data
+types, there are 9 other letters, and 2 other characters, that
+cause the debugger to perform special actions.  Following is a
+complete description of all 20 non-digit characters that can
+occur within a format specification:
+
+=  causes a display, using the format of the letter following =,
+   of the current memory pointer value, instead of the contents
+   of the memory location.  If a letter does not follow the =,
+   then W is used; i.e., the pointer is displayed as a 4-digit
+   hex word.  Two uses for this feature come to mind:
+
+   * If your address specification is symbolic, you can display
+     the equivalent numeric address with =w, telling you exactly
+     where the symbol is in memory.  Note that this display
+     implicitly occurs at the beginning of continuation lines. If
+     the format specification begins with =, then the implicit
+     display is suppressed, because the same address is given
+     explicitly by the L.
+
+   * You can display the values of registers in a format other
+     than hex.  For example, in the 8086 debugger you can display
+     AX as a decimal number by specifying =d1,ax on one of the
+     memory display lines.
+
+@  causes the debugger to read the next byte it was going to
+   display, and instead of displaying the byte, use it as a
+   count, to repeat the next letter in the specification.  The
+   debugger uses only the bottom 7 bits of the memory byte for
+   the count.  For example, if the memory contains a length byte
+   followed by that number of text characters, the text could be
+   displayed by specifying @t (or @a or @c, depending on what you
+   want the display to look like).  If the memory contains 05 41
+   42 43 44 45, the @t would cause ABCDE to be displayed.
+
+A  causes a display of a single ASCII byte, always using 2
+   display bytes.  Bytes in the Ctrl-key range (00--01F) display
+   as ^ followed by the corresponding letter; e.g. ^B for 02.  If
+   the top bit is on (range 080--09F), $ is used instead of ^;
+   e.g. $B for 082.  Displaying ASCII characters whose top bit is
+   on have a prepended #; e.g., #1 for 0B1.  022 is "", 023 is
+   "#, 024 is "$, 05E is "^, 07F is ^r (r stands for rubout), and
+   0FF is $r.  All other characters are their normal selves
+   preceded by a space.
+
+   The A specification is used when you need guaranteed display
+   length for proper alignment of continuation lines; and you do
+   not want the potential loss of information provided by the
+   single-byte T specification.
+
+B  causes a display of a single byte as a 2-digit hexadecimal
+   number.  Numbers less than hex 10 have a leading 0, so that
+   the display is always 2 digits.
+
+C  causes a display of a single ASCII character, just as the A
+   specification, except that normal characters (not in the
+   table) display as just one byte, without the preceding space.
+
+D  causes the display of a 16-bit word as an unsigned positive
+   decimal number. There will be no leading zeros in the display;
+   so the length of the display depends on the size of the
+   number.
+
+F  causes the display of a floating point number, in one of the
+   three formats recognized by the 8087.  You must have a
+   floating point chip (8087 or 287) installed in your computer
+   for this to work.  You specify which of the three formats you
+   are reading by one of three letters immediately following the
+   letter F:
+
+   FD  specifies a 4-byte Doubleword (single precision) number
+   FQ  specifies an 8-byte Quadword (double precision) number
+   FT  specifies a Ten-byte number-- 8087 extended precision.
+
+G  causes a gap between the adjacent display formats, of one
+   space more than there would have been without the G.  For
+   adjacent string bytes, this means a space where there would
+   have been none.  For other data types, this means two spaces
+   where there would have been one.
+
+J  (join) causes two adjacent data types, that would have had a
+   space between them, to have no space.
+
+L  (line) causes the display of an entire text line, using the
+                                                              24
+
+   C-format for each character of the line.  The debugger does
+   not display the terminating carriage return; nor does it
+   display the following linefeed if there is one.  (If you want
+   it to, specify LUC or LUUCC instead of L.)  If a carriage
+   return is not found and the display line fills, then the
+   L-specifier is cut off in mid-string.  Any continuation line
+   will start up at the beginning of the format specification, at
+   the mid-string place in memory.
+
+M  (mark) causes a vertical-bars symbol to be displayed.  The
+   symbol will replace a separating space that would have been
+   output in the position.  If you want the space, you can
+   provide G on either side (or both sides) of the M.
+
+N  (number) causes the display of an 8-bit byte as an unsigned
+   positive decimal number.  There will be no leading zeroes in
+   the display; so the length of the display depends on the size
+   of the number.
+
+O  causes a display of a 16-bit word as a 6-digit octal number.
+   Numbers less than octal 100000 have one or more leading
+   zeroes, so that the display is always 6 digits.
+
+Q  causes a display of a single byte as a 3-digit octal number.
+   Numbers less than octal 100 have one or more leading zeroes,
+   so that the display is always 3 digits.
+
+S  causes the display of an entire null-terminated string, using
+   the C-format for each character of the string.  The
+   terminating null (hex 00) does not generate a display (if you
+   want it to, specify SUC instead of S).  If a null is not found
+   and the display line fills, then the S-specifier is cut off in
+   mid-string.  Any continuation line would start up at the
+   beginning of the format specification, at the mid-string place
+   in memory.
+
+T  causes the display of a single ASCII text byte, with a
+   guaranteed display space of one character.  The character
+   displayed is the same as the second character of the A-format.
+   This means that you will not be able to tell the difference
+   between normal, displaying ASCII characters, and their control
+   and non-ASCII counterparts.  You gain a compact
+   representation, but you also gain ambiguity.
+
+U  (unskip) causes the memory display pointer to decrement by one
+   byte.   No display is generated by this command.  This command
+   is useful in several contexts:
+
+   * displaying memory in more than one format.  For example, the
+     specification 8b8u2g8a gives a hex-and-ASCII side-by-side
+     display, similar to that provided by many memory dump
+     programs.
+
+   * displaying memory out of its sequence order.  To test your
+     understanding of the special-action letters in a format
+     specification, you should convince yourself that the
+     specification xb2ujbx99/ gives the same display on the
+     following " continuation line as the specification w/ does.
+
+   * displaying the count byte consumed by the @ character.  For
+     example, instead of @t, you could specify nu@t, which would
+     display the string count as well as the string.  If memory
+     were 05 41 42 43 44 45, this would be 5 ABCDE.
+
+W  causes a display of a 16-bit word as a 4-digit hex number.
+   Numbers less than hex 1000 have one or more leading zeroes, so
+   that the display is always 4 digits.
+
+X  causes the debugger to skip over the memory byte currently
+   pointed to, without displaying it.  The memory pointer is thus
+   incremented.
+
+Z  is given immediately following another format letter.  It
+   causes the display to fill out the line with displays of the
+   given preceding format; but instead of starting with the given
+   address, the debugger starts with a lower address, and
+   displays memory up to but not including the given address.
+
+   The most common usage of Z is to display the memory just
+   output by a moving output pointer.  For example, in the 8086
+   debugger, you could specify bz,es,di to display the hex bytes
+   most recently output by the STOSB instruction.
+
+   Note that Z makes sense only in a limited number of contexts.
+   You will almost certainly want to use Z only as the second
+   letter of a two-letter specification, as in the example above.
+   I further recommend that you use a format letter that
+   generates a fixed length display; i.e., B,W,Q,O,T, or C.  If
+   you use a variable length display (N,D, or A), the debugger
+                                                              25
+
+   will be as pessimistic as possible about the number of display
+   characters needed, so that the display will likely terminate
+   before the end of the line.
+
+   A continuation of a Z-line will produce the same output as the
+   original line.  If you want to continue beyond the address
+   given, repeat the specification without the Z.
+
+
+The Data Memory Window
+
+You may cause the switchable window in the upper right quadrant
+of the screen to display 14 lines of memory, continuing from the
+last of the lines you specified within the 6-line memory area. To
+do this, you:
+
+1. Type a format-and-address specification on one of the numbered
+   memory lines, as previously described in this chapter.  For
+   example, to display Bytes at location DS:0100, type 6b,ds,0100
+   followed by the Enter key.
+
+2. If you have already selected the memory window, you'll
+   automatically have a continuation of the memory line you just
+   specified, into the upper right quadrant of the screen.  If
+   not, you may select the window by pressing either the Ctrl-N
+   or Ctrl-P keys.
+
+Once you have set up a 14-line window, you may page through
+memory with the Ctrl-N (Next memory page) and Ctrl-P (Previous
+memory page) keys, described in Chapter 4.
+
+If, after having pressed Ctrl-N or Ctrl-P several times, you wish
+to return to the first window continuing from the address you
+specified, you may do so by typing the digit (1 to 6) of the last
+specification line, followed immediately by the Esc key to
+preserve the specification settings.  The memory window will be
+reset to its continuation value.  For example, if your
+specification was on line 6, you type 6 followed immediately by
+the Esc key.
+
+If you want your 14-line memory window to start at a certain
+address instead of continuing from a 1-line display, you can
+separate the format and the address with a slash instead of a
+comma.  For example, if you want Words at location ES:0, type 6
+followed by w/es,0 followed by the Enter key.
+                                                              26
+
+
+CHAPTER 7    FLOATING POINT DEBUGGING
+
+If your machine has a floating-point processor, D86 gives you the
+best facilities for debugging code for the processor (which I
+generically refer to as "the 87").
+
+The display of the 87's state can be obtained by pressing the
+Ctrl-F key.  If you don't have an 87 in your system, you won't
+get the display.
+
+You can also display floating point numbers displayed in 86
+memory, by using the FD, FQ, and FT specifiers described in
+Chapter 6.
+
+In the displays of floating point numbers, both on the 87 stack
+and in 86 memory, I've taken great care to provide a display that
+is both readable and accurate.  I rejected the algorithms for
+display found in the popular reference books on the subject,
+because they failed for several classes of extreme values.
+
+
+The Floating Point Display Window
+
+The floating point display you get with Ctrl-F contains the
+following components:
+
+1. The top 8 lines contain the contents of each floating point
+   register.  The registers are displayed as a stack, with ST(0)
+   on top, numbered with "0:".  The format of the display depends
+   on whether the number is a plain, normal number, or whether it
+   is one of the exotic, non-normal types the 87 supports.  I'll
+   briefly describe the exotic types at the end of this chapter.
+   The possible displays are:
+
+   ----       (four hyphens), denoting a stack slot tagged empty.
+
+   nnn        a decimal number, displayed in scientific notation
+              if necessary.
+
+   Infinity   for an overflowed result.
+
+   NaN        for Not a Number, followed by the hex codes of the
+              significand field of the NaN
+
+   Den        for denormal, followed by the number of bits of
+              precision lost, followed by the value of the
+              number.
+
+   Unn        for unnormal, followed by the number of bits of
+              precision lost, followed by the value of the
+              number.
+
+   Pseudo 0   for a pseudo zero, followed by the contents of the
+              exponent field.
+
+2. English-language displays for the infinity, precision, and
+   rounding mode settings for the chip.
+
+3. The value of the instruction pointer for the instruction that
+   caused the last floating-point exception.  If all exceptions
+   are masked this doesn't change.
+
+4. The address of the memory operand for the instruction that
+   caused the last floating-point exception.  If all exceptions
+   are masked this doesn't change either.
+
+5. The value of the Tag register, for registers 7 through 0.
+   These register numbers are NOT the same as the stack element
+   numbers -- they are rotated by the value of ST, given on the
+   next line.  The possible values for the Tag register fields
+   are:
+
+   f   for finite non-zero number
+   z   for zero
+   i   for infinite number
+   -   for empty slot
+
+6. The value of the stack pointer ST.  The tag-register number
+   for ST(i) is ST plus i.
+
+7. A display of which 87 exceptions are masked; i.e., will not
+   cause interrupts.  If the exception is masked, its letter is
+   displayed.  If it is not masked (interrupt will occur), a
+   blank is displayed.  The letters are:
+
+   p   for precision exception
+   u   for underflow exception
+   o   for overflow exception
+   z   for zero-divide exception
+   d   for denormal exception
+   i   for invalid operation exception
+
+8. A display of which masked exceptions have occurred since the
+   last time the status bits were cleared.  The exceptions have
+   the same letters as the masked display.
+
+9. A display of the 87 Condition Flags C3 through C0.  A
+   displaying character is shown if the flag is set; a blank is
+   shown if the flag is cleared.  The characters are:
+
+   z  for C3  (corresponds to the Zero flag)
+   u  for C2  (set if a result is "unordered")
+   .  for C1
+   c  for C0  (corresponds to the Carry flag)
+
+10. Another display of C3 through C0, this time showing the
+   results of an FXAM instruction.  This display is always
+                                                              27
+
+   present, even when FXAM is not the last flag-setting
+   instruction executed (in which case the display is
+   meaningless).
+
+
+Exotic Flavors of Floating Point Numbers
+
+Some of the types of numbers possible in the floating point
+register display may seem a little strange to you if you haven't
+had much experience with the 87.  It's a bit beyond the scope of
+this manual to go into detail about them -- you should consult a
+book on the theory of floating-point processing, for a detailed
+discussion.  But here are brief descriptions to give you a bit of
+an idea of what's going on:
+
+NaN (Not-a-Number) values are used to represent results that are
+totally different than any floating-point number that could be
+provided.  A specific NaN (with hex value C000 0000 0000 0000) is
+produced by the 87 whenever it can't cope with something, and the
+Invalid Operation exception is masked.  Other NaN values might be
+loaded by a program from 86 memory, to be interpreted in any way
+the program chooses.
+
+For the rest of this discussion, let's introduce a little
+terminology.  Floating point numbers use a format that follows
+the same principle as scientific notation.  In scientific
+notation, one part of the number gives the significant digits of
+the number, always "normalized" to fall between 1 and 10. Another
+part of the number gives the magnitude of the number: the power
+of ten that you multiply the first part by, to get the true
+value.  For example, 2.34 * 10**2 is a normal, scientific
+notation for 234.  (It can be written in A86 as 2.34E2).  2.34 *
+10**-2 is a normal scientific notation for 0.0234.  Note that
+0.234 * 10**-1 is a non-normal representation for the same
+number: we have increased the size of the exponent from -2 to -1,
+but the significant part is less than 1 instead of being between
+1 and 10.
+
+In the 87 formats, everything is binary, with bits instead of
+digits.  There is a "significand" field, normalized whenever
+possible so that the most significant bit is 1 (the value is
+between 1 and 2).  There is the "exponent" field, giving the
+(positive or negative) power of two that you multiply the
+significand by, to get the true value.
+
+Denormals are produced when the result of an operation is non-
+zero, but is so tiny that its exponent is a negative number too
+small to be represented in the 15-bit exponent field of an 87
+register.  There is a trick called "gradual underflow" that makes
+the best of the situation: the smallest possible exponent is
+given, together with leading zeroes in the significand to signal
+a further reduction in the exponent.  Each leading zero means
+there is one less bit with which to represent the significand.
+
+You can see denormals in action by typing Ctrl-F to get the
+floating-point display, then typing the following commands to be
+executed immediately:
+
+     FINIT
+     FLD 10.0
+     FLD 1.E-4931
+     FDIV 1
+
+The result of the division is a denormal because 10 ** -4932 has
+a power-of-two exponent too small to be represented in the 15-bit
+exponent field of the 87 register.  The display indicates that 2
+bits of precision have been lost -- two leading zeroes have been
+forced into the significand field of the number.
+
+Now press the F3 key to divide the number by another 10.  Now 5
+bits of precision have been lost.  If you keep pressing the F3
+key, you get more and more bits of precision lost.  The loss in
+accuracy shows up in the number displayed.  Eventually, all bits
+are lost, and the number collapses to zero.
+
+What happens when we multiply a denormal number by 10, instead of
+dividing it by 10?  The number becomes big enough to no longer
+require the denormalization; but there's no way to recover the
+bits of precision that have been lost.  To signal that bits have
+been lost, the 87 retains the leading zeroes in the significand.
+                                                              28
+
+Numbers containing such zeroes without the minimum exponent are
+called "unnormals".
+
+A certain kind of unnormal is a "pseudo-zero", obtained when all
+the bits of precision are lost.  This can happen when you
+multiply two unnormals.  The number of leading zero bits
+(precision bits lost) of the answer is the sum of the bits lost
+of the operands.  If the total is 64 bits or more, all precision
+is lost -- the significand is zero.  But the exponent field is
+nonzero, which brands the number as strange -- a true zero has
+zeroes in the entire number, including the exponent field.
+                                                              29
+
+
+CHAPTER 8   COMMONLY ASKED QUESTIONS
+
+
+Setting Registers
+
+Q: Why isn't there a debugger command to modify register
+settings?
+
+A: You can do so with an immediate assembly language command. For
+   example, to set the AX register to 100 type MOV AX,100 . You
+   can now also set segment registers this way: MOV DS,0 REMEMBER
+   that if there isn't a leading zero, all constants fed to D86
+   are assumed to be decimal.  If you want hex constants, supply
+   a leading zero.
+
+Q: How do you reset the CS register?  MOV CS,value doesn't work.
+
+A: You issue a far JMP instruction to be executed immediately.
+   For example, to set CS to 0 and IP to 400 hex, type JMP 0:0400
+
+
+Modifying Memory
+
+Q: Why aren't there commands for changing memory to different hex
+   values, or for filling memory with a given value?
+
+A: You can do this very effectively with D86's patch memory mode.
+   Just issue an immediate JMP to the location you want modified,
+   press the F7 key to enter patch-memory mode, and then issue
+   any A86 directive to initialize memory: DB for bytes, DW for
+   words, DD for doublewords, etc.  Remember, you have the full
+   power of the A86 language at your disposal.  You can provide
+   lists of values on a single line:
+
+   DW 0100,0101,MY_SYMBOL
+
+   You can make ASCII initializations with strings on DB lines:
+
+   DB 'This is a string',0D,0A,0
+
+   You can use the DUP construct to fill memory with a given
+   value or sequence of values:
+
+   DB 100 DUP 0, 10 DUP (1,2,3)
+
+
+Debugging ROM
+
+Q: I tried stepping into a ROM BIOS routine.  It worked for a
+   while, but when I got to a certain instruction and stepped,
+   the computer crashed.  What's wrong?
+
+A: My official policy on stepping into ROM is, "all bets are
+   off".  D86 does better than many debuggers at stepping into
+   ROM, but there are still some fairly insurmountable problems.
+   First, D86 itself calls the BIOS.  Not all BIOS routines are
+   reentrant; you could get unfortunate interactions between the
+   call being stepped and calls made by D86 while you are
+   stepping.  Second, ROM cannot be modified and hence traps
+   cannot be set within ROM.  D86 doesn't try to detect failed
+   trap-setting, so the program may be set loose in situations
+   where D86 thinks (and you think) it will retain control.
+
+   This will always happen if you try to step a whole CALL in
+   ROM.  It will also happen if you try to use the F1 key on an
+   instruction that loads a segment register.  For arcane
+   reasons, the single-stepping feature built into the 8088
+   doesn't work on such instructions, so D86 must single step
+   them with a trap.  Thus, F1 on a segment-loading instruction
+   in ROM will set the program loose.
+                                                              30
+
+
+CHAPTER 9    RELEASE HISTORY AND FUTURE PLANS
+
+
+Release History of D86
+
+All releases include bug fixes.
+
+V2.15  August 1986.  Initial public release of the MSDOS version
+       of D86. The last previous version ran under the Xenix
+       operating system on the Altos series of computers. I
+       improved the invocation syntax, incorporated IBM function
+       keys into the interface, and added on-line help.
+
+V2.16  August 1986.  Added the ability to make forward references
+       in patch-memory mode.
+
+V2.18  November 1986.  Added the "O" command, to trap INT 33
+       calls.
+
+V2.22  April 1987.  Release in conjunction with A86 V3.00.  Added
+       support for new 286 and NEC-specific instructions.  Added
+       "F" command, and Shift-F7 commands.  Added the floating
+       point window.
+
+V3.09  August 1987.  Major upgrade: first product-quality
+       release.  Added support for EXE files, some support for
+       BAT files, second disassembly window, extended memory
+       display window, status window, floating point memory
+       display types, backwards paging and sensible Up-Arrow, W
+       command to write program and symbols to disk, enhanced
+       Home key, Ctrl-T set top-of-stack key, and Ctrl-E
+       go-to-end key.
+
+V3.10  September 1987.   Trap INT 020 and INT 027.
+
+V3.15  May 1988.  Added data breakpoint for 386-based machines,
+       available to registered users only.
+
+V3.18  July 1988.  Added MAPD86 tool for registered users only.
+
+V3.20  July 1989.  Added F9 key.
+
+V3.21  August 1989.  Added Ctrl-X key, and changed F1 not to step
+       into interrupts.
+
+V3.22  January 1990.  Added support for the IIT-2C87 and 80387
+       coprocessors.
+
+V3.70  January 1994.  Test release in conjunction with A86 V3.70
+       test release.
+
+V4.00  December 1994.  Added the keystroke-script-saving
+       facility, with the K command, the S system-functions
+       command, the Undo command, default key scripts, and
+       Alt-letter key scripts. Changed F2 to single-step loops
+       and jumps, making the F5 key the "trap next instruction"
+       that F2 had been.
+
+V4.01  March 1995.
+
+V4.02  September 1995.
+
+V4.03 January 1996.
+
+
+Future Plans
+
+I'd like to thank all of you who have supported A86 and D86 so
+far with your registrations.  Your support has allowed me to
+spend the past thirteen-plus
+ years working exclusively on my shareware products.
+
+D86 improvements have been slower to implement than I hoped.  I
+still wish to provide the ability to save and switch to/from the
+program's full screen, and to interrupt a running program from
+the keyboard.  I hope I can get to those eventually.  I will also
+be exploring programming for the Windows environment (my ZIPKEY
+customers are screaming for a Windows version!), and may bring
+out tools and/or new A386/D386 features associated with that.
+                                                              31
+
+INDEX
+
+386 breakpoints, 16
+87 debugging, 26
+A  memory specifier, 23
+adding symbols, 12
+address, my, 3
+addresses, displaying, 23
+advantages of D86, 3
+Alt-F10 key, 13
+ALT-letter commands, 18
+ALTx.D8K file, 18
+arrays, displaying, 21
+ASCII byte, 2-character display, 23
+at-sign format specifier, 23
+B  memory specifier, 23
+B breakpoint command, 16
+BAT files and D86, 9
+benefits of registration, 4
+BIOS output, forcing, 10
+BIOS switching, D86, 10
+blanking memory display lines, 21
+breakpoints on data references D, 16
+breakpoints on system calls with O, 19
+breakpoints, clearing B, 16
+breakpoints, displaying B, 16
+breakpoints, fixed B, 16
+breakpoints, transient G, 17
+British contact, 3
+bugs, reporting, 5
+C  memory specifier, 23
+CALL commands, immediate, 11
+Carry flag, demo, 7
+color monitor, 10
+COM files, debugging, 9
+commands, classes of D86, 11
+commonly asked questions, 29
+Compuserve section, 5
+condition flags, floating, 26
+conditional destination trap F4, 15
+contacting me, 5
+continuation of memory display, 22
+control keys, display, 13
+copying files within D86, 19
+count byte, displaying, 24
+crashing while debugging ROM, 29
+credit cards, 3
+CS register, setting, 29
+CS trickiness and D86, 11
+CS, strange values, 18
+Ctrl-D key, 14
+Ctrl-E key, 14
+Ctrl-F key, 13
+Ctrl-I key, 13
+Ctrl-K with K command, 18
+Ctrl-M key, 15
+Ctrl-M with K command, 18
+Ctrl-N key, 13
+Ctrl-P key, 13
+                                                              32
+
+Ctrl-Q key, 13
+Ctrl-R key, 15
+Ctrl-S key, 13
+Ctrl-T key, 15
+Ctrl-U key, 14
+D  memory specifier, 23
+D86 environment variable, 10
+D86.D8K file, 18
+D86_BUFFER, 11
+D8K script files, 18
+data, entering into memory, 12
+debugger commands, 16
+DEC Rainbow BIOS switch, 10
+decimal byte N memory specifier, 24
+decimal word D memory specifier, 23
+decrementing IP, 14
+deleting files within D86, 19
+demonstration, D86, 6
+Den denormal display, 26
+denormals, 27
+denormals, example, 27
+DI, displaying before, Z, 24
+disassembly page, second, 13
+disassembly to a file, 19
+disassembly, paging, 14
+disassembly, synchronizing, 14
+display control keys, 13
+display of multi-format memory, 24
+displaying before a memory address, Z, 24
+DOS call breakpoints O, 19
+double quotes for memory continuation, 22
+Down-Arrow key, 14
+e-mail address, 5
+electronic mail, 5
+End of program, jump to, 14
+English contact, 3
+entering symbols, 12
+environment variable, D86, 10
+equals sign format specifier, 23
+erasing memory display lines, 21
+ESC key to preserve memory display, 22
+ET-100 BIOS switch, 10
+exception pointer display, 26
+exceptions, 87 display, 26
+EXE files, debugging, 9
+EXE files, recognizing, 9
+execution keys, 14
+exit breakpoint, permanent, 19
+exiting the debugger, 19
+exotic flavors of floating-point numbers, 27
+exponent field, 27
+F  memory specifiers, 23
+F command, 17
+F1 key, 14
+F10 key, 13
+F2 key, 15
+F3 key, 15
+F4 key, 15
+F5 key, 15
+                                                              33
+
+F6 key, 15
+F7 key in D86, 12
+F9 key, 15
+FD memory specifier, 23
+file,  D86 program, 9
+file, symbols, and D86, 9
+files, copying and deleting, 19
+finding strings in memory F, 17
+finding the D86 program file, 9
+fixed breakpoints, setting B, 16
+flags display, D86, 11
+flags, D86 demo, 6
+floating point memory display, 23
+floating window key, 13
+floating-point debugging, 26
+flushing keystrokes, 18
+format specifiers, special action, 23
+formats, mixed memory, 22
+forward references, patch mode, 12
+FQ memory specifier, 23
+frozen at INT 021 due to exit function, 19
+FT memory specifier, 23
+future plans, D86, 30
+FXAM setting display, 26
+G  memory specifier, 23
+G command, 17
+gap memory specifier, 23
+gradual underflow, 27
+Great Britain contact, 3
+hardware compatibility, D86, 10
+help mode, toggling, 13
+help-mode key, 13
+here, go until, F9 key, 15
+hex byte B memory specifier, 23
+hex word W memory specifier, 24
+HEXOUT.8, 6
+history of D86, 30
+Home key to restore IP, 14
+Home key, 14
+how to contact me, 5
+IBM-PC BIOS switch, 10
+immediate assembly language commands, 11
+immediate-execute, demo, 6
+incentives to register, 4
+incrementing IP, 14
+infinity display, 26
+infinity mode display, 26
+instruction pointer positioning, 14
+Internet mail address, 5
+invocation switches, D86, 10
+invoking D86, 9
+IP down and up keys, 14
+IP, positioning, 14
+J  memory specifier, 23
+J command, 18
+JMP commands, immediate, 11
+joining memory displays, 23
+jumping within a strange CS, 18
+K command, 18
+                                                              34
+
+keys, display control, 13
+keystroke scripts, 18
+L  memory specifier, 23
+L command, 19
+last command, F3 repeat, 15
+last execution point, return to, 14
+legal terms, 3
+length byte, displaying, 24
+length-byte specifier, 23
+letter commands, D86, 16
+letters, lower-case display, D86, 11
+line memory display, 23
+loops, breaking past, 15
+M  memory specifier, 24
+machine switches, D86, 10
+MAPD86 tool, 9
+mark location for F key, 15
+mark location for K key, 15
+mark memory display, 24
+marked location, use of with F, 17
+masked exceptions display, 26
+memory accesses, trapping on, 16
+memory display continuation, 22
+memory display, 21
+memory display, demo, 7
+memory display, floating point, 23
+memory display, preserving, 22
+memory displays, erasing, 21
+memory formats, simple, 21
+memory modifying examples, 29
+memory window display key, 13
+memory window, reset after paging, 25
+memory, altering, 12
+mixed memory formats, 22
+MODE command, 10
+mode displays, floating-point, 26
+monochrome monitor, 10
+MOV to segment registers in ROM, 29
+MS-DOS function breakpoints O, 19
+multi-format side-by-side display, 24
+N  memory specifier, 24
+NaNs, 27
+next instruction, trapping, 15
+next memory page key, 13
+NOPs in D86 display, 9
+Not-a-Number, 27
+null-terminated string display, 24
+NULL.D8K file, 18
+numbered memory windows, D86, 11
+numbers in a memory format, 22
+O  memory specifier, 24
+O command, 19
+octal byte Q memory specifier, 24
+octal word O memory specifier, 24
+online support, 5
+operands to debugger commands, 16
+operating requirements, D86, 9
+output strings, displaying via Z, 24
+overview of D86, 4
+                                                              35
+
+paging the disassembly, 14
+patch memory, demo, 8
+patching memory, 11
+PATH and keystroke scripts, 19
+Path variable and programs, 9
+PgDn key, 14
+PgUp key, 14
+phone number, my, 3
+plans, D86, 30
+playing back keystrokes, 19
+precision mode display, 26
+precision, loss of, 27
+previous memory page key, 13
+prices, 3
+procedure-stepping F2 key, 15
+program file, D86 finding, 9
+program file, status, 10
+program start, go to, 14
+program, saving patched, 20
+Pseudo zero display, 26
+pseudo-zeroes, 28
+PSP for immediate-buffer, 11
+Q  memory specifier, 24
+Q command, 19
+questions, commonly asked, 29
+quitting the debugging session, 19
+quotes, double, for memory continuation, 22
+redo an undone keystroke, Ctrl-R, 15
+registers, floating-point, 26
+registers, non-hex display of, 23
+registers, setting, 29
+registration benefit D command, 16
+registration benefits, 4
+release history, D86, 30
+repeat count, memory display, 22
+repeat last command F3 key, 15
+repeat-count specifier, 23
+requirements, D86, 9
+reset debugger session, 19
+RET commands, immediate, 11
+retracting keystrokes, 20
+return, F6 trap on, 15
+reverse engineering, 12
+revision history, D86, 30
+ROM code, CS trickiness, 11
+ROM debugging, 29
+rounding mode display, 26
+S  memory specifier, 24
+S command, 19
+Sanyo 550 BIOS switch, 10
+saving keystrokes, 18
+saving symbols and program, 20
+scientific notation, 58, 27
+screen display, D86, 10
+searching memory F, 17
+second disassembly key, 13
+segments in memory display pointers, 21
+Shift-F7 key, 15
+side-by-side display, 24
+                                                              36
+
+sign-on display, reaching, 13
+significand, 27
+single-line memory windows, 21
+single-stepping keys, 14
+single-stepping, demo, 7
+Sirius/Victor BIOS switch, 10
+skipping backwards in memory, U, 24
+skipping forwards in memory display, X, 24
+spacing a memory display, 22
+special action control keys, 15
+special action format specifiers, 23
+stack pointer, floating-point display, 26
+stack, setting top of with Ctrl-T, 15
+start of program, go to, 14
+starting your program with G, 17
+status window key, 13
+stepping keys, 14
+STOSB memory display, Z, 24
+strings, null-terminated, display, 24
+structures, displaying, 22
+subroutine-stepping F2 key, 15
+switches, D86, 9
+SYM extension and D86, 9
+symbols file and D86, 9
+symbols, adding, 12
+symbols, saving, 20
+synchronizing disassembly, 14
+system calls, 19
+system requirements, D86, 9
+T  memory specifier, 24
+TAB key, 13
+tag register display, 26
+Tandy 2000 BIOS switch, 10
+telephone number, my, 3
+terms, legal, 3
+Texas Instruments PC BIOS switch, 10
+text, 1- or 2-byte C display, 23
+text, 1-byte T display, 24
+text, 2-character A display, 23
+tiny numbers, 27
+toggling display windows, 13
+top of stack, setting with Ctrl-T, 15
+transient breakpoints G, 17
+trap at present location F9 key, 15
+trap next instruction key F5, 15
+trapping function keys, 15
+trapping on memory accesses, 16
+two-screen debugging, 10
+U  memory specifier, 24
+U command, 20
+underflow, gradual, 27
+undoing a debugger command, 20
+Unn unnormal display, 26
+unnormals, 27
+unskipping memory display, 24
+Up-Arrow key, 14
+V switch, D86, 10
+version history, D86, 30
+vertical bars display, 24
+                                                              37
+
+W  memory specifier, 24
+W command, 20
+Wang-PC BIOS switch, 10
+Wettstein, Greg, 5
+window, 14-line memory, 25
+window, memory, reset after paging, 25
+Windows plans, 30
+windows, memory display, 21
+writing program and symbols files, 20
+X  memory specifier, 24
+Z  memory specifier, 24
+Zenith BIOS switch, 10
+

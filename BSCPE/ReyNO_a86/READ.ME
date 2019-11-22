@@ -1,0 +1,70 @@
+A86 macro assembler, V3.72                 September 20, 1994
+Copyright 1986--1994 Eric Isaacson.
+All rights reserved.
+
+See the text file A01.DOC for permissions/restrictions.
+
+This package is the new release of the A86 assembler.  Please
+upload it to bulletin boards, and give it to user groups, 
+computer departments in schools, and anyone else you think might 
+be interested in an assembler package for the IBM-PC. 
+
+You need to read the manual to use this program -- it's 
+just too complex to be self-explanatory.  The file A02.DOC
+takes you through a trial demonstration. 
+
+
+What's New
+
+V3.72 and V3.71 fix a few bugs.
+
+V3.70 adds numerous major features to A86.  Let's cover the 
+INCOMPATIBILITIES first, so you will know where to tweak your 
+existing code: 
+
+* Error messages in A86 now have a slightly different format (on 
+  their own line with a pointer to the error location). If you 
+  have any source code lying around with old-format error 
+  messages, get rid of the messages before reassembling with 
+  this new version -- this version cannot handle them. 
+
+* I have changed the L switch to the G (code Generation) switch 
+  to prepare for L becoming a Listing-control switch. I have 
+  also changed the X switch to +G16, to prepare for X becoming 
+  the XRF control switch.  If you have any batch files or A86 
+  environment-flag settings with +L or +X in them, change them 
+  to +G for this new version. 
+
+* The DATA SEGMENT now has a default ORG value of END; that is, 
+  it starts at the end of your program, unless you have an ORG 
+  otherwise.  V3.20--V3.22 of A86 outlawed ORGless DATA segments,
+  in anticipation of this feature.  Versions before that had a
+  default ORG of 0 -- if you have source code written for a 
+  pre-V3.20 version of A86, make sure you put ORG 0 at the start
+  of the first DATA SEGMENT if it was ORG-less. 
+
+Other new features include an INCLUDE directive (Chapter 9), a 
+listing facility (Chapters 3 and 13), END operand value (Chapter 
+9), pulling XREF and EXMAC functions into the assembler (Chapter 
+13), operand to EVEN (Chapter 9), the removal of the limit on 
+the length of a source file, the removal of most restrictions on 
+forward-references within expressions, the ability to ORG in the 
+DATA segment and structures to a forward-reference value, the 
+REF and DEF operators (Chapter 9), the K numeric base (Chapter 
+10), numeric operands to STOSx and MOVSx (Chapter 5), and macros 
+in an A86LIB library (Chapter 13). 
+
+
+How to Get Everything
+
+If you have downloaded the A86Vxxx.ZIP file from a BBS, you need
+only make a subdirectory on your hard drive, make that the
+current subdirectory, then run the program PKUNZIP or PCUNZIP
+followed by the name of the ZIP file.  The program will "unzip"
+(decompress) all the files of the package into your subdirectory.
+
+There is an associated debugger, in a file D86Vxxx.ZIP, that you
+may wish to look for in the same sources from which you received
+this A86 package.
+
+

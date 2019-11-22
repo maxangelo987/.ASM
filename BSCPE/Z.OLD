@@ -1,0 +1,175 @@
+.model small
+.code
+org 100h
+jmp main
+
+
+asc db 00
+row db 08
+col db 39
+temp db 00
+
+
+main proc near
+call clr
+mov ah, 03h
+int 10h
+
+
+ascii:
+mov dx, 0100h
+call setcur
+
+
+mov cx, 1024
+lea dx, asc
+
+
+again:
+mov ah, 09h
+int 21h
+inc asc
+loop again
+
+
+center:
+mov dh, row
+mov dl, col
+call setcur
+
+
+key:
+mov dh, 07h
+int 21h
+cmp al, 'w'
+je up
+cmp al, 's'
+je down
+cmp al, 'd'
+je right
+cmp al, 'a'
+je left
+cmp al, 'x'
+je exit
+jmp key
+
+
+up:
+dec row
+cmp row, 00
+je down
+call read
+jmp center
+
+
+down:
+inc row
+cmp row, 24
+je up
+call read
+jmp center
+
+
+right:
+inc col
+cmp col, 79
+je left
+call read
+jmp center
+
+
+left:
+dec col
+cmp col, 00
+je right
+call read
+jmp center
+
+
+terminate:
+int 20h
+
+
+setcur proc near
+mov ah, 02
+mov bh, 00
+int 10h
+ret
+setcur endp
+
+
+read proc near
+mov ah, 08h
+mov bh, 00
+int 10h
+
+
+cmp al, 'r'
+je red
+cmp al, 'R'
+je red
+cmp al, 'b'
+je blue
+cmp al, 'B'
+je blue
+cmp al, 'g'
+je green
+cmp al, 'G'
+je green
+cmp al, 'l'
+je blink
+cmp al, 'L'
+je blink
+
+
+red:
+add temp, 04
+call color
+jmp ascii
+
+
+blue:
+add temp, 01
+call color
+jmp ascii
+
+
+green:
+add temp, 02
+call color
+jmp ascii
+
+
+blink:
+add temp, 80h
+call color
+jmp ascii
+
+
+read endp
+
+
+color proc near
+mov ah, 06
+mov al, 00
+mov bh, temp
+mov cx, 0000h
+mov dx, 184fh
+int 10h
+ret
+color endp
+
+
+clr proc near
+mov ah, 06h
+mov al, 00
+mov bh, 07h
+mov cx, 0000h
+mov dx, 184fh
+int 10h
+ret
+clr endp
+
+exit:
+mov ax, 4c00h
+int 21h

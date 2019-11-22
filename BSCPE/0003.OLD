@@ -1,0 +1,44 @@
+.model small
+.code
+org 100h
+jmp begin
+
+plist label byte
+maxlen db 13
+actlen db ?
+kybd db 14 dup ('$'),0ah,0dh
+word1 db 'Enter String: '   ; word1 consist of Enter String define byte
+      db '$'
+word2 db 'Output',0ah,0dh
+      db '$'
+sp db ' ',0ah,0dh
+   db '$'
+
+begin: main proc near
+
+mov ax, 03h ; clrscr
+int 10h
+
+mov ah, 09h    ; printing Enter String
+lea dx, word1
+int 21h
+
+mov ah,0ah  ; scaning string
+lea dx, plist
+int 21h
+
+
+mov ah, 09h  ; print sp
+lea dx, sp
+int 21h
+
+mov ah, 09h ; printing what you inputed
+lea dx, kybd
+int 21h
+
+
+mov ax, 4c00h ; terminating
+int 21h
+
+main endp
+end begin

@@ -1,0 +1,28 @@
+
+.model small
+.code
+org 100h
+jmp main
+
+
+main proc near
+
+mov ah, 00h
+mov al, 13h
+int 10h
+
+mov ds, 40960 ; a000h = 40960 decimal
+mov ax, 44h ; 44h is yellow
+
+START:
+mov [si], 00
+cmp si, 20
+JL START
+
+
+
+mov ax, 4c00h
+int 21h
+
+main endp
+end main

@@ -1,0 +1,51 @@
+
+
+.model small
+.code
+org 100h
+jmp main
+plist label byte
+max db 20
+act db ?
+des db 21 dup(' '),'$'
+kb  db 0ah,0dh,'$'
+main proc near
+  mov ax,03h
+  int 10h
+  mov ah,0ah
+  lea dx,plist
+  int 21h                
+  mov bl,act
+a1:  
+  lea di,des
+  mov cl,act
+
+
+
+a2:
+  mov al,'*'
+  mov [di],al
+  inc di
+ ; dec cl
+;  jnz a2
+  mov ah,09h
+  lea dx,des
+  int 21h
+  loop a2
+  mov ah,09h
+  lea dx,kb
+  int 21h
+
+  dec bl
+  jnz a1
+end:
+
+   mov ax,4c00h
+   int 21h
+
+main endp
+  end main
+
+  
+
+  

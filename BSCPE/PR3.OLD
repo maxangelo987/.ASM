@@ -1,0 +1,42 @@
+﻿.model small
+.code
+org 100h
+jmp main
+
+map1 db   '                                                                         ',0ah,0dh
+	db   '       ²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²           ',0ah,0dh
+        db   '       ²²                                ²²²                           ',0ah,0dh
+        db   '       ²²                                ²²²                           ',0ah,0dh
+        db   '       ²²                                ²²²                           ',0ah,0dh
+        db   '       ²²                                ²²²                         ',0ah,0dh
+        db   '       ²²                                ²²²                           ',0ah,0dh
+        db   '       ²²                                ²²²                           ',0ah,0dh
+        db   '       ²²                                Û²²                           ',0ah,0dh
+        db   '       ²²                                Û²²                           ',0ah,0dh
+	db   '       ²²                                Û²²                           ',0ah,0dh
+	db   '       ²²                                ²²²                           ',0ah,0dh
+	db   '       ²²                                ²²²                           ',0ah,0dh      
+	db   '       ²²                                ²²²  " UNBLOCK KING "         ',0ah,0dh
+        db   '       ²²                                ²²²    using a86              ',0ah,0dh
+        db   '       ²²                                ²²²                           ',0ah,0dh
+        db   '       ²²                                ²²²                           ',0ah,0dh
+        db   '       ²²                                ²²²                           ',0ah,0dh
+        db   '       ²²                                ²²²                           ',0ah,0dh
+        db   '       ²²                                ²²²                           ',0ah,0dh
+	db   '       ²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²                           ',0ah,0dh,
+        db   '                                                                          ',0ah,0dh,'$'
+
+		
+main proc near
+ mov ax, 03h
+ int 10h
+  
+ mov ah, 09h
+ lea dx,  map1
+ int 21h
+ 
+ mov ax, 4c00h
+ int 21h
+ 
+ main endp
+ end main

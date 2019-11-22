@@ -1,0 +1,48 @@
+CpE 221 - Data Structures and Algorithms Analysis
+[NOTE: The Difficulty of the C++ Programs are not arrange.]
+C++; P.S. - All of the programs uses the common functions:
+cout, cin, system("PAUSE").
+
+cout<<""; - printing 
+cin>>; - scan a data type
+system("PAUSE"); - pausing the screen or get character or scanning char
+
+(?) - Unfinished or uncertain programs.
+
+
+
+// (0000000000) Oban Numbers,
+// Example: 4, Four - Oban
+// (stack, class function) <CpE221/Engl1>
+
+// (0000000010) RNO Program <CpE221/Mathematics>
+
+// (0000000001) RNO Program <CpE221/Mathematics>
+
+// (0000000001) RNO Program <CpE221/Mathematics>
+
+// (0000000001) RNO Program <CpE221/Mathematics>
+// (0000000001) RNO Program <CpE221/Mathematics>
+// (0000000001) RNO Program <CpE221/Mathematics>
+// (0000000001) RNO Program <CpE221/Mathematics>
+// (0000000001) RNO Program <CpE221/Mathematics>
+// (0000000001) RNO Program <CpE221/Mathematics>
+// (0000000001) RNO Program <CpE221/Mathematics>
+// (0000000001) RNO Program <CpE221/Mathematics>
+// (0000000001) RNO Program <CpE221/Mathematics>
+// (0000000001) RNO Program <CpE221/Mathematics>
+// (0000000001) RNO Program <CpE221/Mathematics>
+// (0000000001) RNO Program <CpE221/Mathematics>
+// (0000000001) RNO Program <CpE221/Mathematics>
+// (0000000001) RNO Program <CpE221/Mathematics>
+// (0000000001) RNO Program <CpE221/Mathematics>
+// (0000000001) RNO Program <CpE221/Mathematics>
+// (0000000001) RNO Program <CpE221/Mathematics>
+// (0000000001) RNO Program <CpE221/Mathematics>
+// (0000000001) RNO Program <CpE221/Mathematics>
+// (0000000001) RNO Program <CpE221/Mathematics>
+// (0000000001) RNO Program <CpE221/Mathematics>
+// (0000000001) RNO Program <CpE221/Mathematics>
+// (0000000001) RNO Program <CpE221/Mathematics>
+// (0000000001) RNO Program <CpE221/Mathematics>
+// (0000000001) RNO Program <CpE221/Mathematics>

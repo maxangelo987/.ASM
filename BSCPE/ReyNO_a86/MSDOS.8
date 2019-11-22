@@ -1,0 +1,74 @@
+;---------------
+;   MSDOS      library module, NOT a standalone program
+;---------------
+
+; This module contains the file-access routines specific to the MSDOS operating
+;   system.
+
+; MCREAT creates a file whose path name is pointed to by DS:DX, giving the file
+;   a standard set of permissions.  Return Carry if there was an error in
+;   creating the file, with AX set to an error number.  Return NoCarry if
+;   successful, with AX set to the open-file number.
+
+MCREAT:
+  PUSH CX           ; preserve register across call
+  MOV CX,0          ; 0-code provides the standard access
+  MOV AH,03CH       ; MSDOS function number for CREAT
+  INT 33            ; call MSDOS to do the creation
+  POP CX            ; restore clobbered register
+  MOV BX,AX         ; copy file handle to BX, for convenience
+  RET
+
+
+; MREAD reads from the open-file numbered BX, to the CX bytes at DX.  Return
+;   with AX set to the number of bytes actually read.
+
+MREAD:
+  MOV AH,03FH       ; MSDOS function number for READ
+MSDOS:
+  INT 33            ; all MSDOS calls go through this interrupt
+  RET
+
+
+; MOPEN opens the file whose name is pointed to by DS:DX, with the open-mode
+;   given by the value of AL: 0 for reading, 1 for writing, 2 for both.  Return
+;   Carry if the open failed. Return NoCarry if successful; with AX set to the
+;   open-file number.
+
+MOPEN_READ:
+  MOV AL,0
+MOPEN:
+  MOV AH,03DH       ; MSDOS function number for MOPEN
+  INT 33            ; all MSDOS calls go through this interrupt
+  MOV BX,AX         ; copy file handle to BX, for convenience
+  RET
+
+
+; MCLOSE closes the open-file numbered BX.
+
+MCLOSE:
+  MOV AH,03EH       ; MSDOS function number for CLOSE
+  JMP MSDOS         ; jump to call the operating system
+
+
+; MWRITE writes SI bytes from CX to the open-file numbered BX.  Return Carry if
+;   the write failed, with AX set to an error number.
+
+OWRITE:             ; alternate entry point for standard output
+  MOV BX,1
+MWRITE:
+  MOV AH,040H       ; MSDOS function number for WRITE
+  JMP MSDOS         ; jump to call the operating system
+
+EWRITE:             ; alternate entry point for error-console output
+  MOV BX,2
+  JMP MWRITE
+
+
+; EXIT exits the program back to the invoking process, with a status of AL.
+
+GOOD_EXIT:
+  MOV AL,0          ; zero value indicates successful program execution
+EXIT:
+  MOV AH,04CH       ; MSDOS function number for EXIT
+  JMP MSDOS         ; jump to call the operating system

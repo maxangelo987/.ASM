@@ -1,0 +1,59 @@
+.model small
+.code
+ orh 100h
+jmp main
+
+filehandle dw ?
+plist label byte
+max db 20
+act db ?
+kybd db 21 dup ('$')
+
+nots db 'UnsuccessfulXXX','$'
+oks db 'Successful','$'
+
+main proc near
+
+	mov ax, 03h
+	int 10h
+
+	
+
+	mov ah, 0ah
+	lea dx, plist
+	int 21h
+
+
+	mov ch, 00
+	mov cl, act
+	mov bx, cx
+	mov kybd[bx], 0
+
+	mov ah, 3ch
+	;mov cx, 00h
+	lea dx, kybd
+	int 21h
+
+	jc error
+	jnc sucs
+
+	
+error:
+	mov ax, 03h
+	int 10h
+
+	mov ah, 09h
+	lea dx, nots
+	int 21h
+sucs:
+	mov ax, 03h
+	int 10h
+
+	mov ah, 09h
+	lea dx, oks
+	int 21h	
+
+
+int 20h
+main endp
+end main

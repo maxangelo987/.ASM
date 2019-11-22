@@ -1,0 +1,403 @@
+CHAPTER 13   ASSOCIATED TOOLS AND OUTPUT FILES
+
+
+Listings with A86
+
+A86 has a powerful listing facility, that allows you to tailor
+the format of your listings to your specific needs.  Because the
+listing pass adds a significant percentage to the time it takes
+A86 to execute, the listing is not produced by default.  You must
+include either a +L switch, or the name of a file with a .LST
+extension on the A86 invocation line.
+
+By default (+L but nothing else specified), an A86 listing file
+consists of a sequence of pages, each 59 lines long and 79
+characters wide.  Each page has a header line identifying A86 and
+its version number, giving the name of the program output file,
+the date and time of assembly, the name of the source file
+currently being listed, and a page number.  Note that I am not so
+obnoxious as to splash my company name over the top of every page
+of your listing!  If both a TITLE and a SUBTTL have been
+specified, the header consists of three content lines and one
+skipped line; otherwise, there are just two content lines.  Each
+listing line has a sequential line number, a hex offset and hex
+object bytes, an indicator field with "i" for include files and
+"m" for macro expansions, and the source code itself.  Nested
+includes have no special indication; nested macros are indicated
+by increasing indentation of the macro expansion line.  A86 tries
+to be intelligent about the formatting of its listings: it will
+break up the wraparound of a long line at a word if reasonable.
+It will avoid breaking up a multi-line listing of less than 10
+lines.  It will break pages at sensible locations (described in
+detail shortly, under the PAGE directive).  It will suppress
+blank lines at the top and bottom of pages (but it counts them in
+the sequential line numbering so you can tell they were there).
+
+Five A86 switches, H, I, L, T, and W, allow you to control the
+existence and characteristics of titling, pagination, page-number
+format, page break control, source line numbering, hex object
+display, and source line display.  The operation of these
+switches is described in detail in Chapter 3.  Here are some
+examples of switch settings that will produce listings meeting
+some specialized needs:
+
++L21+T0+W12+I137 produces a listing consisting only of the source
+code, with the hex offset of each line placed to the left, and
+with the line truncated at 79 columns.  Such a listing file would
+be ideal for viewing the source file while debugging on a
+primitive remote system that cannot run D86.
+
++L9+T0+W4+I128 produces a list file of just source code, with all
+conditional-assembly lines and skipped code removed.  All
+titling, pagination, line numbers, and hex codes are eliminated,
+so the list file could be renamed as a source file, and
+reassembled.  This might be useful for archival purposes, or for
+giving individualized versions of a source file to parties who
+don't need any of the conditional-assembly options you've
+programmed.
+                                                             13-2
+
++L+I186+H15+W12 produces a list file that concentrates on the hex
+output, increasing the width to 16 bytes per line, showing up to
+15 hex runover lines, and limiting the amount of source code
+shown.
+
+
+Listing Control Directives
+
+In addition to the five switches just mentioned, A86 has a number
+of source-code directives that control aspects of listings.
+
+The .NOLIST directive causes all subsequent listing to be
+suppressed, until a .LIST directive is seen.  Line numbering and
+page numbering continues during list suppression, so the result
+is as if you had text-edited the listing file to remove all the
+suppressed lines.
+
+I also offer a macro-definition control code, #H, which causes
+the suppression of the listing of macro expansion lines.  If #H
+appears anywhere within a macro definition, all calls to that
+macro will be listed as the macro call line only, showing the
+generated hex object bytes on that call line.  This allows you to
+define macros that will be listed as if they were simple machine
+instructions.  This effect can be achieved for all macros with an
+L switch setting that doesn't include the value 4 (see Chapter
+3).
+
+The TITLE directive specifies a title that will appear at the top
+of every page of the entire assembly.  The title consists of the
+first 60 characters starting with the first nonblank after the
+word TITLE on the line.  If you give more than one TITLE
+directive in a program, only the first will be recognized.
+
+The SUBTTL directive specifies a subtitle to appear at the top of
+every page until another SUBTTL directive is given (or until the
+next file change if you have the +T16 switch-bit value set).  If
+the directive is at the very top of the listing page, or it is
+shortly after an automatic page break, the subtitle will take
+effect on the page in which it appears.  Otherwise, it will take
+effect at the next page.
+
+The PAGE directive serves several purposes.  The word PAGE by
+itself will force a new page in the listing, at that point.  A
+plus sign following the word PAGE causes a new page plus an
+incremented section number -- e.g. PAGE + on page 1-17 will cause
+a new page 2-1 to begin.  The word PAGE followed by one or more
+constant parameters will set various A86 listing variables to the
+specified parameter values.  The variables are as follows:
+
+1. The length, in lines, of a listing page.  Minimum is 10;
+   maximum is 65535.
+
+2. The width, in characters, of the maximum listing line.
+
+3,4,5,6. The number of lines at the end of a page, less than
+   which A86 guarantees will not be "widowed" after a page break
+   of level 1,2,3,4, respectively.
+                                                             13-3
+
+Omitted parameters (either left off the end or via leading commas
+or 2 consecutive commas) will remain unchanged.
+
+The concept of "page break levels" is unique to A86 listings: it
+is my attempt to get A86 to make intelligent decisions about
+where to issue new listing pages.  There are 4 page break levels,
+normally triggered by gaps (consecutive blank lines) in the
+source code, and by source-file changes.  One- and two-line gaps
+cause breaks of level 1 and 2, respectively.  Three-or-more-line
+gaps cause a break of level 3.  A source-file change causes a
+break of level 4.  If a page break occurs close to the end of a
+page, and a break of greater level hasn't already been marked,
+A86 will mark the point for a potential new page.  If a page
+break of equal or greater level doesn't occur before the page is
+full, A86 will issue a new page at the marked point.  The
+definition of "close to the end of the page" is 10,20,30, and 40
+lines, respectively, for break levels 1,2,3,4.  Those line counts
+can be changed by parmeters 3,4,5,6 of the PAGE directive, as
+already described.
+
+If you are intimidated by all this, or if you want to control
+page break levels manually, you may specify a T switch value that
+does not include the "auto-paging" option value 4.  With that
+option disabled, page break levels will occur only at places
+where you issue a PAGE directive containing a special parameter
+value /1, /2, /3, or /4.  The leading slash indicates that a page
+break of the indicated level is desired here.  Such a parameter
+will typically be given by itself following PAGE; but, if you
+wish, it can be interspersed anywhere among other parameter
+values -- it will not be "counted" for the purposes of
+determining the other parameters' positions.
+
+
+
+Cross-reference Facility
+
+
+When you specify the +X switch, A86 will create a
+cross-referenced symbol table listing of your program.
+
+The output file, having a standard extension of .XRF is an
+alphabetical listing of all the non-local symbols in your
+program.  For each symbol, A86 gives its type, the file in which
+it was defined, its value, and a list of all procedures in which
+the file was used.  If you print this file, you typically use the
+TCOLS tool to obtain a multi-column listing from A86's
+single-column output.
+
+Note the use of procedure names to identify references -- this
+makes the cross-reference listing truly readable.  Other
+cross-reference listings often give either line numbers, which
+are meaningless unless you go find the associated line; or a file
+name, which doesn't give you as much useful information.
+
+Here is a more detailed description of the various pieces of
+information provided for each symbol:
+                                                             13-4
+
+1. TYPE.  Labels are indicated by a colon immediately following
+   the symbol name.  Special symbols such as macro names are
+   denoted by an appropriate word such as "macro" in place of the
+   value on the following line.  Other symbol types are described
+   by one or two characters, following the symbol name.
+   Possibilities for the first character are:
+
+        m  for a simple memory variable
+        +  for an index memory quantity
+        c  for a constant
+        i  for an interrupt equate
+        s  for a structure
+
+    If there is a second letter, it is a size attribute: b for
+    byte, w for word, f for far (or doubleword).
+
+2. FILE in which the symbol was defined.  The name is stripped of
+   its extension, which is presumably the same for all your
+   source files.  The name is preceded by = or period, which
+   denotes a definition of, not a reference to the symbol.
+
+3. VALUE, given as 4 hex digits, on the line following the
+   symbol.  For memory variables, this is the location of the
+   variable.  For indexed quantities, this is the
+   constant-displacement part of the quantity.  For structures,
+   it is the size of the structure.  For interrupt equates, it is
+   the number of the interrupt.
+
+4. REFERENCES, given on indented lines following the symbol name.
+   All occurrences of the symbol in your program produce a
+   reference.  If the symbol is the first thing on a line, it is
+   considered a "definition" of that symbol, the reference listed
+   is the source file name.  The name is preceded by a period if
+   the definition was via a colon (i.e., a label); it is preceded
+   by an equals sign otherwise. If the symbol is not the first
+   thing on the line, then it is not a definition.  The reference
+   listing consists of the name of the last definition that A86
+   scanned (which, if your program is organized in a standard
+   way, will be the name of the procedure in which the reference
+   occurred.
+
+   Observe that you must use the local-label facility of A86 to
+   make this work.  If you don't use local labels as your
+   "place-marker" symbols, the symbol the cross-reference gives
+   you will often be the name of the last "place-marker" symbol,
+   not the name of the last procedure.
+
+   To save space, duplicate reference entries are denoted by a
+   single entry, followed by "*n", where n is the decimal number
+   of occurrences of that entry.
+                                                             13-5
+
+A86LIB Source File Library Tool
+
+There is a tool, A86LIB.COM, available only if you are
+registered, that lets you build libraries of source files.  To
+use A86LIB, you must first code and debug the A86 source files
+that you wish to include in your library.  Then you issue the
+command A86LIB followed by the names of the source files.
+Wildcards are accepted; so you will typically want to gather the
+source files into a single directory, and use the wildcard
+specification.  For example, if you use the filename extension .8
+for your source files, you can issue the command A86LIB *.8 to
+create the library.
+
+The library created consists of a catalog file, always named
+A86.LIB, together with the source files that you fed to A86LIB to
+create the catalog.
+
+The following observations about A86LIB are in order:
+
+1. Unlike object-code libraries, A86.LIB contains only symbol
+   names and file names; it does not contain the code itself. You
+   MUST retain the source files used to create A86.LIB, because
+   A86 will read those files that it needs after consulting
+   A86.LIB to read their names.
+
+2. A86LIB records all non-local symbols that start a line, and
+   are followed by a colon or an EQU.  (Recall that local symbols
+   are those names consisting of a single letter followed by one
+   or more decimal digits.)   A86LIB also records all symbols
+   appearing on lines starting with the word PUBLIC.
+
+3. If a symbol appears in more than one library source file, it
+   will be logged for the first file A86LIB sees, and not the
+   subsequent ones.  No error will be reported, unless and until
+   A86 tries to assemble both files in one assembly, and sees a
+   conflict.
+
+4. A86LIB is simple-minded.  A86LIB does NOT recognize or expand
+   macros; nor does it recognize conditional-assembly directives.
+   This is because the library files do not stand by themselves;
+   the macros and conditional-assembly variables being used might
+   well be defined in the main program of the programs accessing
+   the library files.
+
+You may update A86.LIB by running A86LIB again; either with new
+files or previously-recorded ones.  If A86LIB is given a file it
+had already read in a previous run, then A86LIB marks all the
+symbols it had logged for the file as deleted, before rereading
+the file.  Those symbols that are still in the file are then
+"unmarked".  Thus, symbols that have been deleted from the file
+disappear functionally from A86.LIB, but still occupy space
+within A86.LIB.  What I'm getting at is this: A86LIB will
+tolerate alterations in library files quite nicely; but for
+optimum storage efficiency you should delete A86.LIB and rebuild
+it from scratch any time you delete anything from the library.
+A86LIB is so fast that this is never very painful.
+                                                             13-6
+
+Using A86.LIB in A86 Assemblies
+
+Once you have created a library with A86LIB, you access it simply
+by calling the procedures in it from your A86 program.  When A86
+finishes an assembly and sees that there are undefined symbols in
+your program, it will automatically look for copies of A86.LIB in
+the current directory (then in other directories, as described in
+the next section).  If any of the undefined symbols are found in
+the A86.LIB catalog, the files containing them are assembled.
+You see this in the list of files output to the console by A86.
+
+The subroutines in your library or libraries are effectively a
+permanent part of the A86 language.  They can be called up
+effortlessly in your A86 programs.  In time you can build up an
+impressive arsenal of library modules, making A86 as easy to
+program in as most high-level languages.
+
+You may now have macros in your A86LIB library.  Here's how it
+works: when A86 sees a new symbol at the beginning of a line, in
+a context where it would formerly have issued an error, A86 will
+first look in the A86LIB libraries for the symbol.  If it's
+found, A86 will INCLUDE that library file on the spot, and then
+assemble the line.  NOTE that if the macro is being called within
+a sequence of executable instructions, the library file must
+generate no output object code.
+
+
+
+Environment Variable A86LIB
+
+You can set an environment variable A86LIB to specify which
+drives or subdirectories contain A86.LIB files.  The variable
+consists of a sequence of path names separated by semicolons,
+just like the PATH variable used by the operating system.  For
+example, if you include in your AUTOEXEC.BAT file the line
+
+   SET A86LIB=C:\bin\lib;\tools\a86lib
+
+then A86 will look for A86.LIB in the current directory, then it
+will look for C:\bin\lib\A86.LIB, then \tools\a86lib\A86.LIB. A86
+will keep looking in all three catalog files, assembling the
+appropriate source files from any or all of them, until there are
+no more undefined symbols, or there are no more source files to
+assemble.
+
+For every symbol in an A86.LIB catalog, there is recorded the
+name of the library file containing the symbol.  The library file
+is assumed to be in the same directory as its A86.LIB file,
+unless a complete path name (starting with \ or a drive
+specifier) was fed to A86.LIB when A86.LIB was created.
+                                                             13-7
+
+Forcing a Library Search
+
+You may force A86 to assemble library files before moving on to
+more of your program's source files.  You do this by placing a
+hash sign # (hex code 23) between file names in your invocation
+line.  For example, suppose your program has two modules FIRST.8
+and LAST.8.  FIRST.8 calls subroutines from your library; but you
+need the library files assembled before LAST.8 is assembled. (You
+might want this because LAST.8 allocates memory space beyond the
+end of your program, which would be the end of LAST.8 if it were
+truly the last module.)  You accomplish this by the invocation
+line:
+
+  A86 FIRST.8 # LAST.8
+
+Note that there is never any need to force a library search at
+the end of your program modules: A86 always makes a library
+search there, if you have any undefined symbols.
+
+You may now also force a library search from within a source
+file, by placing a line with INCLUDE by itself with no file
+names, into the source code.  A86 will include any library files
+necessary to resolve any forward-references at the point of the
+INCLUDE.
+
+
+Mimicking Tool: FAKE.EXE
+
+As of this writing, Turbo C is aware only of the existence of
+Microsoft's MASM for assembling source files it generates.  I
+hope to persuade Borland to provide a switch to Turbo C that
+causes it to invoke A86 directly.  Until that happens, I offer
+the tool FAKE.EXE, that convinces Turbo C that A86 is really
+MASM.
+
+To use FAKE.EXE, it must be renamed MASM.EXE in your disk system.
+I would have named it MASM myself, except that
+
+1. Bill Gates would probably get mad at me if I did, and
+
+2. You need to decide what to do with your real MASM if you have
+   it, before installing FAKE.  You could either place FAKE
+   (named MASM.EXE) into the individual directories containing
+   Turbo C programs, or you can rename MASM to something like
+   MSM.EXE or REALMASM.EXE.
+
+Having renamed FAKE.EXE to MASM.EXE, you may now use the Turbo
+C's switch, -B, that allows you to place A86 statements into your
+C program.  You don't need to worry about the gory details of
+what FAKE does.
+
+If you like gory details, here they are: FAKE filters the command
+line handed to it, replacing switches:
+                                                             13-8
+
+   /D becomes =
+   /ml becomes +c
+   /mx becomes +C
+   /E becomes +f
+
+FAKE also eliminates the semicolon, appends .ASM to the source
+file name, and turns on the O and S switches.  It then feeds the
+resulting filtered command line to A86 for assembly.
+
+

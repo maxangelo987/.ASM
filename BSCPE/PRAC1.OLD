@@ -1,0 +1,58 @@
+.model small
+.code
+org 100h
+
+jmp main
+
+word1 db'string1: ','$'
+word2 db'string2: ','$'
+word3 db'string3: ','$'
+
+plist1 label byte
+maxlen db 20
+actlen db ?
+kybd db 21 dup('$'),'$'
+
+plist2 label byte
+maxlen db 20
+actlen db ?
+kybd db 21 dup('$'),'$'
+
+plist3 label byte
+maxlen db 20
+actlen db ?
+kybd db 21 dup('$'),'$'
+
+main proc near
+
+mov ax,03h
+int 10h
+
+mov ah,09h
+lea dx,string1
+int 21h
+
+mov ah,0ah
+lea dx,plist1
+int 21
+
+mov ah,09h
+lea dx,string2
+int 21h
+
+mov ah,0ah
+lea dx,plist2
+int 21
+
+mov ah,09h
+lea dx,string3
+int 21h
+
+mov ah,0ah
+lea dx,plist3
+int 21
+
+int 20h
+
+main endp
+end main

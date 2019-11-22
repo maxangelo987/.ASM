@@ -1,0 +1,23 @@
+; Following is a minimal program for sending a sequence of bytes to the
+;   PRN printer-device.  The codes that are sent appear in the DB statement
+;   following the label CODES.
+
+PRINT_CODES:
+  MOV DX,PRN_NAME   ; point to the printer's device name
+  MOV AX,03D01      ; MSDOS codes for "open for writing"
+  INT 33            ; call MSDOS to open the printer device
+  XCHG BL,AX        ; swap the printer's open-file handle into BX
+  MOV DX,CODES      ; point to the codes we are outputting
+  MOV CX,LENGTH     ; load the number of code bytes
+  MOV AH,040        ; MSDOS code for "write"
+  INT 33            ; write the codes to the printer
+  MOV AX,04C00      ; MSDOS codes for "successful process termination"
+  INT 33            ; go back to the operating system
+
+PRN_NAME:
+  DB 'PRN',0
+
+CODES:
+  DB 0C             ; single form-feed for the PAGE program
+LENGTH EQU $-CODES
+

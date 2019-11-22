@@ -1,0 +1,22 @@
+.model small
+.code
+org 100h
+jmp main
+
+hello db 'hello$'
+
+
+
+main proc near
+        mov ah, 09h
+        mov dx, offset hello
+        int 21h
+
+
+
+exit:
+        mov ah, 4Ch
+        mov al, 0000
+        int 21h
+
+

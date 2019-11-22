@@ -1,0 +1,761 @@
+.model small
+.code
+.data
+org 100h
+jmp main
+
+ctr db 0
+ctr1 db 11
+
+l db 0
+m db 0
+n db 0
+
+plist1 label byte
+maxlen1 db 31
+actlen1 db ?
+kybd1 db 32 dup ('$')
+
+plist2 label byte
+maxlen2 db 31
+actlen2 db ?
+kybd2 db 32 dup ('$')
+
+plist3 label byte
+maxlen3 db 31
+actlen3 db ?
+kybd3 db 32 dup ('$')
+
+press label byte
+maxlen4 db 31
+actlen4 db ?
+kybd4 db 32 dup ('$')
+
+word1 db 'Enter 1st String: $'
+word2 db 'Enter 2nd String: $'
+word3 db 'Enter 3rd String: $'
+
+stop1 db 'STOPPING $'
+
+new1 db 32 dup ('$')
+new2 db 32 dup ('$')
+new3 db 32 dup ('$')
+
+i db 0
+j db 0
+
+temp db 10 dup ('$')
+
+;__________________
+
+main proc near
+ mov ax, 03h
+ int 10h
+
+ mov ah, 09h
+ lea dx, word1
+ int 21h
+
+ mov ah, 0ah
+ lea dx, plist1
+ int 21h
+
+ call endl
+
+ mov ah, 09h
+ lea dx, kybd1
+ int 21h
+ 
+ call endl
+ 
+ mov ah, 09h
+ lea dx, word2
+ int 21h
+
+ mov ah, 0ah
+ lea dx, plist2
+ int 21h
+
+ call endl
+
+ mov ah, 09h
+ lea dx, kybd2
+ int 21h
+
+ call endl
+
+ mov ah, 09h
+ lea dx, word3
+ int 21h
+
+ mov ah, 0ah
+ lea dx, plist3
+ int 21h
+
+ call endl
+
+ mov ah, 09h
+ lea dx, kybd3
+ int 21h
+ 
+ mov bx,00
+ mov bp,00
+ mov dl, actlen1
+ inc dl
+ inc dl
+
+loop1:
+ dec dl
+ cmp dl, 00h
+ if e jmp here1
+ mov al, kybd1[bx]
+ cmp al, 'a'
+ if e jmp rep1
+ cmp al, 'e'
+ if e jmp rep2
+ cmp al, 'i'
+ if e jmp rep3
+ cmp al, 'o'
+ if e jmp rep4
+ cmp al, 'u'
+ if e jmp rep5
+ cmp al, ' '
+ if e jmp rep6
+ 
+ mov new1[bp], al
+ inc bx
+ inc bp
+ jmp loop1 
+
+
+rep1:
+ mov al, 'e'
+ mov new1[bp], al
+ inc bp
+ inc bx 
+ jmp loop1
+ 
+ 
+rep2:
+ mov al, 'i'
+ mov new1[bp], al
+ inc bp
+ inc bx 
+ jmp loop1
+ 
+rep3:
+ mov al, 'o'
+ mov new1[bp], al
+ inc bp
+ inc bx 
+ jmp loop1
+ 
+rep4:
+ mov al, 'u'
+ mov new1[bp], al
+ inc bp
+ inc bx 
+ jmp loop1
+ 
+rep5:
+ mov al, ' '
+ mov new1[bp], al
+ inc bp
+ inc bx 
+ jmp loop1
+ 
+rep6: 
+ inc bx
+ jmp loop1
+ 
+
+
+
+
+
+
+here1:
+ mov ah, 09h
+ lea dx, new1
+ int 21h 
+ jmp nxt1
+
+nxt1:
+ mov bx,00
+ mov bp,00
+ mov dl, actlen2
+ inc dl
+ inc dl
+
+loop2:
+ dec dl
+ cmp dl, 00h
+ if e jmp here12
+ mov al, kybd2[bx]
+ cmp al, 'a'
+ if e jmp rep12
+ cmp al, 'e'
+ if e jmp rep22
+ cmp al, 'i'
+ if e jmp rep32
+ cmp al, 'o'
+ if e jmp rep42
+ cmp al, 'u'
+ if e jmp rep52
+ cmp al, ' '
+ if e jmp rep62
+ 
+ mov new2[bp], al
+ inc bx
+ inc bp
+ jmp loop2
+
+
+rep12:
+ mov al, 'e'
+ mov new2[bp], al
+ inc bp
+ inc bx 
+ jmp loop2
+ 
+rep22:
+ mov al, 'i'
+ mov new2[bp], al
+ inc bp
+ inc bx 
+ jmp loop2
+ 
+rep32:
+ mov al, 'o'
+ mov new2[bp], al
+ inc bp
+ inc bx 
+ jmp loop2
+ 
+rep42:
+ mov al, 'u'
+ mov new2[bp], al
+ inc bp
+ inc bx 
+ jmp loop2
+ 
+rep52:
+ mov al, ' '
+ mov new2[bp], al
+ inc bp
+ inc bx 
+ jmp loop2
+ 
+rep62: 
+ inc bx
+ jmp loop2
+ 
+
+here12:
+ call endl 
+
+ mov ah, 09h
+ lea dx, new2
+ int 21h 
+ jmp nxt2
+  
+
+nxt2:
+ mov bx,00
+ mov bp,00
+ mov dl, actlen3
+ inc dl
+ inc dl
+
+loop3:
+ dec dl
+ cmp dl, 00h
+ if e jmp here13
+ mov al, kybd3[bx]
+ cmp al, 'a'
+ if e jmp rep13
+ cmp al, 'e'
+ if e jmp rep23
+ cmp al, 'i'
+ if e jmp rep33
+ cmp al, 'o'
+ if e jmp rep43
+ cmp al, 'u'
+ if e jmp rep53
+ cmp al, ' '
+ if e jmp rep63
+ 
+ mov new3[bp], al
+ inc bx
+ inc bp
+ jmp loop3
+
+rep13:
+ mov al, 'e'
+ mov new3[bp], al
+ inc bp
+ inc bx 
+ jmp loop3
+ 
+rep23:
+ mov al, 'i'
+ mov new3[bp], al
+ inc bp
+ inc bx 
+ jmp loop3
+ 
+rep33:
+ mov al, 'o'
+ mov new3[bp], al
+ inc bp
+ inc bx 
+ jmp loop3
+ 
+rep43:
+ mov al, 'u'
+ mov new3[bp], al
+ inc bp
+ inc bx 
+ jmp loop3
+ 
+rep53:
+ mov al, ' '
+ mov new3[bp], al
+ inc bp
+ inc bx 
+ jmp loop3
+ 
+rep63: 
+ inc bx
+ jmp loop3
+ 
+here13:
+ call endl 
+
+ mov ah, 09h
+ lea dx, new3
+ int 21h
+ jmp alphabetical
+
+
+
+alphabetical:
+
+
+ call endl
+ 
+ mov ah, 09h
+ lea dx, new1
+ int 21h
+   
+ call endl
+ 
+ mov ah, 09h
+ lea dx, new2
+ int 21h
+ 
+ call endl
+ 
+ mov ah, 09h
+ lea dx, new3
+ int 21h
+ 
+mov ah, 0ah
+ lea dx, press
+ int 21h
+
+
+mov bx, 00                             ;  bx is for kybd[i]
+mov ch, 3
+mov i, 00
+
+mov al, new1[0]
+mov temp[0], al
+mov al, new2[0]
+mov temp[1], al
+mov al, new3[0]
+mov temp[2], al
+
+
+for1:
+	mov cl, i
+	cmp ch, cl
+	je print101
+  	
+	mov j, 00
+	mov bp, 00 ; bp is for temp[j]
+
+		
+for2:
+	mov cl, j
+	cmp ch, cl  ; kung equal undang na balik sa for1, here2 --> for1 
+	je here29
+	
+	mov dl, temp[bx]      ; bx- i ; bp - j 
+	mov dh, temp[bp]	
+	cmp dl, dh
+	
+	jl here19
+	jg for22
+	
+for22:
+  inc bp
+  inc j
+  jmp for2
+	
+
+here19:	
+	mov dl, temp[bx]
+	mov al, temp[bp]
+        mov temp[bx], al
+        mov temp[bp], dl		
+	inc bp
+	inc j
+	jmp for2
+
+here29:
+     inc bx
+     inc i
+     jmp for1
+
+
+
+
+
+print101:
+ call endl
+
+ mov ah, 09h
+ lea dx, temp
+ int 21h  
+
+ mov ax, 03h
+ int 10h
+
+ mov dl, temp[0]
+ mov dh, new1[0]
+ cmp dl, dh
+ if e jmp print1
+   
+ mov dl, temp[0]
+ mov dh, new2[0]
+ cmp dl, dh
+ if e jmp print2
+ 
+ mov dl, temp[0]
+ mov dh, new3[0]
+ cmp dl, dh
+ if e jmp print3 
+  
+
+back1:
+
+
+ mov dl, temp[1]
+ mov dh, new1[0]
+ cmp dl, dh
+ if e jmp print11
+ 
+
+ mov dl, temp[1]
+ mov dh, new2[0]
+ cmp dl, dh
+ if e jmp print21
+ 
+ 
+ mov dl, temp[1]
+ mov dh, new3[0]
+ cmp dl, dh
+ if e jmp print31
+
+
+
+back2:
+ mov dl, temp[2]
+ mov dh, new1[0]
+ cmp dl, dh
+ if e jmp print12
+ 
+
+ mov dl, temp[2]
+ mov dh, new2[0]
+ cmp dl, dh
+ if e jmp print22
+ 
+ mov dl, temp[2]
+ mov dh, new3[0]
+ cmp dl, dh
+ if e jmp print32 
+ 
+
+
+print1:
+ call endl
+ call prt1
+ inc ctr1
+ jmp back1
+
+print2:
+ call endl
+ call prt2
+ inc ctr1
+ jmp back1
+
+
+print3:
+ call endl
+ call prt3
+ inc ctr1
+ jmp back1
+
+
+
+
+
+
+print11:
+ call endl
+ call prt1 
+ inc ctr1
+ jmp back2
+
+print21:
+ call endl 
+ call prt2
+ 
+ inc ctr1
+ jmp back2
+
+print31:
+ call endl
+ 
+ call prt3
+ 
+ inc ctr1
+ jmp back2
+
+
+
+print12:
+ call endl
+ 
+ call prt1
+  
+ jmp stop101
+
+print22:
+ call endl
+ 
+ call prt2
+ 
+ jmp stop101
+
+print32:
+ call endl
+ 
+ call prt3
+ jmp stop101
+
+
+
+stop101:
+ call stop
+
+main endp
+end main
+;__________________
+
+
+
+
+
+
+
+
+;__________________
+
+stop proc near
+ call endl
+ mov ah, 0ah
+ lea dx, press
+ int 21h
+ 
+ mov ah, 09h
+ lea dx, stop1
+ int 21h
+ 
+ mov ax, 4c00h
+ int 21h
+
+stop endp
+end stop
+;__________________
+
+
+
+
+;__________________
+
+endl proc near
+
+mov ah, 02h
+mov dl, 10
+int 21h
+
+mov ah, 02h
+mov dl, 13
+int 21h
+
+ret
+
+endl endp
+end endl
+;__________________
+
+
+
+;__________________
+
+prt1 proc near
+
+mov al, 00
+mov ctr, al
+
+here18:
+  mov al, 28h
+  mov ah, actlen1
+
+here28:
+ inc ctr
+ sub ah, 2h
+ cmp ah, 01h
+ je output
+ jg here28
+ cmp ah, 00h
+ je output
+ jg here28
+
+output:
+  mov ch, ctr
+  sub al, ch
+
+  mov ah, 02h
+  mov bh, 00   ; NORMAL 
+  mov dh, ctr1   ; ROW
+  mov dl, al   ; COLUMN
+  int 10h
+
+ mov ah, 09h
+ lea dx, new1
+ int 21h
+   
+ ret
+
+
+
+
+prt1 endp
+end prt1
+;__________________
+
+
+
+
+;__________________
+
+prt2 proc near
+
+mov al, 00
+mov ctr, al
+
+here182:
+  mov al, 28h
+  mov ah, actlen2
+
+here282:
+ inc ctr
+ sub ah, 2h
+ cmp ah, 01h
+ je output2
+ jg here282
+ cmp ah, 00h
+ je output2
+ jg here282
+
+output2:
+  mov ch, ctr
+  sub al, ch
+
+  mov ah, 02h
+  mov bh, 00   ; NORMAL 
+  mov dh, ctr1   ; ROW
+  mov dl, al   ; COLUMN
+  int 10h
+
+ mov ah, 09h
+ lea dx, new2
+ int 21h
+   
+ ret
+
+
+
+
+prt2 endp
+end prt2
+;__________________
+
+
+
+
+
+
+;__________________
+
+prt3 proc near
+
+
+mov al, 00
+mov ctr, al
+
+here183:
+  mov al, 28h
+  mov ah, actlen3
+
+here283:
+ inc ctr
+ sub ah, 2h
+ cmp ah, 01h
+ je output3
+ jg here283
+ cmp ah, 00h
+ je output3
+ jg here283
+
+output3:
+  mov ch, ctr
+  sub al, ch
+
+  mov ah, 02h
+  mov bh, 00   ; NORMAL 
+  mov dh, ctr1   ; ROW
+  mov dl, al   ; COLUMN
+  int 10h
+
+ mov ah, 09h
+ lea dx, new3
+ int 21h
+   
+ ret
+
+
+
+
+prt3 endp
+end prt3
+;__________________
+
+
+
+
+

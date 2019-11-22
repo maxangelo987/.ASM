@@ -1,0 +1,18 @@
+A86 and D86 do not create any Windows registry entries, and they do
+not place any files in any system directories.
+
+If you wish to delete A86 and D86 from your system, simply delete
+all the files in the A86 directory, and then remove the directory.
+In DOS, this would be done via a sequence of commands such as:
+
+   C:
+   CD \A86
+   DEL *.*
+   CD \
+   RD A86
+
+If you are running Windows 95 or later, you can do this by going via
+My Computer to the drive containing the A86 folder, and then dragging
+the A86 folder to the Recycle Bin.
+
+

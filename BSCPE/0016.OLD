@@ -1,0 +1,39 @@
+.model small
+.code
+.data
+org 100h
+
+jmp main
+
+handle dw 0
+handle1 dw 0
+
+plist label byte
+max1 db 30
+act1 db ?
+filename db 31 dup ('')
+
+rlist label byte
+max2 db 30
+act2 db ?
+filename1 db 31 dup ('')
+
+string1 db 8 dup (0)
+endchar db '$'
+
+prompt1 db 'Enter filename: $'
+prompt2 db 'Enter backup name: '$' 
+prompt3 db 'read: $'
+succ db 'Backup created. $'
+fail db 'Backup not created. $'
+
+main proc near
+ mov ax, 03h
+ int 10h
+ 
+ mov ah, 09h
+ lea dx, prompt1
+ int 21h
+
+ mov ax, 4c00h
+ int 21h

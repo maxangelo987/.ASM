@@ -1,0 +1,30 @@
+CpE 311 - Computer System Organization with Assembly Language
+[NOTE: The Difficulty of the A86 Programs are not arrange.]
+A86; P.S. - All of the programs uses the common functions:
+mov ax, 03h
+int 10h ; clrscreen.
+
+mov ah, 09h
+lea dx, word
+int 21h ; - printing 
+mov ah, 0ah
+lea dx, plist
+int 21h ; - scan a string type
+
+(?) - Unfinished or uncertain programs.
+
+; (0001) Printing ASSEMBLY LANGUAGE
+; (0002) 
+; (0003)
+; (0004)
+; (0005)
+; (0006)
+; (0007)
+; (0008)
+; (0009)
+; (0010)
+; (0011)
+; (0012)
+; (0013)
+; (0014)
+; (0015)

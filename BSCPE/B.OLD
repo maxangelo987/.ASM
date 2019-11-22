@@ -1,0 +1,31 @@
+.model small
+.code
+org 100h
+jmp main
+
+array3 db 'A','B','C'
+coname db 5 dup ('$'),'$'
+
+main proc near
+
+mov ax, 03h
+int 10h
+
+
+mov bx, 01
+
+mov ah, array3[bx]
+~                ^
+#ERROR 39: Bad Index Register                                             @@@@#
+mov coname, ah
+
+
+mov ah, 09h
+lea dx, coname
+int 21h
+
+mov ax, 4c00h
+int 21h
+
+main endp
+end main

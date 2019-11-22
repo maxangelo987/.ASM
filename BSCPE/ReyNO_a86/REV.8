@@ -1,0 +1,86 @@
+;---------------
+;   REV
+;---------------
+
+; REV is a filter that reverses all lines of standard input, and sends
+;   the reversed lines to standard output.
+
+DATA SEGMENT
+OBUFF:              ; output buffer
+  DB 02000 DUP (?)
+OBUFF_LIM:          ; limit signalling we are near the end of the output buffer
+  DB 0100 DUP (?)
+DATA ENDS
+
+REV:
+  MOV BP,OBUFF         ; initialize the output buffer to empty
+  CALL VERIFY_NO_ARGS  ; verify that there were no arugments in the command tail
+  CALL PROCESS_INPUT   ; reverse all the line of standard input
+  CALL FLUSH_OUTPUT    ; flush the output buffer
+  JMP GOOD_EXIT        ; success-- exit back to the operating system
+
+
+; VERIFY_NO_ARGS insures that there are no command-tail arguments at the
+;   PSP buffer DS:080.  If there are, we abort with USAGE_MSG.
+
+VERIFY_NO_ARGS:
+  MOV SI,080           ; point to the PSP command-tail
+  LODSB                ; fetch the length byte
+  CBW                  ; extend length AL into AX
+  XCHG CX,AX           ; swap the command tail length into CX
+  JCXZ RET             ; good return if there is no tail whatsoever
+L1:                    ; loop here for each byte of the command tail
+  LODSB                ; fetch a command-tail byte
+  CMP AL,' '           ; it had better be a blank or a control character
+  IF A JMP USAGE_EXIT  ; error exit if command tail has non-blank contents
+  LOOP L1              ; loop for the next command-tail byte
+  RET
+
+USAGE_MSG:
+  DB 'usage: rev <in >out',0D,0A
+USAGE_SIZE EQU $ - USAGE_MSG
+
+
+; PROCESS_LINE reverses the line of CX bytes pointed to by SI (and beyond by
+;   DI), and copies the reversed line to the output buffer.
+
+PROCESS_LINE:
+  DEC DI               ; decrement beyond-pointer back to linefeed
+  CMP B[DI-1],0D       ; is there also a CR terminating this line?
+  IF E DEC DI          ; if yes then decrment back to the CR, also
+  CALL REV_STRING      ; reverse the characters of the line
+  MOV DI,BP            ; fetch the output buffer pointer
+  REP MOVSB            ; copy the reversed line to the output buffer
+  MOV BP,DI            ; store the updated output buffer pointer
+  CMP BP,OBUFF_LIM     ; is the output buffer almost full?
+  JB RET               ; return if not
+FLUSH_OUTPUT:
+  PUSH AX,BX,CX,DX     ; preserve registers across call
+  MOV DX,OBUFF         ; point to the start of the output buffer
+  MOV CX,BP            ; point CX beyond the bytes we have placed in buffer
+  SUB CX,DX            ; calculate the number of bytes in the buffer
+  MOV BP,DX            ; reset the output pointer back to the buffer start
+  MOV BX,1             ; file handle for standard output is 1
+  CALL MWRITE          ; write the buffered bytes to standard output
+  POP DX,CX,BX,AX      ; restore clobbered registers
+  RET
+
+
+; REV_STRING reverses the string running from DS:SI through DS:DI-1.  We do so
+;    by repeatedly exchanging the bytes pointed to by each pointer, then moving
+;    the pointers in towards each other, until they meet.
+
+REV_STRING:
+  CMP SI,DI
+  JE RET
+  PUSH SI,DI        ; save registers across call
+L1:                 ; loop here for each pair of bytes
+  LODSB             ; fetch the SI-pointed byte
+  DEC DI            ; decrement DI to the last byte of the remaining string
+  XCHG AL,[DI]      ; exchange the SI-pointed byte with the DI-pointed byte
+  MOV [SI-1],AL     ; store the DI-pointed byte in the SI-pointed spot
+  CMP SI,DI         ; have SI and DI come together yet?
+  JB L1             ; loop if not to swap two more end-bytes
+  POP DI,SI         ; restore clobbered registers
+  RET               ; NoCarry set for disassembler MEMDIS_n's benefit
+

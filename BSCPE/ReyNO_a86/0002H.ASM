@@ -1,0 +1,25 @@
+.model small
+.code
+org 100h
+
+        assume ds: data, cs:code
+        start:
+                mov ax, data
+                mov ds, ax
+        mov bl, 00H
+        mov ch, 00H
+        mov cl, 0AH
+
+      L1: mov dh, 00
+        mov dl, bl
+        add dl,'0'
+        mov ah, 02H
+        int 21h
+        inc bl
+        loop L1
+
+                mov ah, 4ch
+                int 21h
+
+code ends
+        end start

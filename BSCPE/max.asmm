@@ -1,0 +1,20 @@
+.model small
+.code
+org 100h
+jmp main
+
+string1 db 'Testing.......','$'
+
+main proc near
+
+mov ax, 03h
+int 10h
+
+mov ah, 09h
+lea dx, string1
+int 21h
+
+mov ax, 4c00h
+int 21h
+
+

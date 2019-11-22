@@ -1,0 +1,682 @@
+.model small
+.code
+org 100h
+jmp main
+
+ins1 db "Enter Your Six Letter Word: $"
+
+row db ?
+col db ?
+
+string label byte
+actlen db ?
+maxlen db 7
+kybd db 7 dup ('$')
+
+ brb1  db '                                                                               ',0ah,0dh
+       db '                                                                               ',0ah,0dh
+       db '                                                                               ',0ah,0dh
+       db '                                                                               ',0ah,0dh
+       db '                                                                               ',0ah,0dh
+       db '                                    €     €                                    ',0ah,0dh
+       db '                                     €   €                                     ',0ah,0dh
+       db '                                    €€€€€€€                                    ',0ah,0dh
+       db '                                   €€ €€€ €€                                   ',0ah,0dh
+       db '                                  €€€€€€€€€€€                                  ',0ah,0dh
+       db '                                  € €€€€€€€ €                                  ',0ah,0dh
+       db '                                  € €     € €                                  ',0ah,0dh
+       db '                                     €€ €€                                     ',0ah,0dh
+       db '                                                                               ',0ah,0dh
+       db '                                                                               ',0ah,0dh
+       db '                                                                               ',0ah,0dh
+       db '                                 - JEW . WASH -                                ',0ah,0dh
+       db '                                                                               ',0ah,0dh
+       db '             €€€    €€€   €€€€    €€€€       €     €€€   €€€  €   €            ',0ah,0dh
+       db '            €   €  €   €  €   €  €           €    €   € €   € €   €            ',0ah,0dh
+       db '            €      €€€€€  €€€€   €€€€   €€€  €    €   € €     €€€€             ',0ah,0dh
+       db '            €   €  €   €  €          €       €    €   € €   € €   €            ',0ah,0dh
+       db '             €€€   €   €  €      €€€€        €€€€€ €€€   €€€  €   €            ',0ah,0dh
+       db '                                                                               ',0ah,0dh
+       db '                                                                               ','$' 
+       
+ brb2  db '                                                                               ',0ah,0dh
+       db '                  Program Deterministic Finite Automata                        ',0ah,0dh
+       db '                                                                               ',0ah,0dh
+       db '                                    …ÕÕÕÕª                                     ',0ah,0dh
+       db '        ⁄ƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒ>∫ Q9 ∫<ƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒø         ',0ah,0dh
+       db '        ≥           ⁄ƒƒƒƒƒƒƒƒƒƒƒƒƒƒ>»ÕÕÕÕº<ƒƒƒƒƒƒƒƒƒƒƒƒƒø            ≥         ',0ah,0dh
+       db '        ≥           ≥               ^    ^              ≥            ≥         ',0ah,0dh
+       db '        ≥           ≥           ⁄ƒƒƒŸ    ¿ƒƒƒø          ≥            ≥         ',0ah,0dh
+       db '        ≥           ≥           ≥            ≥          ≥            ≥         ',0ah,0dh
+       db '      …ÕÕÕÕª      …ÕÕÕÕª      …ÕÕÕÕª      …ÕÕÕÕª      …ÕÕÕÕª      …ÕÕÕÕª       ',0ah,0dh
+       db '      ∫ Q1 ∫ƒƒƒƒƒ>∫ Q2 ∫ƒƒƒƒƒ>∫ Q3 ∫ƒƒƒƒƒ>∫ Q4 ∫ƒƒƒƒƒ>∫ Q5 ∫ƒƒƒƒƒ>∫ Q6 ∫       ',0ah,0dh
+       db '      »ÕÕÕÕº      »ÕÕÕÕº      »ÕÕÕÕº      »ÕÕÕÕº      »ÕÕÕÕº      »ÕÕÕÕº       ',0ah,0dh
+       db '       ^  ^                                                                    ',0ah,0dh
+       db '       ≥  ≥                                                                    ',0ah,0dh
+       db '       ≥  ≥                                                                    ',0ah,0dh
+       db '       ≥  ¿ƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒø                ',0ah,0dh
+       db '       ≥                                                      ≥                ',0ah,0dh
+       db '       ≥                                                      ≥                ',0ah,0dh
+       db '       ≥                                                      V                ',0ah,0dh
+       db '       ≥    …ÕÕÕÕª                                          …ÕÕÕÕª             ',0ah,0dh
+       db '       ¿ƒƒƒ>∫ Q7 ∫                                          ∫ Q8 ∫             ',0ah,0dh
+       db '            »ÕÕÕÕº                                          »ÕÕÕÕº             ',0ah,0dh
+       db '                                                                               ',0ah,0dh
+       db '                                                      Press [E] to Continue    ',0ah,0dh
+       db '                                                                               ','$'
+ 
+ brb3  db '                                                                               ',0ah,0dh
+       db '                  Program Deterministic Finite Automata                        ',0ah,0dh
+       db '                                                                               ',0ah,0dh
+       db '                                    …ÕÕÕÕª                                     ',0ah,0dh
+       db '        ⁄ƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒ>∫ Q9 ∫                                     ',0ah,0dh
+       db '        ≥                           »ÕÕÕÕº                                     ',0ah,0dh
+       db '        ≥                                                                      ',0ah,0dh
+       db '        ≥                                                                      ',0ah,0dh
+       db '        ≥                                                                      ',0ah,0dh
+       db '      …ÕÕÕÕª      …ÕÕÕÕª      …ÕÕÕÕª      …ÕÕÕÕª      …ÕÕÕÕª      …ÕÕÕÕª       ',0ah,0dh
+       db '      ∫ Q1 ∫      ∫ Q2 ∫      ∫ Q3 ∫      ∫ Q4 ∫      ∫ Q5 ∫      ∫ Q6 ∫       ',0ah,0dh
+       db '      »ÕÕÕÕº      »ÕÕÕÕº      »ÕÕÕÕº      »ÕÕÕÕº      »ÕÕÕÕº      »ÕÕÕÕº       ',0ah,0dh
+       db '                                                                               ',0ah,0dh
+       db '                                                                               ',0ah,0dh
+       db '                                                                               ',0ah,0dh
+       db '                                                                               ',0ah,0dh
+       db '                                                                               ',0ah,0dh
+       db '                                                                               ',0ah,0dh
+       db '                                                                               ',0ah,0dh
+       db '            …ÕÕÕÕª                                          …ÕÕÕÕª             ',0ah,0dh
+       db '            ∫ Q7 ∫                                          ∫ Q8 ∫             ',0ah,0dh
+       db '            »ÕÕÕÕº                                          »ÕÕÕÕº             ',0ah,0dh
+       db '                                                                               ',0ah,0dh
+       db '    String Rejected!!                                 Press [E] to Continue    ',0ah,0dh
+       db '                                                                               ','$'       
+
+
+ brb4  db '                                                                               ',0ah,0dh
+       db '                  Program Deterministic Finite Automata                        ',0ah,0dh
+       db '                                                                               ',0ah,0dh
+       db '                                    …ÕÕÕÕª                                     ',0ah,0dh
+       db '                                    ∫ Q9 ∫                                     ',0ah,0dh
+       db '                    ⁄ƒƒƒƒƒƒƒƒƒƒƒƒƒƒ>»ÕÕÕÕº                                     ',0ah,0dh
+       db '                    ≥                                                          ',0ah,0dh
+       db '                    ≥                                                          ',0ah,0dh
+       db '                    ≥                                                          ',0ah,0dh
+       db '      …ÕÕÕÕª      …ÕÕÕÕª      …ÕÕÕÕª      …ÕÕÕÕª      …ÕÕÕÕª      …ÕÕÕÕª       ',0ah,0dh
+       db '      ∫ Q1 ∫ƒƒƒƒƒ>∫ Q2 ∫      ∫ Q3 ∫      ∫ Q4 ∫      ∫ Q5 ∫      ∫ Q6 ∫       ',0ah,0dh
+       db '      »ÕÕÕÕº      »ÕÕÕÕº      »ÕÕÕÕº      »ÕÕÕÕº      »ÕÕÕÕº      »ÕÕÕÕº       ',0ah,0dh
+       db '                                                                               ',0ah,0dh
+       db '                                                                               ',0ah,0dh
+       db '                                                                               ',0ah,0dh
+       db '                                                                               ',0ah,0dh
+       db '                                                                               ',0ah,0dh
+       db '                                                                               ',0ah,0dh
+       db '                                                                               ',0ah,0dh
+       db '            …ÕÕÕÕª                                          …ÕÕÕÕª             ',0ah,0dh
+       db '            ∫ Q7 ∫                                          ∫ Q8 ∫             ',0ah,0dh
+       db '            »ÕÕÕÕº                                          »ÕÕÕÕº             ',0ah,0dh
+       db '                                                                               ',0ah,0dh
+       db '    String Rejected!!                                 Press [E] to Continue    ',0ah,0dh
+       db '                                                                               ','$'             
+
+
+ brb5  db '                                                                               ',0ah,0dh
+       db '                  Program Deterministic Finite Automata                        ',0ah,0dh
+       db '                                                                               ',0ah,0dh
+       db '                                    …ÕÕÕÕª                                     ',0ah,0dh
+       db '                                    ∫ Q9 ∫                                     ',0ah,0dh
+       db '                                    »ÕÕÕÕº                                     ',0ah,0dh
+       db '                                    ^                                          ',0ah,0dh
+       db '                                ⁄ƒƒƒŸ                                          ',0ah,0dh
+       db '                                ≥                                              ',0ah,0dh
+       db '      …ÕÕÕÕª      …ÕÕÕÕª      …ÕÕÕÕª      …ÕÕÕÕª      …ÕÕÕÕª      …ÕÕÕÕª       ',0ah,0dh
+       db '      ∫ Q1 ∫ƒƒƒƒƒ>∫ Q2 ∫ƒƒƒƒƒ>∫ Q3 ∫      ∫ Q4 ∫      ∫ Q5 ∫      ∫ Q6 ∫       ',0ah,0dh
+       db '      »ÕÕÕÕº      »ÕÕÕÕº      »ÕÕÕÕº      »ÕÕÕÕº      »ÕÕÕÕº      »ÕÕÕÕº       ',0ah,0dh
+       db '                                                                               ',0ah,0dh
+       db '                                                                               ',0ah,0dh
+       db '                                                                               ',0ah,0dh
+       db '                                                                               ',0ah,0dh
+       db '                                                                               ',0ah,0dh
+       db '                                                                               ',0ah,0dh
+       db '                                                                               ',0ah,0dh
+       db '            …ÕÕÕÕª                                          …ÕÕÕÕª             ',0ah,0dh
+       db '            ∫ Q7 ∫                                          ∫ Q8 ∫             ',0ah,0dh
+       db '            »ÕÕÕÕº                                          »ÕÕÕÕº             ',0ah,0dh
+       db '                                                                               ',0ah,0dh
+       db '    String Rejected!!                                 Press [E] to Continue    ',0ah,0dh
+       db '                                                                               ','$'
+       
+       
+ brb6  db '                                                                               ',0ah,0dh
+       db '                  Program Deterministic Finite Automata                        ',0ah,0dh
+       db '                                                                               ',0ah,0dh
+       db '                                    …ÕÕÕÕª                                     ',0ah,0dh
+       db '                                    ∫ Q9 ∫                                     ',0ah,0dh
+       db '                                    »ÕÕÕÕº                                     ',0ah,0dh
+       db '                                         ^                                     ',0ah,0dh
+       db '                                         ¿ƒƒƒø                                 ',0ah,0dh
+       db '                                             ≥                                 ',0ah,0dh
+       db '      …ÕÕÕÕª      …ÕÕÕÕª      …ÕÕÕÕª      …ÕÕÕÕª      …ÕÕÕÕª      …ÕÕÕÕª       ',0ah,0dh
+       db '      ∫ Q1 ∫ƒƒƒƒƒ>∫ Q2 ∫ƒƒƒƒƒ>∫ Q3 ∫ƒƒƒƒƒ>∫ Q4 ∫      ∫ Q5 ∫      ∫ Q6 ∫       ',0ah,0dh
+       db '      »ÕÕÕÕº      »ÕÕÕÕº      »ÕÕÕÕº      »ÕÕÕÕº      »ÕÕÕÕº      »ÕÕÕÕº       ',0ah,0dh
+       db '       ^  ^                                                                    ',0ah,0dh
+       db '                                                                               ',0ah,0dh
+       db '                                                                               ',0ah,0dh
+       db '                                                                               ',0ah,0dh
+       db '                                                                               ',0ah,0dh
+       db '                                                                               ',0ah,0dh
+       db '                                                                               ',0ah,0dh
+       db '            …ÕÕÕÕª                                          …ÕÕÕÕª             ',0ah,0dh
+       db '            ∫ Q7 ∫                                          ∫ Q8 ∫             ',0ah,0dh
+       db '            »ÕÕÕÕº                                          »ÕÕÕÕº             ',0ah,0dh
+       db '                                                                               ',0ah,0dh
+       db '    String Rejected!!                                 Press [E] to Continue    ',0ah,0dh
+       db '                                                                               ','$'
+       
+    
+ brb7  db '                                                                               ',0ah,0dh
+       db '                  Program Deterministic Finite Automata                        ',0ah,0dh
+       db '                                                                               ',0ah,0dh
+       db '                                    …ÕÕÕÕª                                     ',0ah,0dh
+       db '                                    ∫ Q9 ∫                                     ',0ah,0dh
+       db '                                    »ÕÕÕÕº<ƒƒƒƒƒƒƒƒƒƒƒƒƒø                      ',0ah,0dh
+       db '                                                        ≥                      ',0ah,0dh
+       db '                                                        ≥                      ',0ah,0dh
+       db '                                                        ≥                      ',0ah,0dh
+       db '      …ÕÕÕÕª      …ÕÕÕÕª      …ÕÕÕÕª      …ÕÕÕÕª      …ÕÕÕÕª      …ÕÕÕÕª       ',0ah,0dh
+       db '      ∫ Q1 ∫ƒƒƒƒƒ>∫ Q2 ∫ƒƒƒƒƒ>∫ Q3 ∫ƒƒƒƒƒ>∫ Q4 ∫ƒƒƒƒƒ>∫ Q5 ∫      ∫ Q6 ∫       ',0ah,0dh
+       db '      »ÕÕÕÕº      »ÕÕÕÕº      »ÕÕÕÕº      »ÕÕÕÕº      »ÕÕÕÕº      »ÕÕÕÕº       ',0ah,0dh
+       db '                                                                               ',0ah,0dh
+       db '                                                                               ',0ah,0dh
+       db '                                                                               ',0ah,0dh
+       db '                                                                               ',0ah,0dh
+       db '                                                                               ',0ah,0dh
+       db '                                                                               ',0ah,0dh
+       db '                                                                               ',0ah,0dh
+       db '            …ÕÕÕÕª                                          …ÕÕÕÕª             ',0ah,0dh
+       db '            ∫ Q7 ∫                                          ∫ Q8 ∫             ',0ah,0dh
+       db '            »ÕÕÕÕº                                          »ÕÕÕÕº             ',0ah,0dh
+       db '                                                                               ',0ah,0dh
+       db '    String Rejected!!                                 Press [E] to Continue    ',0ah,0dh
+       db '                                                                               ','$' 
+       
+       
+ brb8  db '                                                                               ',0ah,0dh
+       db '                  Program Deterministic Finite Automata                        ',0ah,0dh
+       db '                                                                               ',0ah,0dh
+       db '                                    …ÕÕÕÕª                                     ',0ah,0dh
+       db '                                    ∫ Q9 ∫<ƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒø         ',0ah,0dh
+       db '                                    »ÕÕÕÕº                           ≥         ',0ah,0dh
+       db '                                                                     ≥         ',0ah,0dh
+       db '                                                                     ≥         ',0ah,0dh
+       db '                                                                     ≥         ',0ah,0dh
+       db '      …ÕÕÕÕª      …ÕÕÕÕª      …ÕÕÕÕª      …ÕÕÕÕª      …ÕÕÕÕª      …ÕÕÕÕª       ',0ah,0dh
+       db '      ∫ Q1 ∫ƒƒƒƒƒ>∫ Q2 ∫ƒƒƒƒƒ>∫ Q3 ∫ƒƒƒƒƒ>∫ Q4 ∫ƒƒƒƒƒ>∫ Q5 ∫ƒƒƒƒƒ>∫ Q6 ∫       ',0ah,0dh
+       db '      »ÕÕÕÕº      »ÕÕÕÕº      »ÕÕÕÕº      »ÕÕÕÕº      »ÕÕÕÕº      »ÕÕÕÕº       ',0ah,0dh
+       db '                                                                               ',0ah,0dh
+       db '                                                                               ',0ah,0dh
+       db '                                                                               ',0ah,0dh
+       db '                                                                               ',0ah,0dh
+       db '                                                                               ',0ah,0dh
+       db '                                                                               ',0ah,0dh
+       db '                                                                               ',0ah,0dh
+       db '            …ÕÕÕÕª                                          …ÕÕÕÕª             ',0ah,0dh
+       db '            ∫ Q7 ∫                                          ∫ Q8 ∫             ',0ah,0dh
+       db '            »ÕÕÕÕº                                          »ÕÕÕÕº             ',0ah,0dh
+       db '                                                                               ',0ah,0dh
+       db '    String Rejected!!                                 Press [E] to Continue    ',0ah,0dh
+       db '                                                                               ','$'
+       
+       
+ brb9  db '                                                                               ',0ah,0dh
+       db '                  Program Deterministic Finite Automata                        ',0ah,0dh
+       db '                                                                               ',0ah,0dh
+       db '                                    …ÕÕÕÕª                                     ',0ah,0dh
+       db '                                    ∫ Q9 ∫                                     ',0ah,0dh
+       db '                                    »ÕÕÕÕº                                     ',0ah,0dh
+       db '                                                                               ',0ah,0dh
+       db '                                                                               ',0ah,0dh
+       db '                                                                               ',0ah,0dh
+       db '      …ÕÕÕÕª      …ÕÕÕÕª      …ÕÕÕÕª      …ÕÕÕÕª      …ÕÕÕÕª      …ÕÕÕÕª       ',0ah,0dh
+       db '      ∫ Q1 ∫ƒƒƒƒƒ>∫ Q2 ∫ƒƒƒƒƒ>∫ Q3 ∫ƒƒƒƒƒ>∫ Q4 ∫ƒƒƒƒƒ>∫ Q5 ∫ƒƒƒƒƒ>∫ Q6 ∫       ',0ah,0dh
+       db '      »ÕÕÕÕº      »ÕÕÕÕº      »ÕÕÕÕº      »ÕÕÕÕº      »ÕÕÕÕº      »ÕÕÕÕº       ',0ah,0dh
+       db '       ^                                                                       ',0ah,0dh
+       db '       ≥                                                                       ',0ah,0dh
+       db '       ≥                                                                       ',0ah,0dh
+       db '       ≥                                                                       ',0ah,0dh
+       db '       ≥                                                                       ',0ah,0dh
+       db '       ≥                                                                       ',0ah,0dh
+       db '       ≥                                                                       ',0ah,0dh
+       db '       ≥    …ÕÕÕÕª                                          …ÕÕÕÕª             ',0ah,0dh
+       db '       ¿ƒƒƒ>∫ Q7 ∫                                          ∫ Q8 ∫             ',0ah,0dh
+       db '            »ÕÕÕÕº                                          »ÕÕÕÕº             ',0ah,0dh
+       db '                                                                               ',0ah,0dh
+       db '    String Accepted!!  Output:                        Press [E] to Continue    ',0ah,0dh
+       db '                                                                               ','$'
+       
+       
+brb10  db '                                                                               ',0ah,0dh
+       db '                  Program Deterministic Finite Automata                        ',0ah,0dh
+       db '                                                                               ',0ah,0dh
+       db '                                    …ÕÕÕÕª                                     ',0ah,0dh
+       db '                                    ∫ Q9 ∫                                     ',0ah,0dh
+       db '                                    »ÕÕÕÕº                                     ',0ah,0dh
+       db '                                                                               ',0ah,0dh
+       db '                                                                               ',0ah,0dh
+       db '                                                                               ',0ah,0dh
+       db '      …ÕÕÕÕª      …ÕÕÕÕª      …ÕÕÕÕª      …ÕÕÕÕª      …ÕÕÕÕª      …ÕÕÕÕª       ',0ah,0dh
+       db '      ∫ Q1 ∫ƒƒƒƒƒ>∫ Q2 ∫ƒƒƒƒƒ>∫ Q3 ∫ƒƒƒƒƒ>∫ Q4 ∫ƒƒƒƒƒ>∫ Q5 ∫ƒƒƒƒƒ>∫ Q6 ∫       ',0ah,0dh
+       db '      »ÕÕÕÕº      »ÕÕÕÕº      »ÕÕÕÕº      »ÕÕÕÕº      »ÕÕÕÕº      »ÕÕÕÕº       ',0ah,0dh
+       db '          ^                                                                    ',0ah,0dh
+       db '          ≥                                                                    ',0ah,0dh
+       db '          ≥                                                                    ',0ah,0dh
+       db '          ¿ƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒƒø                ',0ah,0dh
+       db '                                                              ≥                ',0ah,0dh
+       db '                                                              ≥                ',0ah,0dh
+       db '                                                              V                ',0ah,0dh
+       db '            …ÕÕÕÕª                                          …ÕÕÕÕª             ',0ah,0dh
+       db '            ∫ Q7 ∫                                          ∫ Q8 ∫             ',0ah,0dh
+       db '            »ÕÕÕÕº                                          »ÕÕÕÕº             ',0ah,0dh
+       db '                                                                               ',0ah,0dh
+       db '    String Accepted!!  Output:                        Press [E] to Continue    ',0ah,0dh
+       db '                                                                               ','$'                                         
+main proc near
+
+	mov ah,09h
+	lea dx,brb1
+	int 21h
+	call delay
+	call clear
+	
+	mov ah,09h
+	lea dx,brb2
+	int 21h
+	
+	ask:	
+	mov ah,07h
+	int 21h
+	cmp al,'e'
+	if e jmp act1
+	jmp ask
+	
+	act1:
+		call clear
+		
+		mov ah,09h
+		lea dx,ins1
+		int 21h
+		
+		mov ah,0ah
+		lea dx,string
+		int 21h
+		mov bh,00
+		moc cx,00
+	act2:
+		cmp bh,06
+		if e jmp act3
+		cmp kybd[bh],'a'
+		if e jmp count
+		cmp kybd[bh],'b'
+		if e jmp count
+		cmp kybd[bh],'c'
+		if e jmp count
+		cmp kybd[bh],'d'
+		if e jmp count
+		cmp kybd[bh],'e'
+		if e jmp count
+		cmp kybd[bh],'f'
+		if e jmp count
+		cmp kybd[bh],'g'
+		if e jmp count
+		cmp kybd[bh],'h'
+		if e jmp count
+		cmp kybd[bh],'i'
+		if e jmp count
+		cmp kybd[bh],'j'
+		if e jmp count
+		cmp kybd[bh],'k'
+		if e jmp count
+		cmp kybd[bh],'l'
+		if e jmp count
+		cmp kybd[bh],'m'
+		if e jmp count
+		cmp kybd[bh],'n'
+		if e jmp count
+		cmp kybd[bh],'o'
+		if e jmp count
+		cmp kybd[bh],'p'
+		if e jmp count
+		cmp kybd[bh],'q'
+		if e jmp count
+		cmp kybd[bh],'r'
+		if e jmp count
+		cmp kybd[bh],'s'
+		if e jmp count
+		cmp kybd[bh],'t'
+		if e jmp count
+		cmp kybd[bh],'u'
+		if e jmp count
+		cmp kybd[bh],'v'
+		if e jmp count
+		cmp kybd[bh],'w'
+		if e jmp count
+		cmp kybd[bh],'x'
+		if e jmp count
+		cmp kybd[bh],'y'
+		if e jmp count
+		cmp kybd[bh],'z'
+		if e jmp count
+		cmp kybd[bh],'A'
+		if e jmp count
+		cmp kybd[bh],'B'
+		if e jmp count
+		cmp kybd[bh],'C'
+		if e jmp count
+		cmp kybd[bh],'D'
+		if e jmp count
+		cmp kybd[bh],'E'
+		if e jmp count
+		cmp kybd[bh],'F'
+		if e jmp count
+		cmp kybd[bh],'G'
+		if e jmp count
+		cmp kybd[bh],'H'
+		if e jmp count
+		cmp kybd[bh],'I'
+		if e jmp count
+		cmp kybd[bh],'J'
+		if e jmp count
+		cmp kybd[bh],'K'
+		if e jmp count
+		cmp kybd[bh],'L'
+		if e jmp count
+		cmp kybd[bh],'M'
+		if e jmp count
+		cmp kybd[bh],'N'
+		if e jmp count
+		cmp kybd[bh],'O'
+		if e jmp count
+		cmp kybd[bh],'P'
+		if e jmp count
+		cmp kybd[bh],'Q'
+		if e jmp count
+		cmp kybd[bh],'R'
+		if e jmp count
+		cmp kybd[bh],'S'
+		if e jmp count
+		cmp kybd[bh],'T'
+		if e jmp count
+		cmp kybd[bh],'U'
+		if e jmp count
+		cmp kybd[bh],'V'
+		if e jmp count
+		cmp kybd[bh],'W'
+		if e jmp count
+		cmp kybd[bh],'X'
+		if e jmp count
+		cmp kybd[bh],'Y'
+		if e jmp count
+		cmp kybd[bh],'Z'
+		if e jmp count
+		jmp error
+		
+	count:
+		inc cx
+		inc bh
+		jmp act2
+		
+	error:
+		cmp cx,00
+		if e jmp disp1
+		cmp cx,01
+		if e jmp disp2
+		cmp cx,02
+		if e jmp disp3
+		cmp cx,03
+		if e jmp disp4
+		cmp cx,04
+		if e jmp disp5
+		cmp cx,05
+		if e jmp disp6
+		
+	disp1:
+		mov ah,09h
+	    lea dx,brb3
+	    int 21h
+	    jmp ask1
+	
+	disp2:    
+	    mov ah,09h
+	    lea dx,brb4
+	    int 21h
+	    jmp ask1
+	
+	disp3:    
+	    mov ah,09h
+	    lea dx,brb5
+	    int 21h
+	    jmp ask1
+	
+	disp4:    
+	    mov ah,09h
+	    lea dx,brb6
+	    int 21h
+		jmp ask1
+		
+	disp5:    
+	    mov ah,09h
+	    lea dx,brb7
+	    int 21h
+		jmp ask1
+		
+	disp6:    
+	    mov ah,09h
+	    lea dx,brb8
+	    int 21h
+		jmp ask1
+		
+	ask1:	
+		mov ah,07h
+		int 21h
+		cmp al,'e'
+		if e jmp exit
+		jmp ask1	
+			
+	act3:
+		mov bx,00
+		mov cx,06
+		cmp kybd[1],'a'
+		if e jmp vowel
+		cmp kybd[1],'b'
+		if e jmp cons
+		cmp kybd[1],'c'
+		if e jmp cons
+		cmp kybd[1],'d'
+		if e jmp cons
+		cmp kybd[1],'e'
+		if e jmp vowel
+		cmp kybd[1],'f'
+		if e jmp cons
+		cmp kybd[1],'g'
+		if e jmp cons
+		cmp kybd[1],'h'
+		if e jmp cons
+		cmp kybd[1],'i'
+		if e jmp vowel
+		cmp kybd[1],'j'
+		if e jmp cons
+		cmp kybd[1],'k'
+		if e jmp cons
+		cmp kybd[1],'l'
+		if e jmp cons
+		cmp kybd[1],'m'
+		if e jmp cons
+		cmp kybd[1],'n'
+		if e jmp cons
+		cmp kybd[1],'o'
+		if e jmp vowel
+		cmp kybd[1],'p'
+		if e jmp cons
+		cmp kybd[1],'q'
+		if e jmp cons
+		cmp kybd[1],'r'
+		if e jmp cons
+		cmp kybd[1],'s'
+		if e jmp cons
+		cmp kybd[1],'t'
+		if e jmp cons
+		cmp kybd[1],'u'
+		if e jmp vowel
+		cmp kybd[1],'v'
+		if e jmp cons
+		cmp kybd[1],'w'
+		if e jmp cons
+		cmp kybd[1],'x'
+		if e jmp cons
+		cmp kybd[1],'y'
+		if e jmp cons
+		cmp kybd[1],'z'
+		if e jmp cons
+		cmp kybd[1],'A'
+		if e jmp vowel
+		cmp kybd[1],'B'
+		if e jmp cons
+		cmp kybd[1],'C'
+		if e jmp cons
+		cmp kybd[1],'D'
+		if e jmp cons
+		cmp kybd[1],'E'
+		if e jmp vowel
+		cmp kybd[1],'F'
+		if e jmp cons
+		cmp kybd[1],'G'
+		if e jmp cons
+		cmp kybd[1],'H'
+		if e jmp cons
+		cmp kybd[1],'I'
+		if e jmp vowel
+		cmp kybd[1],'J'
+		if e jmp cons
+		cmp kybd[1],'K'
+		if e jmp cons
+		cmp kybd[1],'L'
+		if e jmp cons
+		cmp kybd[1],'M'
+		if e jmp cons
+		cmp kybd[1],'N'
+		if e jmp cons
+		cmp kybd[1],'O'
+		if e jmp vowel
+		cmp kybd[1],'P'
+		if e jmp cons
+		cmp kybd[1],'Q'
+		if e jmp cons
+		cmp kybd[1],'R'
+		if e jmp cons
+		cmp kybd[1],'S'
+		if e jmp cons
+		cmp kybd[1],'T'
+		if e jmp cons
+		cmp kybd[1],'U'
+		if e jmp vowel
+		cmp kybd[1],'V'
+		if e jmp cons
+		cmp kybd[1],'W'
+		if e jmp cons
+		cmp kybd[1],'X'
+		if e jmp cons
+		cmp kybd[1],'Y'
+		if e jmp cons
+		cmp kybd[1],'Z'
+		if e jmp cons
+		
+	vowel:
+		mov ah,kybd[bx]
+		cmp ah,41h
+		jb act4
+		cmp ah,5ah
+		ja act4
+		xor ah,00100000b
+		mov kybd[bx],ah
+	act4:
+		inc bx
+		loop vowel
+		
+	output1:
+		mov ah,09h
+	    lea dx,brb9
+	    int 21h
+	    
+	    mov col,30
+        mov row,24
+        call curse
+        
+        mov ah,09h
+	    lea dx,kybd
+	    int 21h
+        
+		jmp ask1
+		
+		
+	cons:
+		mov ah,kybd[bx]
+		cmp ah,61h
+		jb act5
+		cmp ah,7ah
+		ja act5
+		xor ah,00100000b
+		mov kybd[bx],ah
+	act5:
+		inc bx
+		loop vowel
+		
+	output2:
+		mov ah,09h
+	    lea dx,brb10
+	    int 21h
+	    
+	    mov col,30
+        mov row,24
+        call curse
+        
+        mov ah,09h
+	    lea dx,kybd
+	    int 21h
+        
+		jmp ask1			
+		
+exit:	
+	int 20h		
+	main endp
+	end main
+		 
+	
+;---------------
+ 
+clear proc near
+
+	mov ax,03h
+	int 10h
+	ret
+	clear endp
+	
+curse proc near
+        mov ah,02h
+        mov dh,row
+        mov dl,col
+        mov bh,00
+        int 10h
+        ret
+        curse endp	
+	
+delay proc near                 
+		    
+	mov del1,5000
+      
+lpo13:	mov del2,0ffffh
+lpo14:	nop
+		dec del2
+		jnz lpo14
+		dec del1
+		jnz lpo13
+	    ret
+        delay endp      

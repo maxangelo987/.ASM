@@ -1,0 +1,448 @@
+.model small
+.code
+org 100h
+jmp main
+
+
+plist1 label byte
+maxlen1 db 30
+actlen1 db ?
+kybd1 db 31 dup ('$'), '$'
+
+
+ctr db 00
+col db 00
+row db 00
+mode db 00
+
+
+word9 db 'Enter String:  ','$'
+fword db 30 dup ('$')
+
+
+lcase db 30 dup ('$')
+ucase db 30 dup ('$')
+vowel db 30 dup ('$')
+conso db 30 dup ('$')
+
+
+
+quot1 db 0
+
+main proc near
+
+ mov ax, 03h
+ int 10h
+
+ mov ah, 09h
+ lea dx, word9
+ int 21h
+
+ mov ah, 0ah
+ lea dx, plist1
+ int 21h
+ 
+ mov ax, 03h
+ int 10h
+
+
+mov bl, actlen1
+inc ctr
+
+
+div2:
+ inc ctr
+ sub bl, 4h
+ 
+ cmp bl, 0h
+ je are
+ cmp bl, 1h
+ je are
+ cmp bl, 2h
+ je are
+ cmp bl, 3h
+ je are
+ cmp bl, -1h
+ je are
+ cmp bl, -2h
+ je are
+ cmp bl, -3h
+ je are
+ 
+ jmp div2
+
+are:
+ mov ah, actlen1
+
+
+even_i:
+
+ call eveni
+ call stop
+
+main endp
+end main
+
+;__________________________________________________-
+
+eveni proc near
+
+a10:                          ; lowercase
+
+
+
+;_______________________________
+
+mov cl, 14h  
+mov dl, ctr
+sub cl, dl
+mov col, cl
+ 
+
+mov bx, 0h
+mov bp, 0h
+mov si, 0h
+mov cl, actlen1
+
+
+loop1:
+cmp cl, 0h
+je nxt1
+dec cl
+
+mov al, kybd1[bx]
+cmp al, 'a'
+je here1
+cmp al, 'b'
+je here1
+cmp al, 'c'
+je here1
+cmp al, 'd'
+je here1
+cmp al, 'e'
+je here1
+cmp al, 'f'
+je here1
+cmp al, 'g'
+je here1
+cmp al, 'h'
+je here1
+cmp al, 'i'
+je here1
+cmp al, 'j'
+je here1
+cmp al, 'k'
+je here1
+cmp al, 'l'
+je here1
+cmp al, 'm'
+je here1
+cmp al, 'n'
+je here1
+cmp al, 'o'
+je here1
+cmp al, 'p'
+je here1
+cmp al, 'q'
+je here1
+cmp al, 'r'
+je here1
+cmp al, 's'
+je here1
+cmp al, 't'
+je here1
+cmp al, 'u'
+je here1
+cmp al, 'v'
+je here1
+cmp al, 'w'
+je here1
+cmp al, 'x'
+je here1
+cmp al, 'y'
+je here1
+cmp al, 'z'
+je here1
+cmp al, ' '
+je shere
+
+jne here2
+
+shere:
+inc bx
+
+jmp loop1
+
+nxt1:
+jmp nxt11        ; I did this because ma Jump 126, Basin dool na kaayo mo react pajud siya nga layo.
+
+here1:
+mov ch, kybd1[bx]
+mov lcase[bp], ch
+inc bp
+inc bx
+jmp loop1
+
+here2:
+mov ch, kybd1[bx]
+mov ucase[si], ch
+inc si
+inc bx
+jmp loop1
+
+
+;________________________
+nxt11:
+
+mov bx, 0h
+mov bp, 0h
+mov si, 0h
+mov cl, actlen1
+
+
+loop2:
+cmp cl, 0h
+je nxt2
+dec cl
+
+mov al, kybd1[bx]
+cmp al, 'A'
+je here22
+cmp al, 'a'
+je here22
+cmp al, 'E'
+je here22
+cmp al, 'e'
+je here22
+cmp al, 'I'
+je here22
+cmp al, 'i'
+je here22
+cmp al, 'O'
+je here22
+cmp al, 'o'
+je here22
+cmp al, 'U'
+je here22
+cmp al, 'u'
+je here22
+cmp al, ' '
+je shere2
+jne here3
+
+
+nxt2:
+jmp printing
+
+shere2:
+inc bx
+jmp loop2
+
+here22:
+mov ch, kybd1[bx]
+mov vowel[bp], ch
+inc bp
+inc bx
+jmp loop2
+
+here3:
+mov ch, kybd1[bx]
+mov conso[si], ch
+inc si
+inc bx
+jmp loop2
+
+
+;_________________________________
+
+
+
+
+
+printing:
+
+b10:
+ mov ah, 0fh
+ int 10h
+
+ mov mode, al
+ mov ah, 00h
+ mov al, 03
+ int 10h
+ 
+c10:              ; color
+                                          
+ mov bh, ah
+ mov ah, 08h
+ int 10h
+
+ mov ax, 0600h
+ mov bh, 16h
+ mov cx, 0000h
+ mov dx, 0c27h
+ int 10h
+
+d10:
+ mov ah, 02h        ; cursor
+ mov bh, 00
+ mov dh, 5          ; row
+ mov dl, col        ;
+ int 10h
+
+e10:
+ mov ah, 09h
+ lea dx, lcase
+ int 21h 
+
+
+
+;_________________________________________
+
+
+mov cl, 3ch
+mov dl, ctr
+sub cl, dl
+mov col, cl
+
+ 
+b11:
+
+
+c11:              ; color
+ mov ah, 08h
+ mov bh, ah
+ int 10h
+                                             
+
+ mov ax, 0600h
+ mov bh, 16h
+ mov cx, 0d28h
+ mov dx, 1950h
+ int 10h
+
+d11:
+ mov ah, 02h       ; cursor
+ mov bh, 00        ; normal force
+ mov dh, 18
+ mov dl, col
+ int 10h
+
+
+e11:
+ mov ah, 09h
+ lea dx, ucase
+ int 21h 
+
+;_______________________________________
+
+
+
+mov cl, 3ch
+mov dl, ctr
+sub cl, dl
+mov col, cl
+
+ 
+b12:
+
+
+c12:              ; color
+ mov ah, 08h
+ mov bh, ah
+ int 10h
+              
+                               
+ mov ax, 0600h
+ mov bh, 07h
+ mov cx, 0028h
+ mov dx, 0c50h
+ int 10h
+
+d12:
+ mov ah, 02h       ; cursor
+ mov bh, 00        ; normal force
+ mov dh, 5
+ mov dl, col
+ int 10h
+
+
+e12:
+ mov ah, 09h
+ lea dx, conso
+ int 21h 
+
+;_______________________________________
+
+mov cl, 14h  
+mov dl, ctr
+sub cl, dl
+mov col, cl
+ 
+b13:
+
+c13:              ; color
+ mov ah, 08h
+ mov bh, ah
+ int 10h
+                                             
+ mov ax, 0600h
+ mov bh, 57h
+ mov cx, 0d00h
+ mov dx, 0c27h
+ int 10h
+
+d13:
+ mov ah, 02h       ; cursor
+ mov bh, 00        ; normal force
+ mov dh, 18
+ mov dl, col
+ int 10h
+
+
+e13:
+ mov ah, 09h
+ lea dx, vowel
+ int 21h 
+
+
+;_______________________________________
+
+
+
+
+
+
+flo:
+ mov ah, 10h
+ int 16h
+ 
+glo:
+ mov ah, 00h
+ mov al, mode
+ int 10h
+
+
+
+
+;_____________________________________
+
+
+ 
+ ret
+ eveni endp
+ end eveni
+;_______
+
+
+
+stop proc near
+ 
+
+ mov ax, 4c00h
+ int 21h
+
+ ret
+ stop endp 
+ end stop
+ 
+ ;_______________________________

@@ -1,0 +1,99 @@
+<?xml version="1.0"?>
+<XML_DIZ_INFO>
+<MASTER_DIZ_VERSION_INFO>
+    <MASTER_DIZ_VERSION>.99c</MASTER_DIZ_VERSION>
+    <MASTER_DIZ_INFO>Portable Application Description, or PAD for short, is a data set that is used by shareware authors to dissemminate information to anyone interested in their software products.  To find out more go to http://www.asp-shareware.org/pad</MASTER_DIZ_INFO>
+</MASTER_DIZ_VERSION_INFO>
+<Company_Info>
+        <Company_Name>Eric Isaacson Software</Company_Name>
+        <Address_1>416 East University St.</Address_1>
+        <Address_2 />
+        <City_Town>Bloomington</City_Town>
+        <State_Province>IN</State_Province>
+        <Zip_Postal_Code>47401-4739</Zip_Postal_Code>
+        <Country>USA</Country>
+        <ASP_Member>Y</ASP_Member>
+        <ASP_Member_Number>00046</ASP_Member_Number>
+        <ESC_Member>N</ESC_Member>
+        <Company_WebSite_URL>http://eji.com</Company_WebSite_URL>
+<Contact_Info>
+        <Author_First_Name>Eric</Author_First_Name>
+        <Author_Last_Name>Isaacson</Author_Last_Name>
+        <Author_Email>eric@eji.com</Author_Email>
+        <Contact_First_Name>Eric</Contact_First_Name>
+        <Contact_Last_Name>Isaacson</Contact_Last_Name>
+        <Contact_Email>eric@eji.com</Contact_Email>
+    </Contact_Info>
+<Support_Info>
+        <Sales_Email>eric@eji.com</Sales_Email>
+        <Support_Email>eric@eji.com</Support_Email>
+        <General_Email>eric@eji.com</General_Email>
+        <Sales_Phone>1-812-339-1811</Sales_Phone>
+        <Support_Phone>1-812-339-1811</Support_Phone>
+        <General_Phone>1-812-339-1811</General_Phone>
+        <Fax_Phone>1-812-335-1611</Fax_Phone>
+    </Support_Info>
+</Company_Info>
+<Program_Info>
+        <Program_Name>A86 assembler D86 debugger</Program_Name>
+        <Program_Version>4.05</Program_Version>
+        <Program_Release_Month>01</Program_Release_Month>
+        <Program_Release_Day>14</Program_Release_Day>
+        <Program_Release_Year>2000</Program_Release_Year>
+        <Program_Cost_Dollars>90</Program_Cost_Dollars>
+        <Program_Cost_Other />
+        <Program_Type>Shareware</Program_Type>
+        <Program_Release_Status>Major Update</Program_Release_Status>
+        <Program_Install_Support>Install and Uninstall</Program_Install_Support>
+        <Program_OS_Support>Win 3.1x,Win95,Win98,WinNT 3.x,WinNT 4.x,Windows2000,MS-DOS</Program_OS_Support>
+        <Program_Language>English</Program_Language>
+        <Program_System_Requirements>DOS V3.1 or a DOS box in Windows, Linux, etc.</Program_System_Requirements>
+        <Program_Categories>Programming languages, Programming utilities</Program_Categories>
+<File_Info>
+        <Filename_Versioned>A86V405.ZIP</Filename_Versioned>
+        <Filename_Previous>A86*.ZIP D86*.ZIP</Filename_Previous>
+        <Filename_Generic>A86.ZIP</Filename_Generic>
+        <Filename_Long>A86 assembler and D86 debugger.ZIP</Filename_Long>
+        <File_Size_Bytes>255712</File_Size_Bytes>
+        <File_Size_K>256</File_Size_K>
+        <File_Size_MB>0.26</File_Size_MB>
+    </File_Info>
+<Expire_Info>
+        <Has_Expire_Info>N</Has_Expire_Info>
+        <Expire_Count />
+        <Expire_Based_On>Days</Expire_Based_On>
+        <Expire_Other_Info />
+        <Expire_Month />
+        <Expire_Day />
+        <Expire_Year />
+    </Expire_Info>
+        <Includes_VB_Runtime>N</Includes_VB_Runtime>
+        <Includes_JAVA_VM>N</Includes_JAVA_VM>
+        <Includes_DirectX>N</Includes_DirectX>
+</Program_Info>
+<Program_Descriptions>
+<English>
+        <Keywords>A86 D86 assembler debugger assembly Isaacson programming machine language</Keywords>
+        <Char_Desc_45>Fast, easy-to-use x86 assembler-debugger</Char_Desc_45>
+        <Char_Desc_80>Easy-to-use assembler-debugger for Intel x86 family.  Make small, fast programs.</Char_Desc_80>
+        <Char_Desc_250>A86 is the finest assembler available, at any cost under any terms, for the Intel 86-family of microprocessors.  Use assembly language to create the smallest and fastest programs possible!  Read more about A86 at       http://eji.com/a86</Char_Desc_250>
+        <Char_Desc_450>A86 is the finest assembler available, at any cost under any terms, for the Intel 86-family of processors.  A86 accepts assembly language source files, and transforms them directly into either: (1) .COM files executable under DOS (or in a DOS box under Windows) (2) .OBJ files suitable for feeding to a linker to create EXE files; or (3) object files suitable for copying to ROMs.  Read more about A86 at       http://eji.com/a86</Char_Desc_450>
+        <Char_Desc_2000>A86 (with its 32-bit version A386) is the finest assembler available, at any cost under any terms, for the Intel 86-family of microprocessors.  A86 accepts assembly language source files, and transforms them directly into either: (1) .COM files executable under DOS (or in a DOS box under Windows), starting at offset 0100 within a code segment; (2) .OBJ files suitable for feeding to a linker to create EXE files; or (3) object files starting at offset 0, suitable for copying to ROMs.  A86 is a full featured, professional-quality program, that has been on the market, selling successfully, since 1986.  At the first Shareware Industry Awards in 1992, A86 was one of only four programs nominated for &quot;Best Overall Program&quot;, and was the winner of the &quot;Best Programming Language and Tools&quot; award.  The downloadable version A86 covers the instruction sets of all processors up through the 286, and can be used to develop programs that can be run on all computers based on the Intel x86 processors (the Pentium series, the AMD K6 or Athlon series, etc.).  When you purchase the full A86/D86 package, you get the A386 assembler, that allows you to take advantage of the 32-bit registers and instructions available since the 386 was introduced.  A386 includes the instruction sets of all processors through the Pentium III and Athlon.  A86 is blazingly fast -- many times faster than any competing assembler.  On a typical computer (Pentium II or better, with source files already disk-cached) A86 assembles at a rate of over 100,000 lines per second.  That&apos;s per second.  NOT per minute, per second.  A86 is simple to use.  You can feed it a program containing just machine instructions, without the red tape (NAME, ASSUME, SEGMENT PARA PUBLIC, PROC, ENDP, END, PUBLIC, EXTRN, etc. etc.) necessary with other assemblers.  You can read more about A86&apos;s special features at     http://eji.com/a86/features.htm</Char_Desc_2000>
+</English>
+</Program_Descriptions>
+<Web_Info>
+<Application_URLs>
+        <Application_Info_URL>http://eji.com/a86</Application_Info_URL>
+        <Application_Order_URL>http://eji.com/a86/order</Application_Order_URL>
+        <Application_Screenshot_URL />
+        <Application_Icon_URL />
+        <Application_XML_File_URL>http://eji.com/a86/pad_file.xml</Application_XML_File_URL>
+    </Application_URLs>
+<Download_URLs>
+        <Primary_Download_URL>http://eji.com/a86.zip</Primary_Download_URL>
+        <Secondary_Download_URL>ftp://eji.com/a86.zip</Secondary_Download_URL>
+        <Additional_Download_URL_1 />
+        <Additional_Download_URL_2 />
+    </Download_URLs>
+</Web_Info>
+</XML_DIZ_INFO>

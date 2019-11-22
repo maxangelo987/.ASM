@@ -1,0 +1,44 @@
+.model small
+.code
+org 100h
+jmp main
+;===========
+plist label byte
+maxlen db 21
+actlen db ?
+kname  db 20 dup('$')
+newl   db 0ah,0dh,'$'
+;===========
+main proc near
+
+        MOV ah,0ah
+        LEA dx,plist
+        int 21H
+
+        MOV cl,actlen
+        LEA si,kname
+
+LOOP1:
+
+        mov ah,09H
+        mov bh,00
+        mov bl,00
+        mov cx,actlen
+        mov al,'*'
+        int 10H
+
+        inc si
+        dec cl
+
+;        MOV ah,09h
+;        LEA dx,newl
+;        int 21H
+
+        JNZ LOOP1
+
+EXIT:
+        MOV ax,4c00h
+        int 21H
+
+main endp
+        end main

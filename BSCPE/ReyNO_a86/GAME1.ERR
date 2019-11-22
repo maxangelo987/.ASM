@@ -1,0 +1,380 @@
+.model small
+.code
+org 100H
+jmp main
+;===========
+
+bord    db      'лллллллллллллллллллллллллллллллллллллллллллллллллллллллллллл','$'
+bord1   db      '                                           лл              л','$'
+bord2   db      'л                                                          л','$'
+bord3   db      'л                                      л                   л','$'
+bord4   db      'л   л   л                              л       л           л','$'
+bord5   db      'л   л                                  л       л           л','$'
+bord6   db      'л                                                          л','$'
+bord7   db      'л        л  л                                              л','$'
+bord8   db      'л         лл                           л                   л','$'
+bord9   db      'л                                          л   л           л','$'
+bordA   db      'л                                                          л','$'
+bordB   db      'л                                                          л','$'
+bordC   db      'л                                                          л','$'
+bordD   db      'л                                                          л','$'
+bordE   db      'л                                                          л','$'
+bordF   db      'л                                                          л','$'
+bordG   db      'л   л     л                                                л','$'
+bordH   db      'л   л          л                                          лл','$'
+bordI   db      'л                  л л                                      ','$'
+bordJ   db      'л      л                                               л   л','$'
+bordK   db      'л                                                          л','$'
+bordL   db      'лллллллллллллллллллллллллллллллллллллллллллллллллллллллллллл','$'
+
+
+ast     db      'л','$'
+spc     db      'В','$'
+
+;===========
+
+main    proc    near
+        MOV     ch,     00
+        MOV     cl,     04
+
+        CALL    crsr
+
+        CALL    brd
+
+        MOV     ch,     01
+        MOV     cl,     04
+
+        CALL    crsr
+
+        CALL    aste
+LEAP2:
+
+
+LEAP1:
+        MOV     ah,     07
+        INT     21H
+
+        CMP     al,     'w'
+        JE      upp
+        CMP     al,     's'
+        JE      dwnn
+        CMP     al,     'a'
+        JE      lftt
+        CMP     al,     'd'
+        JE      rghtt
+	CMP	al,	'e'
+        JE      asd
+        JMP LEAP1
+;-------------------------
+upp:
+        CALL    ups
+        CMP     al,     'л'
+        JNE    inxt
+
+        INC     ch
+        JMP LEAP2
+
+inxt:
+        CMP     al,     'X'
+        JNE     nxt      
+
+        INC     ch
+        JMP LEAP2
+nxt:
+        INC     ch
+        CALL    crsr
+        CALL    spce
+        DEC     ch
+        CALL    crsr
+        CALL    aste
+        JMP     LEAP1
+;---------------------------
+dwnn:
+        CALL    downs
+        CMP     al,     'л'
+        JNE     inxt1
+
+        DEC     ch
+        JMP LEAP2
+
+inxt1:
+
+        CMP     al,     'X'
+        JNE     nxt1      
+
+        DEC     ch
+        JMP LEAP2
+nxt1:
+        DEC     ch
+        CALL    crsr
+        CALL    spce
+        INC     ch
+        CALL    crsr
+        CALL    aste
+        JMP LEAP1
+;---------------------
+lftt:
+        CALL    lfts
+        CMP     al,     'л'
+        JNE     inxt2
+
+        INC     cl
+        JMP LEAP2
+
+inxt2:
+
+        CMP     al,     'X'
+        JNE     nxt2     
+
+        INC     cl
+        JMP     LEAP2
+nxt2:
+        INC     cl
+        CALL    crsr
+        CALL    spce
+        DEC     cl
+        CALL    crsr
+        CALL    aste
+        JMP LEAP1
+;---------------------
+rghtt:
+        CALL    rghts
+        CMP     al,     'л'
+        JNE     inxt3
+
+        DEC     cl
+        JMP LEAP2
+
+inxt3:
+
+        CMP     al,     'X'
+        JNE     nxt3
+
+        DEC     cl
+        JMP LEAP2
+nxt3:
+        DEC     cl
+        CALL    crsr
+        CALL    spce
+        INC     cl
+        CALL    crsr
+        CALL    aste
+        JMP     LEAP1
+asd:
+;--------------------------------
+        MOV     ax,     4c00h
+        INT     21H
+
+;--------------------------------
+main    endp
+;------------------------------
+;------------------------------
+brd     proc    near
+
+        MOV     ah,     09H
+        LEA     dx,     bord
+        INT     21H
+
+        INC     ch
+        CALL    crsr
+
+
+        MOV     ah,     09H
+        LEA     dx,     bord1
+        INT     21H
+
+        INC     ch
+        CALL    crsr
+
+        MOV     ah,     09H
+        LEA     dx,     bord2
+        INT     21H
+        INC     ch
+        CALL    crsr
+
+        MOV     ah,     09H
+        LEA     dx,     bord3
+        INT     21H
+        INC     ch
+        CALL    crsr
+
+        MOV     ah,     09H
+        LEA     dx,     bord4
+        INT     21H
+        INC     ch
+        CALL    crsr
+
+        MOV     ah,     09H
+        LEA     dx,     bord5
+        INT     21H
+        INC     ch
+        CALL    crsr
+
+        MOV     ah,     09H
+        LEA     dx,     bord6
+        INT     21H
+        INC     ch
+        CALL    crsr
+
+        MOV     ah,     09H
+        LEA     dx,     bord7
+        INT     21H
+        INC     ch
+        CALL    crsr
+
+        MOV     ah,     09H
+        LEA     dx,     bord8
+        INT     21H
+        INC     ch
+        CALL    crsr
+
+        MOV     ah,     09H
+        LEA     dx,     bord9
+        INT     21H
+        INC     ch
+        CALL    crsr
+
+        MOV     ah,     09H
+        LEA     dx,     bordA
+        INT     21H
+        INC     ch
+        CALL    crsr
+
+        MOV     ah,     09H
+        LEA     dx,     bordB
+        INT     21H
+        INC     ch
+        CALL    crsr
+
+        MOV     ah,     09H
+        LEA     dx,     bordC
+        INT     21H
+        INC     ch
+        CALL    crsr
+
+        MOV     ah,     09H
+        LEA     dx,     bordD
+        INT     21H
+        INC     ch
+        CALL    crsr
+
+        MOV     ah,     09H
+        LEA     dx,     bordE
+        INT     21H
+        INC     ch
+        CALL    crsr
+
+        MOV     ah,     09H
+        LEA     dx,     bordF
+        INT     21H
+        INC     ch
+        CALL    crsr
+
+        MOV     ah,     09H
+        LEA     dx,     bordG
+        INT     21H
+        INC     ch
+        CALL    crsr
+
+        MOV     ah,     09H
+        LEA     dx,     bordH
+        INT     21H
+        INC     ch
+        CALL    crsr
+
+        MOV     ah,     09H
+        LEA     dx,     bordI
+        INT     21H
+        INC     ch
+        CALL    crsr
+
+        MOV     ah,     09H
+        LEA     dx,     bordJ
+        INT     21H
+        INC     ch
+        CALL    crsr
+
+        MOV     ah,     09H
+        LEA     dx,     bordK
+        INT     21H
+        INC     ch
+        CALL    crsr
+
+        MOV     ah,     09H
+        LEA     dx,     bordL
+        INT     21H
+        INC     ch
+        CALL    crsr
+
+
+        brd     endp
+
+;--------------------------
+crsr    proc    near
+
+        MOV     dh,     ch
+        MOV     dl,     cl
+        MOV     ah,     02
+        INT     10H
+
+        RET
+
+        crsr    endp
+;---------------------------
+aste    proc    near
+
+        MOV     ah,     09H
+        LEA     dx,     ast
+        INT     21H
+        RET
+        aste    endp
+;----------------------------
+spce    proc    near
+
+        MOV     ah,     09H
+        LEA     dx,     spc
+        INT     21H
+        RET
+        spce    endp
+;---------------------------
+ups     proc    near
+
+        DEC     ch
+        CALL    crsr
+        CALL    cmpr
+        RET
+        up      endp
+;----------------------------
+downs   proc    near
+
+        INC     ch
+        CALL    crsr
+        CALL    cmpr
+        RET
+        downs   endp
+;---------------------------
+lfts    proc    near
+
+        DEC     cl
+        CALL    crsr
+        CALL    cmpr
+        RET
+        lfts    endp
+;--------------------------
+rghts   proc    near
+
+        INC     cl
+        CALL    crsr
+        CALL    cmpr
+        RET
+        rghts   endp
+;--------------------------
+cmpr    proc    near
+
+        MOV     ah,     08
+        INT     10H
+        RET
+        cmpr    endp
+
+;--------------------------
+end     main

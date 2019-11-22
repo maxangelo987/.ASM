@@ -1,0 +1,17 @@
+.model small
+.code
+org 100h
+
+
+plist1 label byte
+maxlen1 db 20
+actlen1 db ?
+kybd1 db 21 dup('$'),'$'
+
+jmp main
+
+main proc near
+
+
+
+int 20h

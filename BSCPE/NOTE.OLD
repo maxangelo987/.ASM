@@ -1,0 +1,84 @@
+.model small
+.code
+org 100h
+
+jmp a10main
+	parlist label byte
+	maxnlen db 20
+	actulen db ?
+	kbname db 21 dup(' ')
+	prompt db 'name?','$'
+a10main proc near
+	call q10clear
+a20:
+	mov dx,0000
+	call q20cursor
+	call b10input
+	call q10clear
+	cmp actulen,00
+	je a30
+	call c10center
+	call d10display
+	jmp a20
+a30:
+	int 20h
+a20main endp
+
+b10input proc near
+	push ax
+	push dx
+	
+	mov ah,09h
+	lea dx,prompt
+	int 21h
+	
+	mov ah,09h
+	lea dx,parlist
+	int 21h
+	
+	pop dx
+	pop ax
+	ret
+b10input endp
+
+c10center proc near
+	mov bl,actulen
+	mov bh,00
+	mov kbname[bx],07
+	mov kbname[bx+1],'$'
+	mov dl,actulen
+	shr dl,1
+	neg dl
+	add dl,40
+	mov dh,12
+	call q20cursor
+	ret
+c10center endp
+
+d10display proc near
+	mov ah,09h
+	lea dx,kbname
+	int 21h
+	ret
+d10display endp
+
+q10clear proc near
+	push a
+	mov ax,0600h
+	mov bh,30
+	mov cx,0000
+	mov dx,184fh
+	int 10h
+	pop a
+	ret
+	q10clear endp
+
+q20cursor proc near
+	mov ah,02h
+	mov bh,00
+	int 20h
+	ret
+q20cursor endp
+	end main
+	
+	

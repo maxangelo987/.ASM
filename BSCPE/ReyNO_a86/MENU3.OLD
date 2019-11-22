@@ -1,0 +1,32 @@
+.model small
+.code
+org 100H
+
+jmp     main
+
+plist   label   byte
+max     db      21
+act     db      ?
+kbn     db      20 dup('$')
+mach    db      'breakaway','$'
+main    proc    near
+
+MOV     ah,     06
+MOV     al,     00
+MOV     cl,     0
+MOV     ch,     0
+MOV     dl,     80
+MOV     dh,     24
+MOV     bh,     [10110011]b
+INT     10H
+
+MOV     ah,     09H
+LEA     dx,     mach
+INT     21H
+
+
+MOV     ax,     4c00h
+INT     21H
+
+main    endp
+        end     main

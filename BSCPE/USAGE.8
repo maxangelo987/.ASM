@@ -1,0 +1,17 @@
+;---------------
+;   USAGE      library module, NOT a standalone program
+;---------------
+
+; This module provides the routine USAGE_EXIT, which outputs the message
+;  USAGE_MSG, of size USAGE_SIZE bytes, to the error console; then exits
+;  the program with error code 1.
+;
+;  USAGE_MSG and USAGE_SIZE must be defined by the user's program!
+
+USAGE_EXIT:
+  MOV DX,USAGE_MSG        ; point to the usage message
+  MOV CX,USAGE_SIZE       ; load the length of the message
+  CALL EWRITE             ; output the message to the error console
+BAD_EXIT:
+  MOV AL,1                ; 1 code means program was unsuccessful
+  JMP EXIT                ; exit back to the operating system

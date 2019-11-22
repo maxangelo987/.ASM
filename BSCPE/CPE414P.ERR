@@ -1,0 +1,695 @@
+.model small
+.code 
+org 100h
+jmp main
+
+hell db '$'
+counter1 db 0
+counter2 db 0
+
+option db 'CpE 414 Project #1-M ',10,13
+	   db 'press [a] or ON switch 2 shiftleft',10,13
+	   db 'press [s] or ON switch 3 shiftright',10,13
+	   db 'press [d] or ON switch 4 wiper',10,13
+	   db 'press [f] or ON switch 5 blink alternate',10,13
+	   db 'press [g] or ON switch 6 chacha',10,13
+	   db 'press [e] or ON switch 7 exit',10,13
+	   db 'Enter your selection here:       ','$'
+
+inputaddr equ 0314h
+outputaddr equ 0315h
+
+chachaw db 'CHACHA OPERATION       $'
+shiftlw db 'SHIFT LEFT OPERATION   $'
+shiftrw db 'SHIFT RIGHT OPERATION  $'
+blinkw  db 'BLINK OPERATION        $'
+wiperw  db 'WIPER OPERATION        $'
+
+main proc near
+call clrscr
+call clrscr2
+
+zz1:
+	mov dx, 00
+	call setcursor
+
+	mov ah, 09h
+	lea dx, option
+	int 21h
+	
+	mov ah, 0bh
+	int 21h
+	cmp al, 00
+	if e jmp yy1
+	
+	mov ah, 00
+	int 16h
+	jmp yy2
+	
+yy1:
+	mov dx, inputaddr
+	in al, dx
+	cmp al, 0ffh
+	if e jmp zz1
+	
+	call analyze_al
+	
+yy2:
+	cmp al, 'a'
+	if e jmp zz2
+	cmp al, 's'
+	if e jmp zz3
+	cmp al, 'd'
+	if e jmp zz4
+	cmp al, 'e'
+	if e jmp exit
+	cmp al, 'f'
+	if e jmp zz5
+	cmp al, 'g'
+	if e jmp zz6
+	jmp zz1
+	
+
+zz2:
+	mov dh, 12
+	mov dl, 29
+	call setcursor
+	
+	mov ah, 09h
+	lea dx, shiftlw
+	int 21h
+	
+	call shiftl
+	call shiftl
+	jmp zz1
+	
+zz3:
+	mov dh, 12
+	mov dl, 29
+	call setcursor
+	
+	mov ah, 09h
+	lea dx, shiftrw
+	int 21h
+	
+	call shiftr
+	call shiftr
+	jmp zz1
+	
+zz4:
+	mov dh, 12
+	mov dl, 29
+	call setcursor
+	
+	mov ah, 09h
+	lea dx, wiperw
+	int 21h
+	
+	call wiper
+	call wiper
+	jmp zz1
+	
+zz5:
+	mov dh, 12
+	mov dl, 29
+	call setcursor
+	
+	mov ah, 09h
+	lea dx, blinkw
+	int 21h
+	
+	call blink
+	call blink
+	jmp zz1
+
+zz6:
+	mov dh, 12
+	mov dl, 29
+	call setcursor
+	
+	mov ah, 09h
+	lea dx, chachaw
+	int 21h
+	
+	call chacha
+	call chacha
+	jmp zz1
+
+exit:
+mov ax, 4c00h
+int 21h
+
+
+;----------------------------------------
+
+analyze_al proc near
+	
+	cmp al, 0fdh
+	if e jmp an1
+	cmp al, 0fbh
+	if e jmp an2
+	cmp al, 0f7h
+	if e jmp an3
+	cmp al, 0efh
+	if e jmp an4
+	cmp al, 0fdh
+	if e jmp an5
+	cmp al, 0dfh
+	if e jmp an6
+	cmp al, 0bfh
+	if e jmp an7
+	jmp an0
+	
+	
+an0:
+	mov al, 'q'
+	jmp an6
+an1:
+	mov al, 'a'
+	jmp an6
+an2:	
+	mov al, 's'
+	jmp an6
+an3:
+	mov al, 'd'
+	jmp an6
+an4:
+	mov al, 'f'
+	jmp an6
+an5:
+	mov al, 'g'
+	jmp an6
+an7:
+	mov al, 'e'
+	jmp an6
+an6:
+	ret
+
+;----------------------------------------
+
+shiftl proc near
+
+mov bh, 8
+mov counter1, bh
+mov bl, 01h
+
+aa1:
+	mov al, bl
+	not al
+	mov dx, outputaddr
+	call outport
+	
+	dec counter1
+	shl bl, 01
+	
+	call delay
+	
+	cmp counter1, 00
+	if ne jmp aa1
+
+ret
+end shiftl
+
+;----------------------------------------
+
+chacha proc near
+
+mov bh, 4
+mov counter1, bh
+mov bl, 05
+
+chacha1:
+	mov al, bl
+	mov dx, outputaddr 
+	not al
+	call outport
+	
+	call delayslow
+	
+	shl bl, 01
+	
+	mov al, bl
+	mov dx, outputaddr 
+	not al
+	call outport
+	
+	call delayslow
+	
+	mov al, bl
+	mov dx, outputaddr 
+	not al
+	call outport
+	
+	call delayslow
+	
+	shl bl, 01
+	
+	dec counter1
+	cmp counter1, 00
+	if ne jmp chacha1
+	
+ret
+end chacha
+
+;----------------------------------------
+
+
+wiper proc near
+
+
+cc1:
+	mov bl, 81h
+	mov al, bl
+	not al
+	mov dx, outputaddr
+	call outport
+	
+	call delay
+	
+	mov bl, 42h
+	mov al, bl
+	not al
+	mov dx, outputaddr
+	call outport
+	
+	call delay
+	
+	mov bl, 24h
+	mov al, bl
+	not al
+	mov dx, outputaddr
+	call outport
+
+	call delay
+	
+	mov bl, 18h
+	mov al, bl
+	not al
+	mov dx, outputaddr
+	call outport
+	
+	call delay
+	
+	mov bl, 24h
+	mov al, bl
+	not al
+	mov dx, outputaddr
+	call outport
+
+	call delay
+	
+	mov bl, 81h
+	mov al, bl
+	not al
+	mov dx, outputaddr
+	call outport
+
+ret
+end wiper
+
+;----------------------------------------
+
+blink proc near
+
+mov bh, 4
+mov counter1, bh
+mov bl, 01010101b
+
+blink1:
+	mov al, bl
+	mov dx, outputaddr
+	call outport
+	
+	call delayslow
+	
+	not bl
+	
+	mov al, bl
+	mov dx, outputaddr
+	call outport
+	
+	call delayslow
+	
+	dec counter1
+	cmp counter1, 00
+	if ne jmp blink1
+	
+ret
+end blink
+
+;----------------------------------------
+
+shiftr proc near
+
+mov bh, 8
+mov counter1, bh
+mov bl, 80h
+
+bb1:
+	mov al, bl
+	not al
+	mov dx, outputaddr
+	call outport
+	
+	dec counter1
+	shr bl, 01
+	
+	call delay
+	
+	cmp counter1, 00
+	if ne jmp bb1
+
+ret
+end shiftr
+
+;----------------------------------------
+
+delay proc near
+
+mov cx, 3000
+delay1:
+	
+	mov dh, 23
+	mov dl, 79
+	call setcursor
+	
+	mov ah, 09h
+	lea dx, hell
+	int 21h
+	
+dec cx
+cmp cx, 00
+if ne jmp delay1
+
+ret
+end delay
+	
+;----------------------------------------
+
+delayslow proc near
+
+mov cx, 5000
+delayslow1:
+	
+	mov dh, 23
+	mov dl, 79
+	call setcursor
+	
+	mov ah, 09h
+	lea dx, hell
+	int 21h
+	
+dec cx
+cmp cx, 00
+if ne jmp delayslow1
+
+ret
+end delayslow
+
+;----------------------------------------
+
+setcursor proc near
+
+mov ah, 02
+mov bh, 00
+int 10h
+ret
+end setcursor
+
+;----------------------------------------
+
+clrscr proc near
+
+mov ah, 06
+mov al, 00
+mov cx, 00
+mov dh, 14
+mov dl, 80
+mov bh, 07h
+int 10h
+ret
+end clrscr
+
+;----------------------------------------
+
+clrscr2 proc near
+
+mov ah, 06
+mov al, 00
+mov ch, 15
+mov cl, 0
+mov dh, 24
+mov dl, 80
+mov bh, 04h
+int 10h
+ret
+end clrscr2
+
+;----------------------------------------
+
+outport proc near
+
+	out dx, al
+	cmp al, 0feh
+	if e jmp oo1
+	cmp al, 0fdh
+	if e jmp oo2
+	cmp al, 0fbh
+	if e jmp oo3
+	cmp al, 0f7h
+	if e jmp oo4
+	cmp al, 0efh
+	if e jmp oo5
+	cmp al, 0dfh
+	if e jmp oo6
+	cmp al, 0bfh
+	if e jmp oo7
+	cmp al, 7fh
+	if e jmp oo8
+	
+	cmp al, 01111110b
+	if e jmp oo9
+	cmp al, 10111110b
+	if e jmp oo10
+	cmp al, 11011011b
+	if e jmp oo11
+	cmp al, 11100111b
+	if e jmp oo12
+	cmp al, 11111010b
+	if e jmp oo13
+	cmp al, 11110101b
+	if e jmp oo14
+	cmp al, 11101011b
+	if e jmp oo15
+	cmp al, 11010111b
+	if e jmp oo16
+	cmp al, 10101111b
+	if e jmp oo17
+	cmp al, 01011110b
+	if e jmp oo18
+	
+	cmp al, 55h
+	if e jmp oo19
+	cmp al, 0aah
+	if e jmp oo20
+	jmp oo22
+	
+	
+oo1:
+	mov dh, 18	
+	mov dl, 28
+	call setcursor
+	lea dx, disp1
+	jmp oo21
+	
+	
+oo2:
+	mov dh, 18	
+	mov dl, 28
+	call setcursor
+	lea dx, disp2
+	jmp oo21
+	
+
+oo3:
+	mov dh, 18	
+	mov dl, 28
+	call setcursor
+	lea dx, disp3
+	jmp oo21
+	
+
+oo4:
+	mov dh, 18	
+	mov dl, 28
+	call setcursor
+	lea dx, disp4
+	jmp oo21
+
+oo5:
+	mov dh, 18	
+	mov dl, 28
+	call setcursor
+	lea dx, disp5
+	jmp oo21
+
+oo6:
+	mov dh, 18	
+	mov dl, 28
+	call setcursor
+	lea dx, disp6
+	jmp oo21
+
+oo7:
+	mov dh, 18	
+	mov dl, 28
+	call setcursor
+	lea dx, disp7
+	jmp oo21
+
+oo8:
+	mov dh, 18	
+	mov dl, 28
+	call setcursor
+	lea dx, disp8
+	jmp oo21
+
+oo9:
+	mov dh, 18	
+	mov dl, 28
+	call setcursor
+	lea dx, disp9
+	jmp oo21
+
+oo10:
+	mov dh, 18	
+	mov dl, 28
+	call setcursor
+	lea dx, disp10
+	jmp oo21
+
+oo11:
+	mov dh, 18	
+	mov dl, 28
+	call setcursor
+	lea dx, disp11
+	jmp oo21
+
+oo12:
+	mov dh, 18	
+	mov dl, 28
+	call setcursor
+	lea dx, disp12
+	jmp oo21
+
+oo13:
+	mov dh, 18	
+	mov dl, 28
+	call setcursor
+	lea dx, disp13
+	jmp oo21
+
+oo14:
+	mov dh, 18	
+	mov dl, 28
+	call setcursor
+	lea dx, disp14
+	jmp oo21
+
+oo15:
+	mov dh, 18	
+	mov dl, 28
+	call setcursor
+	lea dx, disp15
+	jmp oo21
+
+oo16:
+	mov dh, 18	
+	mov dl, 28
+	call setcursor
+	lea dx, disp16
+	jmp oo21
+
+oo17:
+	mov dh, 18	
+	mov dl, 28
+	call setcursor
+	lea dx, disp17
+	jmp oo21
+
+oo18:
+	mov dh, 18	
+	mov dl, 28
+	call setcursor
+	lea dx, disp18
+	jmp oo21
+
+oo19:
+	mov dh, 18	
+	mov dl, 28
+	call setcursor
+	lea dx, disp19
+	jmp oo21
+
+oo20:
+	mov dh, 18	
+	mov dl, 28
+	call setcursor
+	lea dx, disp20
+	jmp oo21
+
+
+oo21:
+	mov ah, 09h
+	int 21h
+	
+oo22:
+	
+	ret
+end outport
+
+	
+
+;----------------------------------------
+
+
+disp1 db 0feh,' ',0feh,' ',0feh,' ',0feh,' ',0feh,' ',0feh,' ',0dbh,10,13
+	  db '                      ',0d0h','0d0h','0d0h','0d0h','0d0h','0d0h','0d0h','0d0h','$'
+disp2 db 0feh,' ',0feh,' ',0feh,' ',0feh,' ',0feh,' ',0feh,' ',0dbh,10,13
+	  db '                      ',0d0h','0d0h','0d0h','0d0h','0d0h','0d0h','0d0h','0d0h','$'
+disp3 db 0feh,' ',0feh,' ',0feh,' ',0feh,' ',0feh,' ',0feh,' ',0dbh,10,13
+	  db '                      ',0d0h','0d0h','0d0h','0d0h','0d0h','0d0h','0d0h','0d0h','$'
+disp4 db 0feh,' ',0feh,' ',0feh,' ',0feh,' ',0feh,' ',0feh,' ',0dbh,10,13
+	  db '                      ',0d0h','0d0h','0d0h','0d0h','0d0h','0d0h','0d0h','0d0h','$'
+disp5 db 0feh,' ',0feh,' ',0feh,' ',0feh,' ',0feh,' ',0feh,' ',0dbh,10,13
+	  db '                      ',0d0h','0d0h','0d0h','0d0h','0d0h','0d0h','0d0h','0d0h','$'
+disp6 db 0feh,' ',0feh,' ',0feh,' ',0feh,' ',0feh,' ',0feh,' ',0dbh,10,13
+	  db '                      ',0d0h','0d0h','0d0h','0d0h','0d0h','0d0h','0d0h','0d0h','$'
+disp7 db 0feh,' ',0feh,' ',0feh,' ',0feh,' ',0feh,' ',0feh,' ',0dbh,10,13
+	  db '                      ',0d0h','0d0h','0d0h','0d0h','0d0h','0d0h','0d0h','0d0h','$'
+disp8 db 0feh,' ',0feh,' ',0feh,' ',0feh,' ',0feh,' ',0feh,' ',0dbh,10,13
+	  db '                      ',0d0h','0d0h','0d0h','0d0h','0d0h','0d0h','0d0h','0d0h','$'
+disp9 db 0feh,' ',0feh,' ',0feh,' ',0feh,' ',0feh,' ',0feh,' ',0dbh,10,13
+	  db '                      ',0d0h','0d0h','0d0h','0d0h','0d0h','0d0h','0d0h','0d0h','$'
+disp10 db 0feh,' ',0feh,' ',0feh,' ',0feh,' ',0feh,' ',0feh,' ',0dbh,10,13
+	  db '                      ',0d0h','0d0h','0d0h','0d0h','0d0h','0d0h','0d0h','0d0h','$'
+disp11 db 0feh,' ',0feh,' ',0feh,' ',0feh,' ',0feh,' ',0feh,' ',0dbh,10,13
+	  db '                      ',0d0h','0d0h','0d0h','0d0h','0d0h','0d0h','0d0h','0d0h','$'
+disp12 db 0feh,' ',0feh,' ',0feh,' ',0feh,' ',0feh,' ',0feh,' ',0dbh,10,13
+	  db '                      ',0d0h','0d0h','0d0h','0d0h','0d0h','0d0h','0d0h','0d0h','$'
+disp13 db 0feh,' ',0feh,' ',0feh,' ',0feh,' ',0feh,' ',0feh,' ',0dbh,10,13
+	  db '                      ',0d0h','0d0h','0d0h','0d0h','0d0h','0d0h','0d0h','0d0h','$'
+disp14 db 0feh,' ',0feh,' ',0feh,' ',0feh,' ',0feh,' ',0feh,' ',0dbh,10,13
+	  db '                      ',0d0h','0d0h','0d0h','0d0h','0d0h','0d0h','0d0h','0d0h','$'
+disp15 db 0feh,' ',0feh,' ',0feh,' ',0feh,' ',0feh,' ',0feh,' ',0dbh,10,13
+	  db '                      ',0d0h','0d0h','0d0h','0d0h','0d0h','0d0h','0d0h','0d0h','$'
+disp16 db 0feh,' ',0feh,' ',0feh,' ',0feh,' ',0feh,' ',0feh,' ',0dbh,10,13
+	  db '                      ',0d0h','0d0h','0d0h','0d0h','0d0h','0d0h','0d0h','0d0h','$'
+disp17 db 0feh,' ',0feh,' ',0feh,' ',0feh,' ',0feh,' ',0feh,' ',0dbh,10,13
+	  db '                      ',0d0h','0d0h','0d0h','0d0h','0d0h','0d0h','0d0h','0d0h','$'
+disp18 db 0feh,' ',0feh,' ',0feh,' ',0feh,' ',0feh,' ',0feh,' ',0dbh,10,13
+	  db '                      ',0d0h','0d0h','0d0h','0d0h','0d0h','0d0h','0d0h','0d0h','$'
+disp19 db 0feh,' ',0feh,' ',0feh,' ',0feh,' ',0feh,' ',0feh,' ',0dbh,10,13
+	  db '                      ',0d0h','0d0h','0d0h','0d0h','0d0h','0d0h','0d0h','0d0h','$'
+disp20 db 0feh,' ',0feh,' ',0feh,' ',0feh,' ',0feh,' ',0feh,' ',0dbh,10,13
+	  db '                      ',0d0h','0d0h','0d0h','0d0h','0d0h','0d0h','0d0h','0d0h','$'

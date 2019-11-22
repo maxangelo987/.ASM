@@ -1,0 +1,66 @@
+.model small
+.code
+org 100h
+jmp main
+
+num1 db 5
+num2 db 6
+
+
+sum db ?
+
+string1 db 'MATHEMATICAL OPERATION','$'
+equal db 'EQUAL','$'
+greater db 'GREATER','$'
+lesser db 'LESSER','$'
+
+main proc near
+ mov ax, 03h ; clrscr
+ int 10h
+
+ mov ah,09h   ; print string1
+ lea dx, string1
+ int 21h
+
+ mov ah, num1
+ mov al, num2
+
+ sub ah, al
+ jz equal1
+ jg greater1
+ jl lesser1
+
+equal1:
+ mov ah, 09h
+ lea dx, equal
+ int 21h
+ jmp stop
+
+greater1:
+ mov ah, 09h
+ lea dx, greater
+ int 21h
+ jmo loop1
+
+lesser1:
+ mov ah, 09h
+ lea dx, lesser
+ int 2h
+ jmp stop
+
+loop1:
+ add ah, al
+ dec al
+
+loop2:
+ add ah, num1
+ dec al
+ jnz loop2
+ jz stop
+
+stop:
+ main endp
+ end begin
+
+
+ 

@@ -1,0 +1,66 @@
+.model small
+.code
+org 100h
+
+
+plist1 label byte
+maxlen1 db 20
+actlen1 db ?
+kybd1 db 21 dup('$'),'$'
+
+word1 db 0ah,0dh,'$'
+kybd2 db 21 dup('$'),'$'
+
+jmp main
+
+main proc near
+
+mov ax, 03h
+int 10h
+
+
+mov ah, 0ah
+lea dx, plist1
+int 21h
+
+
+mov al, actlen1
+loop1:
+	sub al, 2
+	cmp al, 0
+	if e jmp even1
+	cmp al, -1
+	if e jmp stop
+	jmp loop1
+	
+even1:
+	mov bl, actlen1
+	mov al, 0
+	
+loop2:
+		sub bl, 2
+		cmp bl, 0
+		if e jmp here
+		inc al
+		jmp loop2
+
+	here:
+		
+		mov bl, al
+		mov ah, kybd1[bx]
+		mov kybd2[0],ah
+	
+		mov ah, kybd1[bx+1]
+		mov kybd2[1],ah
+		
+		mov ah, 09h
+		lea dx, word1
+		int 21h
+
+
+		mov ah, 09h
+		lea dx, kybd2
+		int 21h
+	
+stop:
+int 20h

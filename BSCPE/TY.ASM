@@ -1,0 +1,60 @@
+.model small
+.code
+org 100h
+
+jmp main
+       
+plist label byte
+maxlen db 49
+actlen db ?
+kybd db 50 dup ('$'),0ah,0dh,'$'
+
+newline db 0ah,0dh,'$'
+string2 db 16 dup('$'),'$'
+ 
+ main proc near
+	mov ax, 03h
+	int 10h
+	
+mov ah,0ah  ; scaning string
+lea dx, plist
+int 21h
+
+
+	;lea si,string1
+	;lea di,string2
+	;mov cx,16
+	
+	mov bl, actlen
+	mov di, 0
+
+	
+process:
+		cmp bx,-1
+		if e jmp here
+		mov al,kybd[bx]
+		mov string2[di],al
+		inc di
+		dec bx
+		jmp process
+	
+	
+here:
+mov ah,09h
+lea dx,kybd
+int 21h
+
+
+mov ah,09h
+lea dx,newline
+int 21h
+
+
+mov ah,09h
+lea dx,string2
+int 21h
+
+int 20h
+main endp
+end main
+		

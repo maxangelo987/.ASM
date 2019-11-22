@@ -1,0 +1,48 @@
+.model small
+.code
+org 100h
+jmp begin
+
+word1 db 'ASSEMBLY'
+word2 db 'LANGUAGE'
+word3 db  16 dup ('0'),'$'
+
+begin: main proc near
+
+mov ax, 03h   ; Clearscreen
+int 10h
+mov bx, 00h
+
+here:
+    mov al, word1[bx]
+    mov word3[bx], al
+    inc ch
+    cmp ch, 07h
+    je here1
+    jne here
+
+here1:
+    mov cl, 08h
+    mov dl, 08h
+
+here2:
+    mov al, word2[cl-1]
+    mov word3[dl],al
+    inc dl
+    dcr cl
+    jz output
+    jnz here2
+
+output:
+     mov ah, 09h
+     lea dx, word3
+     int 21h
+
+
+mov ax, 4c00h
+int 21h       ; Terminating
+
+main endp
+end main
+
+

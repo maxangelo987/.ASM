@@ -1,0 +1,111 @@
+.model small
+.code
+org 100h
+jmp a10main
+
+
+ctr db 00
+col db 24
+row db 04
+mode db ?
+
+
+; Main Procedure
+; _ _ _ _ _ _ _
+
+a10main proc near
+ call b10mode
+ call c10mode
+
+a20:
+ call d10set
+ call e10disp
+ cmp ctr, 0ffh
+ je a30
+ inc ctr
+ add col, 02
+ cmp col, 56
+ jne a20
+ inc row
+ mov col, 24
+ jmp a20
+
+a30:
+ call floread
+ call g10mode
+ moc ax, 4c00h
+ int 21h
+
+a10main endp
+ ; __ get and set video mode ___
+
+b10mode proc near
+ mov ah, 0fh
+ int 10h
+ mov mode, al
+ mov ah, 00h
+ mov al, 03
+ int 10h
+
+ret
+ b10mode endp
+
+cl0clr proc near
+ mov ah, 08h
+ int 10h
+ mov bh, ah
+ mov ax, 0600h
+ mov cx, 0000h
+ mov dx, 184fh
+ int 10h
+
+ mov ax, 0610h
+ mov bh, 16h
+ mov cx, 0418h
+ mov dx, 1336h
+ int 10h
+ ret
+ c10clr endp
+
+d10set proc near
+ mov ah, 02h
+ mov bh, 00
+ mov dh, row
+ mov dl, col
+ int 10h
+
+ ret
+ d10set endp
+
+; __ Display ASCII characters __
+
+e10disp proc near
+ mov ah, 09h
+ mov al, ctr
+ mov bh, 00
+ mov bl, 14h
+ mov cx, 01
+ int 10h
+
+ ret
+ e10disp endp
+
+ ; __ Force pause, get keyboard char ___
+
+f10read proc near
+ mov ah, 10h
+ int 16h
+
+ ret
+ floread endp
+
+ ; _ restore original mode _
+
+g10mode proc near
+ mov ah, 00h
+ mov al, mode
+ int 10h
+ ret
+g10mode endp
+
+end main

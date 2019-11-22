@@ -1,0 +1,80 @@
+.model small 
+.code
+
+org 100h
+jmp main
+
+parlist         label                   byte
+max 		db			20
+act             db                      ?
+inp1            db                      21 dup (' ')'$'
+
+password        db                      'rno101','$'
+life            db                      04h 
+pass101		db 			0ah,0dh,'Pass Word Accepted.','$'
+ask             db                      0ah,0dh,'Enter a Password: ','$'
+not_pass101     db                      0ah,0dh,'Sorry,Out Life.','$'
+
+main proc near
+        mov ax, 03h   ;clear the screen
+        int 10h
+
+a1:
+	dec life
+	jz not_pass
+	jnz a2
+a2:
+	mov ah, 09h
+	lea dx, ask
+	int 21h
+
+        mov ah, 0ah
+	lea dx, parlist 
+	int 21h
+
+        lea di, password
+	lea si, inp1
+	mov cl, act
+
+	cmp cl, 06h
+	jne a1
+        je com_101
+
+com_101:
+	mov ah, [si]
+	cmp ah, 61h
+	je com_2
+	jb a1
+	cmp ah, 7ah
+	ja a1
+com_2:
+	mov bh, [di]
+	cmp ah, bh
+	jne a1
+	je inc_val
+
+inc_val:
+	inc si
+	inc di
+        cmp di, 05h
+	je pass
+        jne com_101
+
+pass:
+	mov ah, 09h
+	lea dx, pass101
+	int 21h
+	jmp exit101
+
+not_pass:
+	mov ah, 09h
+        lea dx, not_pass101
+	int 21h
+	jmp exit101
+	
+exit101:
+	mov ax, 4c00h
+	int 21h
+	
+main endp
+end main	

@@ -1,0 +1,83 @@
+;			//Problem//
+;Input(word): Hello	
+;Output(sort increasing): eHllo 
+
+
+.model small
+.code
+
+org 100h
+jmp main 
+
+intro 	db	 "Enter Input(word): ",'$'
+outro	db 	 0ah,0dh,"Output: ",'$'
+	
+;------------------------------------
+parlist 	label 	byte
+maxlen 		db	 	30
+actlen 		db 		?
+input		db 		31 dup (' ')
+output 		db 		31 dup (' '),'$'
+;------------------------------------
+
+counter 	db 		?
+
+main proc near
+
+	mov ax, 03h
+	int 10h
+	
+	mov ah, 09h
+	lea dx, intro
+	int 21h
+	
+	mov ah, 0ah
+	lea dx, parlist
+	int 21h
+	
+	lea di, input 
+	lea si, output
+	mov cl, actlen 
+	dec cl
+a0:
+	mov al, 0
+	a1:
+		mov bl, input[al]
+		inc al
+		mov dl, input[al]
+		cmp bl, dl
+		ja nxt
+		jb process
+		je nxt
+		
+			nxt:
+				jmp a0
+			process:
+				mov ah,bl
+				mov bl,dl
+				mov dl,ah
+				cmp cl,al
+				jne a1
+		
+		mov [si],dl
+		inc si
+		dec cl
+		jz print		
+		jnz a0		
+				
+print:	
+	mov ah, 09h
+	lea dx, outro
+	int 21h
+	
+	mov ah, 09h
+	lea dx, output
+	int 21h
+	
+	mov ax, 4c00h
+	int 21h
+	
+main endp
+end main
+				
+				

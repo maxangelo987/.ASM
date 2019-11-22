@@ -1,0 +1,230 @@
+.model small
+.code
+org 100h
+jmp main
+
+
+plist1 label byte
+maxlen1 db 30
+actlen1 db ?
+kybd1 db 31 dup ('$'),'$'
+
+
+ctr db 00
+col db ?
+row db ?
+mode db ?
+
+
+word9 db 'Enter String:  ','$'
+
+fword db 15 dup ('$')
+
+odd1 db 'ODD','$'
+even1 db 'EVEN','$'
+
+quot1 db ?
+
+main proc near
+ mov ax, 03h
+ int 10h
+
+ mov ah, 09h
+ lea dx, word9
+ int 21h
+
+ mov ah, 0ah
+ lea dx, plist1
+ int 21h
+ 
+ mov ax, 03h
+ int 10h
+
+
+mov bl, actlen1
+
+div2:
+ sub bl, 2h
+ cmp bl, 0h
+ je are
+ cmb bl, 1h
+ je are
+ inc quot1
+ jmp div2
+
+
+are:
+
+mov ah, actlen1
+div1:
+ sub ah, 2h
+ cmp ah, 00h
+ je even_i
+ cmp ah, 01h
+ je odd_i
+ jmp div1
+
+; ______
+
+
+
+
+even_i:
+ 
+ mov bl, quot1
+ mov cl, 20
+  
+ sub cl, bl
+ mov col, cl
+ 
+ lea si, kybd1
+ lea di, fword
+ 
+ mov bl, actlen1
+ inc bl
+
+trans1:
+ dec bl
+ cmp bl, 00h
+ je b10 
+ mov cl, [si]
+ mov [di], cl
+ inc si
+ inc si
+ inc di
+ jmp trans1
+
+
+
+b10:
+ mov ah, 0fh
+ int 10h
+
+ mov mode, al
+ mov ah, 00h
+ mov al, 03
+ int 10h
+ 
+ mov al, ctr
+ mov col, al
+
+c10:              ; color
+ mov ah, 08h
+ int 10h
+ mov bh, ah
+ mov ax, 0600h
+ mov cx, 0000h
+ mov dx, 184fh
+ int 10h                                               
+
+ mov ax, 0600h
+ mov bh, 16h
+ mov cx, 0000h
+ mov dx, 0B28h
+ int 10h
+
+d10:
+ mov ah, 02h       ; cursor
+ mov bh, 00
+ mov dh, 05          ; row
+ mov dl, col         ;
+ int 10h
+
+e10:
+ mov ah, 09h
+ lea dx, fword
+ int 21h 
+
+flo:
+ mov ah, 10h
+ int 16h
+
+glo:
+ mov ah, 00h
+ mov al, mode
+ int 10h
+ jmp stop
+
+
+;_______
+
+
+
+odd_i:
+
+ mov ax, 03h
+ int 10h
+
+ mov ah, 09h
+ lea dx, odd1
+ int 21h
+
+ lea si, kybd1
+ lea di, fword
+ 
+ mov bl, actlen1
+ inc bl
+
+trans:
+ dec bl
+ cmp bl, 00h
+ je b11
+ inc si 
+ mov cl, [si]
+ mov [di], cl
+ inc si
+ inc di
+ jmp trans
+
+
+
+
+ b11:
+ mov ah, 0fh
+ int 10h
+
+ mov mode, al
+ mov ah, 00h
+ mov al, 03
+ int 10h
+
+c11:              ; color
+ mov ah, 08h
+ int 10h
+ mov bh, ah
+ mov ax, 0600h
+ mov cx, 0000h
+ mov dx, 184fh
+ int 10h                                               
+
+ mov ax, 0600h
+ mov bh, 81h
+ mov cx, 0B28h
+ mov dx, 1950h
+ int 10h
+
+d11:
+ mov ah, 02h       ; cursor
+ mov bh, 00        ; normal force
+ mov dh, 18
+ mov dl, 60
+ int 10h
+
+e11:
+ mov ah, 09h
+ lea dx, fword
+ int 21h 
+
+fl1:
+ mov ah, 10h
+ int 16h
+
+gl1:
+ mov ah, 00h
+ mov al, mode
+ int 10h
+ jmp stop
+
+stop:
+ mov ax, 4c00h
+ int 21h

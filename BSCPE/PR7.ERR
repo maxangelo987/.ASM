@@ -1,0 +1,629 @@
+.model small
+.code
+org 100h
+jmp main
+
+
+
+block1b db  '                лллллллллллллллллллллллллллллллллллллллллллллллллл  ',0ah,0dh,'$'
+block1c db  '                лллллллллллллллллллллллллллллллллллллллллллллллллл  ',0ah,0dh,'$'
+block1d db  '                лллллллллллллллллллллллллллллллллллллллллллллллллл  ',0ah,0dh  ,'$'
+block1e db  '                лл                                              лл  ',0ah,0dh,'$'
+block1f db  '                лл                                              лл  ',0ah,0dh ,'$'
+block1g db  '                лл  л   л  лл   л  ллл  л      ллл   ллл  л  л  лл  ',0ah,0dh,'$'
+block1h db  '                лл  л   л  л л  л  л  л л     л   л л     л л   лл  ',0ah,0dh,'$'
+block1i db  '                лл  л   л  л  л л  ллл  л     л   л л     лл    лл  ',0ah,0dh,'$'
+block1j db  '                лл  л   л  л   лл  л  л л     л   л л     л л   лл  ',0ah,0dh,'$'
+block1k db  '                лл   ллл   л    л  ллл  ллллл  ллл   ллл  л  л  лл  ',0ah,0dh,'$'
+block2a db  '                лл                                              лл  ',0ah,0dh,'$'
+block2b db  '                лл   ллллл л  л лллл   л  л  л  лл   л   ллл    лл  ',0ah,0dh,'$'
+block2c db  '                лл     л   л  л л      л л      л л  л  л       лл  ',0ah,0dh,'$'
+block2d db  '                лл     л   лллл ллл    лл    л  л  л л  л  лл   лл  ',0ah,0dh,'$'
+block2e db  '                лл     л   л  л л      л л   л  л   лл  л   л   лл  ',0ah,0dh,'$'
+block2f db  '                лл     л   л  л лллл   л  л  л  л    л   ллл    лл  ',0ah,0dh,'$'
+block2g db  '                лл                                              лл  ',0ah,0dh ,'$'
+block2h db  '                лллллллллллллллллллллллллллллллллллллллллллллллллл  ',0ah,0dh,'$'
+block2i db  '                лллллллллллллллллл PRESS ANY KEY ллллллллллллллллл  ',0ah,0dh,'$'
+block2j db  '                лллллллллллллллллллллллллллллллллллллллллллллллллл  ',0ah,0dh,'$'
+
+
+marg1   db  '                                                                               ',0ah,0dh
+	db  ' кФФФФФФФФФФФФФФФФФФФФФФФФФФФФФФФФФФФФФФФФФФФФФФФФФФФФФФФФФФФФФФФФФФФФФФФФФФФФП',0ah,0dh
+        db  ' Г                                                                            Г',0ah,0dh
+        db  ' Г                                                                            Г',0ah,0dh 
+        db  ' Г                                                                            Г',0ah,0dh
+        db  ' Г                                                                            Г',0ah,0dh 
+        db  ' Г                                                                            Г',0ah,0dh
+        db  ' Г                                                                            Г',0ah,0dh
+        db  ' Г                                                                            Г',0ah,0dh 
+        db  ' Г                                                                            Г',0ah,0dh
+        db  ' Г                                                                            Г',0ah,0dh
+        db  ' Г                                                                            Г',0ah,0dh
+        db  ' Г                                                                            Г',0ah,0dh
+        db  ' Г                                                                            Г',0ah,0dh
+        db  ' Г                                                                            Г',0ah,0dh
+        db  ' Г                                                                            Г',0ah,0dh
+        db  ' Г                                                                            Г',0ah,0dh
+        db  ' Г                                                                            Г',0ah,0dh
+        db  ' Г                                                                            Г',0ah,0dh
+        db  ' Г                                                                            Г',0ah,0dh
+        db  ' Г                                                                            Г',0ah,0dh
+        db  ' Г                                                                            Г',0ah,0dh
+        db  ' Г                                                                            Г',0ah,0dh
+        db  ' Г                                                                            Г',0ah,0dh
+        db  ' РФФФФФФФФФФФФФФФФФФФФФФФФФФФФФФФФФФФФФФФФФФФФФФФФФФФФФФФФФФФФФФФФФФФФФФФФФФФФй',0ah,0dh,'$'
+
+
+                 
+intro1          db              ' Г                             UNBLOCK THE KING                            ', 0ah,0dh
+                db              ' Г                                                                         ', 0ah,0dh
+                db              ' Г Prolouge:                                                               ', 0ah,0dh
+                db              ' Г                                                                         ', 0ah,0dh
+                db              ' Г          Once upon a time, Zeus had a son with a mortal Queen in the    ', 0ah,0dh
+                db              ' Г Kingdom of Argos, the boy became the successor of the previous King     ', 0ah,0dh
+                db              ' Г and ruled gallantly. Hera, Zeuss wife and the Goddess of Patron of      ', 0ah,0dh 
+                db              ' Г marriage became aware of his husbands adultery. She then transcended    ', 0ah,0dh 
+                db              ' Г to the human realm to banish the King of Argos. The Kings name was      ', 0ah,0dh                                ', 0ah,0dh
+                db              ' Г Maximus, Hera then approched him in the castle and revealed to him the  ', 0ah,0dh                
+                db              ' Г truth followed with a curse that banished him into the catalombs of the ', 0ah,0dh
+                db              ' Г Underworlds. The place was a maze filled with heavy blocks that blocks  ', 0ah,0dh
+                db              ' Г the exit. Zeus then heard the news about his son. He cannot go directly ','$'
+
+
+row db 3
+col db 0
+
+row2 db 22
+col2 db 0
+
+main proc near
+mov ax,03h
+int 10h
+
+call title_page
+call delay
+call delay
+call delay
+call delay
+call delay
+call delay
+call delay
+call page1
+
+stop:
+mov ax,4c00h
+int 21h
+
+main endp
+end main
+
+
+title_page proc near 
+
+   	mov ah,06h        ;set color background 
+        mov al,00h
+        mov ch,row
+        mov cl,0
+        mov dh,row
+        mov dl,79
+        mov bh,04h ; 27
+        int 10h
+
+	mov ah,02h
+	mov bh,00
+	mov dh,row
+	mov dl,col
+	int 10h
+		
+
+        mov ah, 09h
+        lea dx, block1b
+        int 21h
+
+	mov ax,0600h
+	mov bh,06h
+	mov ch,row2
+	mov cl,0
+	mov dh,row2
+	mov dl,79
+	int 10h
+
+	mov ah,02h
+	mov bh,00
+	mov dh,row2
+	mov dl,col
+	int 10h
+
+	mov ah,09h
+	lea dx,block2j
+	int 21h
+
+;===========================================  	
+
+inc row
+dec row2
+call delay
+
+mov ah,06h        ;set color background 
+        mov al,00h
+        mov ch,row
+        mov cl,0
+        mov dh,row
+        mov dl,79
+        mov bh,04h ; 27
+        int 10h
+
+	mov ah,02h
+	mov bh,00
+	mov dh,row
+	mov dl,col
+	int 10h
+	
+	
+        mov ah, 09h
+        lea dx, block1c
+        int 21h
+
+	mov ax,0600h
+	mov bh,06h
+	mov ch,row2
+	mov cl,0
+	mov dh,row2
+	mov dl,79
+	int 10h
+
+	mov ah,02h
+	mov bh,00
+	mov dh,row2
+	mov dl,col
+	int 10h
+
+	mov ah,09h
+	lea dx,block2i
+	int 21h
+
+
+;===========================================  	
+
+inc row
+dec row2
+call delay
+
+mov ah,06h        ;set color background 
+        mov al,00h
+        mov ch,row
+        mov cl,0
+        mov dh,row
+        mov dl,79
+        mov bh,04h ; 27
+        int 10h
+
+	mov ah,02h
+	mov bh,00
+	mov dh,row
+	mov dl,col
+	int 10h
+	
+	
+        mov ah, 09h
+        lea dx, block1d
+        int 21h
+
+	mov ax,0600h
+	mov bh,06h
+	mov ch,row2
+	mov cl,0
+	mov dh,row2
+	mov dl,79
+	int 10h
+
+	mov ah,02h
+	mov bh,00
+	mov dh,row2
+	mov dl,col
+	int 10h
+
+	mov ah,09h
+	lea dx,block2h
+	int 21h
+
+
+	;===========================================  	
+
+inc row
+dec row2
+call delay
+
+mov ah,06h        ;set color background 
+        mov al,00h
+        mov ch,row
+        mov cl,0
+        mov dh,row
+        mov dl,79
+        mov bh,04h ; 27
+        int 10h
+
+	mov ah,02h
+	mov bh,00
+	mov dh,row
+	mov dl,col
+	int 10h
+	
+	
+        mov ah, 09h
+        lea dx, block1e
+        int 21h
+
+	mov ax,0600h
+	mov bh,06h
+	mov ch,row2
+	mov cl,0
+	mov dh,row2
+	mov dl,79
+	int 10h
+
+	mov ah,02h
+	mov bh,00
+	mov dh,row2
+	mov dl,col
+	int 10h
+
+	mov ah,09h
+	lea dx,block2g
+	int 21h
+
+;===========================================  	
+
+
+inc row
+dec row2
+call delay
+
+mov ah,06h        ;set color background 
+        mov al,00h
+        mov ch,row
+        mov cl,0
+        mov dh,row
+        mov dl,79
+        mov bh,04h ; 27
+        int 10h
+
+	mov ah,02h
+	mov bh,00
+	mov dh,row
+	mov dl,col
+	int 10h
+	
+	
+        mov ah, 09h
+        lea dx, block1f
+        int 21h
+
+	mov ax,0600h
+	mov bh,06h
+	mov ch,row2
+	mov cl,0
+	mov dh,row2
+	mov dl,79
+	int 10h
+
+	mov ah,02h
+	mov bh,00
+	mov dh,row2
+	mov dl,col
+	int 10h
+
+	mov ah,09h
+	lea dx,block2f
+	int 21h
+
+
+
+;===========================================  	
+
+
+inc row
+dec row2
+call delay
+
+mov ah,06h        ;set color background 
+        mov al,00h
+        mov ch,row
+        mov cl,0
+        mov dh,row
+        mov dl,79
+        mov bh,04h ; 27
+        int 10h
+
+	mov ah,02h
+	mov bh,00
+	mov dh,row
+	mov dl,col
+	int 10h
+	
+	
+        mov ah, 09h
+        lea dx, block1g
+        int 21h
+
+	mov ax,0600h
+	mov bh,06h
+	mov ch,row2
+	mov cl,0
+	mov dh,row2
+	mov dl,79
+	int 10h
+
+	mov ah,02h
+	mov bh,00
+	mov dh,row2
+	mov dl,col
+	int 10h
+
+	mov ah,09h
+	lea dx,block2e
+	int 21h
+
+
+
+;===========================================  	
+
+
+inc row
+dec row2
+call delay
+
+mov ah,06h        ;set color background 
+        mov al,00h
+        mov ch,row
+        mov cl,0
+        mov dh,row
+        mov dl,79
+        mov bh,04h ; 27
+        int 10h
+
+	mov ah,02h
+	mov bh,00
+	mov dh,row
+	mov dl,col
+	int 10h
+	
+	
+        mov ah, 09h
+        lea dx, block1h
+        int 21h
+
+	mov ax,0600h
+	mov bh,06h
+	mov ch,row2
+	mov cl,0
+	mov dh,row2
+	mov dl,79
+	int 10h
+
+	mov ah,02h
+	mov bh,00
+	mov dh,row2
+	mov dl,col
+	int 10h
+
+	mov ah,09h
+	lea dx,block2d
+	int 21h
+
+
+
+;===========================================  	
+
+
+inc row
+dec row2
+call delay
+
+mov ah,06h        ;set color background 
+        mov al,00h
+        mov ch,row
+        mov cl,0
+        mov dh,row
+        mov dl,79
+        mov bh,04h ; 27
+        int 10h
+
+	mov ah,02h
+	mov bh,00
+	mov dh,row
+	mov dl,col
+	int 10h
+	
+	
+        mov ah, 09h
+        lea dx, block1i
+        int 21h
+
+	mov ax,0600h
+	mov bh,06h
+	mov ch,row2
+	mov cl,0
+	mov dh,row2
+	mov dl,79
+	int 10h
+
+	mov ah,02h
+	mov bh,00
+	mov dh,row2
+	mov dl,col
+	int 10h
+
+	mov ah,09h
+	lea dx,block2c
+	int 21h
+
+
+;===========================================  	
+
+
+inc row
+dec row2
+call delay
+
+mov ah,06h        ;set color background 
+        mov al,00h
+        mov ch,row
+        mov cl,0
+        mov dh,row
+        mov dl,79
+        mov bh,04h ; 27
+        int 10h
+
+	mov ah,02h
+	mov bh,00
+	mov dh,row
+	mov dl,col
+	int 10h
+	
+	
+        mov ah, 09h
+        lea dx, block1j
+        int 21h
+
+	mov ax,0600h
+	mov bh,06h
+	mov ch,row2
+	mov cl,0
+	mov dh,row2
+	mov dl,79
+	int 10h
+
+	mov ah,02h
+	mov bh,00
+	mov dh,row2
+	mov dl,col
+	int 10h
+
+	mov ah,09h
+	lea dx,block2b
+	int 21h
+
+
+;===========================================  	
+
+
+inc row
+dec row2
+call delay
+
+mov ah,06h        ;set color background 
+        mov al,00h
+        mov ch,row
+        mov cl,0
+        mov dh,row
+        mov dl,79
+        mov bh,04h ; 27
+        int 10h
+
+	mov ah,02h
+	mov bh,00
+	mov dh,row
+	mov dl,col
+	int 10h
+	
+	
+        mov ah, 09h
+        lea dx, block1k
+        int 21h
+
+	mov ax,0600h
+	mov bh,06h
+	mov ch,row2
+	mov cl,0
+	mov dh,row2
+	mov dl,79
+	int 10h
+
+	mov ah,02h
+	mov bh,00
+	mov dh,row2
+	mov dl,col
+	int 10h
+
+	mov ah,09h
+	lea dx,block2a
+	int 21h
+
+
+
+;===========================================  	
+
+
+
+ret
+title_page endp
+
+
+
+page1 proc near
+	mov ax, 03h
+	int 10h
+	
+	mov ah,06h                      ; set color background 
+        mov al,00h
+        mov ch,00
+        mov cl,00
+        mov dh,24
+        mov dl,79
+        mov bh,04h 
+        int 10h
+	
+	mov ah, 02h
+        mov dh, 00h
+        mov dl, 00h
+        mov bh, 00h
+        int 10h
+
+	mov ah, 09h
+        lea dx, marg1
+        int 21h
+
+		
+        mov ah, 02h
+        mov dh, 03h
+        mov dl, 00h
+        mov bh, 00h
+        int 10h
+		
+        mov ah, 09h
+        lea dx, intro1		; load intro
+        int 21h
+		
+	mov ah,0bh
+	int 21h
+
+        mov ah,07h
+	int 21h
+		
+ret	
+page endp
+end page
+
+	
+;_________________
+	
+delay proc near
+
+mov cx,20000
+
+delay1:
+
+push cx
+mov cx, 2000
+
+delay2:
+loop delay2
+pop cx
+
+loop delay1
+
+ret
+delay endp
+end delay
+;_________________

@@ -1,0 +1,14 @@
+.model small
+.code
+org 100h
+jmp main
+
+word db 'Hello Assembly$'
+
+main proc near
+
+mov ah, 09h
+lea dx, word
+int 21h
+
+int 20h

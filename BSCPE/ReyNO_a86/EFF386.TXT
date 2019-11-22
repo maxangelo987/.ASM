@@ -1,0 +1,106 @@
+Encoding of 32-bit Effective Addresses
+
+Unless you are concerned with the nitty-gritty details of 86
+instruction encoding, you don't need to read this file.
+
+The file EFF86.TXT describes the encoding of opcode bytes for
+16-bit effective addresses.  If the instruction is preceded by
+an A4 address override byte (opcode 67 hex), or if the code
+segment is of type USE32 and the A4 byte is *not* present, then
+the encoding of EFF86.TXT is not used at all, and the following
+encoding is used instead.
+
+Recall that in 16-bit mode, the effective address consists
+of a single byte (taken from the chart in EFF86.TXT), possibly
+followed by an 8-bit or a 16-bit displacement value.  In 32-bit
+mode, the effective address consists of 1 or 2 bytes, possibly 
+followed by an 8-bit or a 32-bit displacement value.  The first
+byte is taken from the follwing table; if its value has an
+"s-i-b" entry in the "Reg-or-memory operand" column, then
+there is a second byte, taken from the second table.
+
+ ES   CS   SS   DS   FS   GS
+ AL   CL   DL   BL   AH   CH   DH   BH
+ AX   CX   DX   BX   SP   BP   SI   DI
+ EAX  ECX  EDX  EBX  ESP  EBP  ESI  EDI
+  0    1    2    3    4    5    6    7
+                                        Reg-or-memory
+                                         operand:
+ 00   08   10   18   20   28   30   38   50  [EAX]
+ 01   09   11   19   21   29   31   39   48  [ECX]
+ 02   0A   12   1A   22   2A   32   3A   30  [EDX]
+ 03   0B   13   1B   23   2B   33   3B   28  [EBX]
+ 04   0C   14   1C   24   2C   34   3C   10  s-i-b, baserow #1
+ 05   0D   15   1D   25   2D   35   3D   08  d32 (simple var)
+ 06   0E   16   1E   26   2E   36   3E   04  [ESI]
+ 07   0F   17   1F   27   2F   37   3F   40  [EDI]
+
+ 40   48   50   58   60   68   70   78    [EAX] + d8
+ 41   49   51   59   61   69   71   79    [ECX] + d8
+ 42   4A   52   5A   62   6A   72   7A    [EDX] + d8
+ 43   4B   53   5B   63   6B   73   7B    [EBX] + d8
+ 44   4C   54   5C   64   6C   74   7C    s-i-b, baserow #2
+ 45   4D   55   5D   65   6D   75   7D    [EBP] + d8
+ 46   4E   56   5E   66   6E   76   7E    [ESI] + d8
+ 47   4F   57   5F   67   6F   77   7F    [EDI] + d8
+ 80   88   90   98   A0   A8   B0   B8    [EAX] + d32
+ 81   89   91   99   A1   A9   B1   B9    [ECX] + d32
+ 82   8A   92   9A   A2   AA   B2   BA    [EDX] + d32
+ 83   8B   93   9B   A3   AB   B3   BB    [EBX] + d32
+ 84   8C   94   9C   A4   AC   B4   BC    s-i-b, baserow #3
+ 85   8D   95   9D   A5   AD   B5   BD    [EBP] + d32
+ 86   8E   96   9E   A6   AE   B6   BE    [ESI] + d32
+ 87   8F   97   9F   A7   AF   B7   BF    [EDI] + d32
+ C0   C8   D0   D8   E0   E8   F0   F8    rmv=eAX   rmb=AL
+ C1   C9   D1   D9   E1   E9   F1   F9    rmv=eCX   rmb=CL
+ C2   CA   D2   DA   E2   EA   F2   FA    rmv=eDX   rmb=DL
+ C3   CB   D3   DB   E3   EB   F3   FB    rmv=eBX   rmb=BL
+ C4   CC   D4   DC   E4   EC   F4   FC    rmv=eSP   rmb=AH
+ C5   CD   D5   DD   E5   ED   F5   FD    rmv=eBP   rmb=CH
+ C6   CE   D6   DE   E6   EE   F6   FE    rmv=eSI   rmb=DH
+ C7   CF   D7   DF   E7   EF   F7   FF    rmv=eDI   rmb=BH
+
+
+     
+Values for the s-i-b (scale-index-base) byte
+--------------------------------------------
+          
+Base:
+row #1 [EAX]  [ECX]  [EDX]  [EBX]  [ESP]   d32   [ESI]  [EDI]
+row #2  +d8    +d8    +d8    +d8    +d8    +d8    +d8    +d8
+row #3 +d32   +d32   +d32   +d32   +d32   +d32   +d32  +d32
+s-i-b                                                          Index:
+byte:   00     01     02     03     04     05     06     07    [EAX]
+        08     09     0A     0B     0C     0D     0E     0F    [ECX]
+        10     11     12     13     14     15     16     17    [EDX]
+        18     19     1A     1B     1C     1D     1E     1F    [EBX]
+                                    24                         none            
+        28     29     2A     2B     2C     2D     2E     2F    [EBP]
+        30     31     32     33     34     35     36     37    [ESI]
+        38     39     3A     3B     3C     3D     3E     3F    [EDI]
+        40     41     42     43     44     45     46     47    [EAX*2]
+        48     49     4A     4B     4C     4D     4E     4F    [ECX*2]
+        50     51     52     53     54     55     56     57    [EDX*2]
+        58     59     5A     5B     5C     5D     5E     5F    [EBX*2]
+                                                               undefined
+        68     69     6A     6B     6C     6D     6E     6F    [EBP*2]
+        70     71     72     73     74     75     76     77    [ESI*2]
+        78     79     7A     7B     7C     7D     7E     7F    [EDI*2]
+        80     81     82     83     84     85     86     87    [EAX*4]
+        88     89     8A     8B     8C     8D     8E     8F    [ECX*4]
+        90     91     92     93     94     95     96     97    [EDX*4]
+        98     99     9A     9B     9C     9D     9E     9F    [EBX*4]
+                                                               undefined
+        A8     A9     AA     AB     AC     AD     AE     AF    [EBP*4]
+        B0     B1     B2     B3     B4     B5     B6     B7    [ESI*4]
+        B8     B9     BA     BB     BC     BD     BE     BF    [EDI*4]
+        C0     C1     C2     C3     C4     C5     C6     C7    [EAX*8]
+        C8     C9     CA     CB     CC     CD     CE     CF    [ECX*8]
+        D0     D1     D2     D3     D4     D5     D6     D7    [EDX*8]
+        D8     D9     DA     DB     DC     DD     DE     DF    [EBX*8]
+                                                               undefined
+        E8     E9     EA     EB     EC     ED     EE     EF    [EBP*8]
+        F0     F1     F2     F3     F4     F5     F6     F7    [ESI*8]
+        F8     F9     FA     FB     FC     FD     FE     FF    [EDI*8]
+
+

@@ -1,0 +1,12 @@
+
+jmp main
+
+word1 db 'Hello Assembly$'
+
+main proc near
+k
+mov ah, 09h
+lea dx, word1
+int 21h
+
+int 20h

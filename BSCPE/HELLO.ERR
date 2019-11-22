@@ -1,0 +1,18 @@
+.model small
+.code
+
+org 100h
+jmp main
+
+testing db 'ENTER MY NAME:$'
+main proc near 
+
+mov ax, 03h
+int 10h
+
+mov ah, 09h
+lea dx ,testing 
+int21h
+
+
+int 20h

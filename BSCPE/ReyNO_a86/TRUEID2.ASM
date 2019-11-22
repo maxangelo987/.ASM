@@ -1,0 +1,506 @@
+.model small
+.code
+org 100H
+jmp main
+;===========
+bord2   db      '                                                                                ',0ah,0dh
+        db      ' ²°²°²°                                                                         ',0ah,0dh
+        db      ' ÷÷÷÷÷²                                                                         ',0ah,0dh
+        db      ' ²°²°÷°                ²°²°²°²°²°²°²°²°²°²°²°²°²°²°²°²°                         ',0ah,0dh
+        db      '    ²÷²                °÷÷÷÷°÷÷÷÷°²°÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷²                         ',0ah,0dh
+        db      '    °÷°          ²°²°²°²÷÷÷÷÷÷÷÷÷²°²÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷°                         ',0ah,0dh
+        db      '    ²÷²         ²°÷÷÷÷²°÷²°²°²°²÷°²°÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷²                         ',0ah,0dh
+        db      '    °÷°     °²°²°²÷²÷÷°²÷÷÷÷÷÷÷÷÷²°²÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷°                         ',0ah,0dh
+        db      '    ²÷²     ²÷÷÷²°÷÷÷°²°÷÷÷÷÷÷÷÷÷°²°÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷²                         ',0ah,0dh
+        db      '    °÷°²°²°²°÷°÷°²÷÷÷÷°²÷÷÷²°²÷÷÷²°÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷°                         ',0ah,0dh
+        db      '    ²÷²°÷÷²°²÷÷÷²°÷°÷÷²°÷÷÷÷÷÷÷÷÷°²÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷²÷÷÷²°²°²°²°²°²°²°²°²°²       ',0ah,0dh
+        db      '    °÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷²÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷X°       ',0ah,0dh
+        db      '    ²°²°²÷÷°²÷÷÷²°÷÷²÷²°÷÷÷÷÷÷÷÷²°²÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷²°²°²°²°²°²°²°²°²°²       ',0ah,0dh
+        db      '        °²°²°÷°÷°²÷÷÷÷°²÷÷²°²°²÷÷²°÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷°                         ',0ah,0dh
+        db      '            ²÷÷÷²°²÷÷÷²°÷÷÷÷÷÷÷÷÷°²°÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷²                         ',0ah,0dh
+        db      '            °²°²°²÷÷²÷°²÷÷÷÷÷÷÷÷÷²°²÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷°                         ',0ah,0dh
+        db      '                 °÷÷÷÷²°÷÷°²°²°÷÷°²°÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷²                         ',0ah,0dh
+        db      '                 ²°²°²°²÷÷÷÷÷÷÷÷÷²°²÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷°                         ',0ah,0dh
+        db      '                       °÷÷÷÷÷÷÷÷÷°²°÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷²                         ',0ah,0dh
+        db      '                       ²°²°²°²°²°²°²°²°²°²°²°²°²°²°²°²°                         ',0ah,0dh
+        db      '                                                                                ',0ah,0dh
+        db      '                                                                                ',0ah,0dh
+        db      '                                                                                ',0ah,0dh
+        db      '                                                                                ','$'
+
+                                                                                
+                                                             
+
+
+bord    db      ' °²°²°²°²°²°²°²°²°²°²°²°²°²°²°²°²°²°²°²°²°²°²°²°²°²°²°²°²°²°²°²°²°²°²°²°²°²°²°²°',0ah,0dh
+        db      ' ²÷÷÷÷÷÷÷÷÷²÷²÷²÷²÷÷÷÷÷²÷÷÷÷÷²÷²÷²÷÷÷²÷÷÷÷÷²÷²÷÷÷÷°÷°÷°÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷°÷÷÷÷²',0ah,0dh
+        db      '  ÷°²°÷°²°÷°÷°÷°÷°÷°÷°÷°÷°÷°÷°÷°÷°÷°÷°÷°÷°²÷÷÷²÷²÷÷÷÷÷÷÷²°²°²°²°²°÷°²°²°²°²°÷°÷°',0ah,0dh
+        db      ' ²÷²÷²÷²÷²÷²÷²÷÷÷²÷²÷²÷²÷²°²÷²÷²÷²÷²÷²÷²÷²°÷°÷°÷°÷°²÷²÷²°÷÷²÷÷÷÷÷²÷÷÷÷÷÷÷÷÷÷÷²÷²',0ah,0dh
+        db      ' °÷°÷°÷°÷°÷°÷°÷°÷°÷°÷°÷°÷°÷÷÷°÷°÷°÷°÷÷÷°÷÷÷÷²÷²°²÷²÷÷°÷°²÷÷÷÷°÷°÷÷²°²°²°²°²°²°÷°',0ah,0dh
+        db      ' ²÷²÷²÷²÷²÷÷÷²°²÷²÷²÷²÷÷÷²÷²÷²÷²÷²÷²÷²°²÷²°÷°÷÷÷°÷°²÷²÷÷°÷°²°²°²°÷°÷÷÷÷÷÷÷÷÷÷÷÷²',0ah,0dh
+        db      ' °÷°÷°÷°÷°÷°÷÷÷°÷°÷°÷°÷°÷°÷°÷°÷°÷°÷°÷°÷÷÷÷²°²°²÷²÷÷°÷°÷°²°²÷÷÷÷÷²°²÷²°²÷²÷²÷²÷²°',0ah,0dh
+        db      ' ²÷²÷²°²÷²÷²÷²÷²÷²÷²°²÷²÷²÷²÷²÷²°²÷²÷²÷²°²°÷÷÷÷÷°÷°²÷²÷÷°÷°²°÷°÷°÷°÷÷÷°²°÷°²÷²÷²',0ah,0dh
+        db      ' °÷÷÷÷÷÷÷°²°÷°÷°÷°÷°÷°÷°÷÷÷°÷°÷°÷°÷°÷°÷÷÷÷²÷²°²°²÷²÷÷°÷°²÷²÷÷÷²÷÷÷÷°÷°÷÷÷÷÷÷÷÷÷°',0ah,0dh
+        db      ' ²÷²÷²°²÷÷÷²÷²÷²÷²÷²÷²÷²÷²÷²÷²÷²÷²÷²÷²÷²°²°÷÷÷÷÷÷÷°÷°²÷÷°÷°²°÷°÷°÷°²°²°²°²°²°÷°²',0ah,0dh
+        db      ' °÷°÷°÷°÷°²°÷°÷°÷°÷÷÷°÷°÷°÷°÷÷÷°÷÷÷°÷°÷÷÷°²°²°²°²°²°÷°÷°²÷÷÷÷÷÷÷²÷÷÷÷÷÷÷÷÷÷÷²÷÷°',0ah,0dh
+        db      ' ²÷²÷²÷²÷²÷²÷²÷²÷²÷²°²÷²÷²÷²÷²÷²÷²÷²°²÷÷°²÷÷÷÷÷÷÷÷÷²÷²÷÷°²°²°²°÷°²°²°²°²°²÷²°÷°²',0ah,0dh
+        db      ' °÷°÷°÷°÷°÷÷÷°÷°÷°÷°÷°÷°÷°÷°²°÷°÷°÷°÷°²÷÷°÷°²÷²°²°²°÷°÷÷²÷÷÷÷÷²÷²÷÷÷÷°÷÷÷÷÷÷÷÷÷°',0ah,0dh
+        db      ' ²÷²÷²÷²÷²÷²÷²÷²÷²÷²÷²÷²÷²°²÷²÷²÷²÷²÷÷÷÷°²÷÷°÷÷÷÷÷÷÷÷²÷÷÷°÷÷°÷°÷°÷°²°²°²°÷°²÷²°²',0ah,0dh
+        db      ' °÷°÷°÷°÷°÷°÷°÷°÷°÷°÷°÷°÷°÷°÷°÷°÷°÷°÷°÷÷÷÷÷÷²÷²÷²°²°²°÷°÷÷÷°²÷²÷²÷÷÷÷÷÷°÷÷÷°÷÷÷°',0ah,0dh
+        db      ' ²÷²÷÷÷²÷²÷²÷²÷²÷²÷²÷²÷²÷²÷÷÷²÷²÷²÷²÷²°²÷²°÷°÷°÷°÷°÷°÷÷²°²÷÷°÷°÷°÷°²°²°÷°²°²°²÷²',0ah,0dh
+        db      ' °÷°÷°÷°÷°÷°÷°÷°÷°÷°÷°÷°÷°÷°÷°÷°÷°÷°÷°÷°²°÷÷²÷²÷÷÷÷÷÷÷÷÷÷÷÷÷÷÷²÷²÷÷÷÷÷²÷÷÷÷÷÷÷÷°',0ah,0dh
+        db      ' ²÷²÷²÷²÷²÷²÷²÷²÷²÷²÷²÷²÷²÷²÷²÷²÷²÷²÷²÷÷÷²÷÷°÷°²°²°²°²°²°²÷²÷÷°÷°÷÷²°²°²°²°²°²°²',0ah,0dh
+        db      ' °÷°÷°÷°÷°÷°÷°÷°÷°÷°÷°÷°÷°÷°÷°÷°÷°÷°÷°÷÷÷°²÷²÷÷÷÷÷÷÷÷°÷÷÷°÷÷²÷²÷²°²°÷÷÷÷÷÷÷÷÷÷÷°',0ah,0dh
+        db      ' ²÷²°²°²÷²÷²÷²÷²÷²÷²÷²÷²÷²÷²÷²÷²÷²÷²÷²÷²°÷°÷°²°²°²°²°²°÷°²°÷°²°÷°÷÷²÷²÷²÷²÷²÷²÷²',0ah,0dh
+        db      ' °÷÷÷°÷°÷÷÷°÷°÷°÷÷÷°÷°÷°÷°÷°÷°÷°÷°÷°÷°÷÷²÷²÷÷÷÷÷÷°÷÷÷÷²÷÷÷÷÷÷°÷÷÷÷÷°÷°÷°÷°²÷²÷²°',0ah,0dh 
+        db      ' ²÷²÷²÷²÷²÷²÷²÷÷÷²÷²÷²÷²÷²÷²÷²÷²÷²÷²÷÷÷÷÷÷°²°²°²÷÷÷²°÷°²°÷°²°²°²÷²÷²÷²÷²÷÷°²÷÷÷X',0ah,0dh
+        db      ' °÷°÷°÷°÷°÷°÷°²°²°²°÷°÷°÷°²°÷°²°÷°÷°÷°²÷²°²÷÷÷÷°÷°²÷÷÷²÷²÷÷÷÷÷÷°÷°÷÷²°÷°²÷÷°²°÷°',0ah,0dh
+        db      ' ²÷²÷÷÷²÷²÷²÷÷÷÷÷÷÷÷÷²÷÷÷÷÷÷÷÷÷÷÷²÷²÷÷÷÷÷÷÷÷÷²÷÷÷÷÷÷°÷÷÷÷÷°²°²÷÷°²÷÷÷÷÷÷÷²÷÷÷÷÷²',0ah,0dh
+        db      ' °²°²°²°²°²°²°²°²°²°²°²°²°²°²°²°²°²°²°²°²°²°²°²°²°²°²°²°²°²°²°²°²°²°²°²°²°²°²°²°','$'
+
+
+ast     db      01H,'$'
+spc     db      'Û','$'
+
+;===========
+
+main    proc    near
+
+GMaze1:
+        LEA     di,     bord2
+
+
+	MOV	ah,	0
+	MOV	al,	3
+	INT	10H
+
+        MOV     ch,     00
+        MOV     cl,     00
+
+        CALL    crsr
+
+        CALL    brd2
+
+	MOV	cl,	00
+	MOV	ch,	00		
+	PUSH	cx		
+	
+        MOV     ch,     02
+        MOV     cl,     00
+
+        CALL    crsr
+
+        CALL    aste
+
+        JMP     bordstrt
+        
+GMaze2:
+	LEA	di,	bord
+	MOV	ah,	0
+	MOV	al,	3
+	INT	10H
+
+        MOV     ch,     00
+        MOV     cl,     00
+
+        CALL    crsr
+
+	CALL    brd
+
+	MOV	cl,	00
+	MOV	ch,	00		
+	PUSH	cx		
+	
+        MOV     ch,     02
+        MOV     cl,     00
+
+        CALL    crsr
+
+        CALL    aste
+
+bordstrt:
+
+LEAP2:
+
+
+LEAP1:	
+	MOV     ah,     07
+        INT     21H
+        CMP     al,     'w'
+        JE      upp
+	CMP	al,	'W'
+	JE	upp
+        CMP     al,     's'
+        JE      dwnn
+	CMP	al,	'S'
+	JE	dwnn
+        CMP     al,     'a'
+        JE      lftt
+	CMP	al,	'A'
+	JE	lftt
+        CMP     al,     'd'
+        JE      rghtt
+	CMP	al,	'D'
+	JE	rghtt
+	CMP	al,	'e'
+	JE	qwerty
+
+        JMP LEAP1
+;-------------------------
+upp:
+        CALL    ups
+
+        CMP     al,     '°'
+        JNE    iinxt
+        JMP     skipah
+iinxt:
+        CMP     al,     '²'
+        JNE     inxt
+skipah:        
+        INC     ch
+        JMP LEAP2
+
+inxt:
+	CMP	al,	'X'
+        JE      GMaze2 
+
+
+        CMP     al,     'Û'
+        JNE     nxt
+        JMP     GMaze1
+
+        INC     ch
+        JMP LEAP2
+nxt:
+        INC     ch
+        CALL    crsr
+        CALL    spce
+        DEC     ch
+        CALL    crsr
+        CALL    aste
+        JMP     LEAP1
+lftt:
+        JMP     lftte
+JFGMaze2:
+        JMP     GMaze2
+;---------------------------
+dwnn:
+        CALL    downs
+        CMP     al,     '°'
+        JNE    iinxt1
+        JMP     skipah1
+iinxt1:
+        CMP     al,     '²'
+        JNE     inxt1
+skipah1:
+        DEC     ch
+        JMP LEAP2
+
+inxt1:
+	CMP	al,	'X'
+        JE      JFGMaze2 
+
+
+
+        CMP     al,     'Û'
+        JNE     nxt1
+        JMP     GMaze1
+
+        DEC     ch
+        JMP LEAP2
+nxt1:
+        DEC     ch
+        CALL    crsr
+        CALL    spce
+        INC     ch
+        CALL    crsr
+        CALL    aste
+        JMP	LEAP1
+rghtt:
+        JMP rghttt
+qwerty:
+	JMP	qwerty2
+JFGMaze1:
+        JMP     GMaze1
+;---------------------
+lftte:
+        CALL    lfts
+        CMP     al,     '°'
+        JNE    iinxt2
+        JMP     skipah2
+iinxt2:
+        CMP     al,     '²'
+        JNE     inxt2
+skipah2:
+        INC     cl
+        JMP LEAP2
+
+inxt2:
+	CMP	al,	'X'
+        JE      JFGMaze2 
+
+
+        CMP     al,     'Û'
+        JNE     nxt2
+        JMP     JFGMaze1
+
+        INC     cl
+        JMP     LEAP2
+nxt2:
+        INC     cl
+        CALL    crsr
+        CALL    spce
+        DEC     cl
+        CALL    crsr
+        CALL    aste
+        JMP LEAP1
+;---------------------
+rghttt:
+        CALL    rghts
+        CMP     al,     '°'
+        JNE    iinxt3
+        JMP     skipah3
+iinxt3:
+        CMP     al,     '²'
+        JNE     inxt3
+skipah3:
+	DEC     cl
+        JMP LEAP2
+inxt3:
+	CMP	al,	'X'
+        JE      inxt2 
+
+        CMP     al,     'Û'
+        JNE     nxt3
+        JMP     JFGMaze1
+
+        DEC     cl
+        JMP LEAP2
+nxt3:
+        DEC     cl
+        CALL    crsr
+        CALL    spce
+        INC     cl
+        CALL    crsr
+        CALL    aste
+        JMP     LEAP1
+;--------------------------------
+qwerty2:
+	MOV	ah,	0
+	MOV	al,	3
+	INT	10H
+
+        MOV     ax,     4c00h
+        INT     21H
+
+;--------------------------------
+main    endp
+;------------------------------
+brd2    proc    near
+	
+        LEA     si,     bord2
+        
+        MOV     cl,     0
+CLop1:
+       PUSH     cx
+       MOV      al,     '°'
+       CMP      [si],   al
+       JE       a40
+       MOV      al,     '²'
+       CMP      [si],   al
+       JE       a40
+       MOV      al,     'Û'
+       CMP      [si],   al
+       JE       a40
+       MOV      al,     '÷'
+       CMP      [si],   al
+       JE       a50
+       MOV      al,     'X'
+       CMP      [si],   al
+       JE       a60
+       MOV      bl,0
+       JMP      inter101
+a40:
+       MOV      bl,     3
+       JMP      inter101
+a50:
+       MOV     al,     '±'
+       MOV      bl,     11
+       JMP      inter101
+a60:
+       MOV     bl,     4
+       JMP     inter101        
+inter101:
+       MOV      ah,     09H
+       MOV      cx,     1
+       INT      10H            
+       POP      cx
+       CALL     crsr
+       INC      cl
+       CMP      cl,     82
+       JE       refa2
+refa3:
+       
+       INC      si
+       MOV      al,     '$'
+       CMP      [si],     al
+       JNE      Clop
+       JMP      yuiop1
+refa2:
+        MOV     cl,     0
+        INC     ch
+        JMP refa3    
+        
+yuiop1:
+
+        MOV     cl, 0
+        INC     ch
+        INC     si
+        CALL    crsr
+
+
+        brd2    endp
+
+
+;------------------------------
+brd     proc    near
+	
+        LEA     si,     bord
+        
+        MOV     cl,     0
+CLop:
+       PUSH     cx
+       MOV      al,     '°'
+       CMP      [si],   al
+       JE       a10
+       MOV      al,     '²'
+       CMP      [si],   al
+       JE       a10
+       MOV      al,     'Û'
+       CMP      [si],   al
+       JE       a10
+       MOV      al,     '÷'
+       CMP      [si],   al
+       JE       a20
+       MOV      al,     'X'
+       CMP      [si],   al
+       JE       a30
+       MOV      bl,0
+       JMP      inter10
+a10:
+       MOV      bl,     3
+       JMP      inter10
+a20:
+       MOV     al,     '±'
+       MOV      bl,     11
+       JMP      inter10
+a30:
+       MOV     bl,     4
+       JMP     inter10        
+inter10:
+       MOV      ah,     09H
+       MOV      cx,     1
+       INT      10H            
+       POP      cx
+       CALL     crsr
+       INC      cl
+       CMP      cl,     82
+       JE       refa
+refa1:
+       
+       INC      si
+       MOV      al,     '$'
+       CMP      [si],     al
+       JNE      Clop
+       JMP      yuiop
+refa:
+        MOV     cl,     0
+        INC     ch
+        JMP refa1    
+        
+yuiop:
+
+        MOV     cl, 0
+        INC     ch
+        INC     si
+        CALL    crsr
+
+
+        brd     endp
+
+;--------------------------
+crsr    proc    near
+
+        MOV     dh,     ch
+        MOV     dl,     cl
+        MOV     ah,     02
+        INT     10H
+
+        RET
+
+        crsr    endp
+;---------------------------
+aste    proc    near
+push CX
+        MOV     ah,     09H
+        MOV     al,     ast
+	MOV	cx,	01H
+	MOV	bl,	14
+        INT     10H
+pop CX
+        
+        RET
+        aste    endp
+;----------------------------
+spce    proc    near
+push CX
+        MOV     ah,     09H
+        MOV     al,     spc
+        MOV     bl,     09H
+        MOV     cx,     01H        
+        INT     10H
+pop CX
+        RET
+        spce    endp
+;---------------------------
+ups     proc    near
+
+        DEC     ch
+        CALL    crsr
+        CALL    cmpr
+        RET
+        up      endp
+;----------------------------
+downs   proc    near
+
+        INC     ch
+        CALL    crsr
+        CALL    cmpr
+        RET
+        downs   endp
+;---------------------------
+lfts    proc    near
+
+        DEC     cl
+        CALL    crsr
+        CALL    cmpr
+        RET
+        lfts    endp
+;--------------------------
+rghts   proc    near
+
+        INC     cl
+        CALL    crsr
+        CALL    cmpr
+        RET
+        rghts   endp
+;--------------------------
+cmpr    proc    near
+
+        MOV     ah,     08
+        INT     10H
+        RET
+        cmpr    endp
+
+;--------------------------
+end     main

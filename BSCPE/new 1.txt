@@ -1,0 +1,5 @@
+1:  Enter two string, print the string with much vowels. 
+
+
+
+2: # - B, * - A

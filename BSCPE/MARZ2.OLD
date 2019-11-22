@@ -1,0 +1,38 @@
+.model small
+.code
+org100h
+
+jmp main
+
+word1 db'BISU-MAIN CAMPUS'
+word2 db 16 dup(*),'$'
+
+main proc near
+
+	mov ax,03h
+	int 10h
+	
+	mov ah,09h
+	lea dx,string1
+	int 21h
+	
+	mov si,15
+	mov di,0 
+	
+process:
+		cmp cx,-1
+		if e jmp here
+		mov ah,string1[si]
+		mov string2[di],ah
+		inc di
+		dec si
+		jmp process
+		
+here:
+	mov ah,09h
+	lea dx, string2
+	int 21h
+	
+	
+	main endp
+	end main

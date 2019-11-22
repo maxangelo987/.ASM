@@ -1,0 +1,503 @@
+CHAPTER 3   OPERATION AND REQUIREMENTS
+
+
+Creating Programs to Assemble
+
+Before you invoke A86 you must have an assembly-language source
+program to assemble.  A source program is an ASCII text file,
+created with the text editor of your choice.  The editor must
+produce a file that is free of internal records known only to the
+editor.  Some of the fancier word processors will require you to
+use a "plain text" mode to insure that the file is free of such
+records.
+
+This manual will fully explain to you the correct syntax of an
+A86 program, but it is not intended to teach you about the
+86-family instruction set, or about assembly-language interfacing
+to your computer or your operating system.
+
+The instruction set charts in Chapters 6 and 7 give concise,
+one-line descriptions of each instruction, but they don't go into
+any detail about instruction usage, or about how to make system
+calls to input from keyboard or disk, output to screen, printer
+or disk, etc.  For that, you need a book that covers the MS-DOS
+operating system and the BIOS for the IBM-PC.  I am currently
+using DOS Programmer's Reference by Terry Dettmann, available by
+mail from Public Brand Software at 1-800-426-3475.  At a more
+instructional level, my users report that Peter Norton's Assembly
+Language Guide to the IBM-PC has been helpful.
+
+
+Program Invocation
+
+To invoke A86, you must provide a program invocation line, either
+typed to the console when the DOS command prompt appears, or
+included in a batch file.  The program invocation line consists
+of the program name A86, followed by assembler switches
+(described in the next section), and the names of the source
+files you want to assemble, and of the output files you want to
+produce.  If the output files all have their standard extensions,
+they may appear in any order: before, after, or even intermixed
+with the source file names.  If they don't have their standard
+extensions, you must give the source file names first, followed
+by the word TO, followed by the output file names.  Each
+non-standard name following the word TO will be assigned to the
+first previously- unassigned output file in order: program,
+symbols, listing, then cross-reference.
+
+You may use the wild card delimiters * and ? if you wish, to
+denote a group of source files to be assembled.  A86 will sort
+all matching names into alphabetical order for each wild card
+specification; so the files will be assembled in the same order
+even if they get jumbled up within a directory.
+
+If you provide a name without a period or an extension, A86 will
+use that as the output program file name, appending to it the
+default extension as follows:
+
+1. .OBJ if you invoked the +O switch, for linkable object file
+   production.
+                                                              3-2
+
+2. .BIN if there is no +O switch, but there is an ORG 0 of in
+   your program, without a later ORG 256.
+
+3. .COM otherwise.
+
+If you want your program file to have no extension, you end the
+file name with a period.
+
+You may omit any of the output file names if you wish.  If you do
+so, A86 will output the program source.COM (or source.OBJ or
+source.BIN), where "source" is a name derived from the list of
+source files, according to the rules described in the section
+"Strategies for Source File Maintenance" later in this chapter.
+Any of the other output files will use the name of the program
+output file, combined with the standard extension for that output
+file.
+
+
+Assembler Switches
+
+In addition to input and output file names, you may intersperse
+assembler switch settings anywhere after the A86 program name.
+They are all acted upon immediately, no matter where they are on
+the command line.  Some of the switches are discussed in more
+detail elsewhere; I'll summarize them here:
+
++C     causes the assembler to output symbol names with lower
+    case letters to its OBJ and SYM files.  The case of letters
+    is still ignored during assembly.  I output the name as it
+    appears in the last PUBLIC or EXTRN directive containing it;
+    if there is no such directive, I use the first occurrence of
+    the symbol to control which letters are output lower case.
+    (+C duplicates Microsoft MASM's /mx switch.)
+
++c     causes the assembler to consider the case of letters
+    within all non-built-in symbols as significant both during
+    assembly and for output.  Thus, for example, you can define
+    different symbols X and x.  (+c duplicates MASM's /ml
+    switch.)
+
++D     causes the default base for numeric constants to be
+    decimal, even if the constants have leading zeroes.
+
+-D     causes the default base to be hexadecimal if there is a
+    leading zero; decimal otherwise.
+
++E     causes the error-message-augmented source file to be
+    written to yourname.ERR within the current directory, in all
+    cases. With +E, A86 will never rewrite your original source
+    file.
+
+-E     causes A86 to insert error messages into your source file,
+    whenever the file is in the current directory.  If the file
+    is not in the current directory, A86 writes an ERR file no
+    matter what the E switch setting is.
+                                                              3-3
+
++F     causes A86 to generate the 287 form of floating point
+    instructions (no implicit FWAIT bytes are generated before
+    the instructions).  This mode can also be specified in the
+    program with the .287 directive.
+
++f     causes A86 to support emulation of the 8087.  When A86
+    sees a floating point instruction, it generates external
+    references to be resolved by the standard emulation library
+    (provided by Microsoft, Borland, etc.).  When you LINK your
+    program to the emulation library, the floating point
+    instructions are emulated by software.  NOTE you must be
+    assembling to a linkable OBJ file for this mode to have
+    effect; otherwise, +f is ignored.
+
+-F     causes emulation and default-287 to be disabled.  You'll
+    still get 287 generation if there is a .287 directive in your
+    program.
+
++G  n         causes A86 to implement one or more of the
+    following minor options for code-generation.  All these
+    options enhance MASM compatibility.  The first three do so at
+    the expense of program size.  The number n should be the sum
+    of the numbers for each of the options selected.  For
+    example, +G10 will select the options numbered 2 and 8.
+
+    1    causes A86 to generate a longer (3-byte) instruction
+        form for an unconditional JMP instruction to a forward
+        reference local label, e.g. JMP >L1.  A86 normally
+        assumes that since it's a local label, it will be nearby
+        and the short, 2-byte form will work.  With this option
+        your code will usually be longer than necessary, but
+        you'll be spared having to occasionally go back and code
+        an explicit JMP LONG >L1.
+
+    2    causes A86 to refrain from optimizing the LEA
+        instruction. Without this option A86 will replace an LEA
+        with a shorter, equivalent MOV when it sees the chance.
+
+    4    causes A86 to generate a slightly more inefficient
+        internal format for memory references within an OBJ file.
+        The Power C compiler's MIX utility requires the
+        inefficient form. The makers of Power C refused to
+        support their customers on this by enhancing MIX, so I am
+        forced to offer this option.
+
+    8    causes A86 to assume that all ambiguous forward
+        reference operands to instructions other than jumps or
+        calls refer to memory variables and not offsets or
+        constant values.  You can override this on a one-by-one
+        basis, with the OFFSET operator.
+
+    16   causes A86 to require that undefined names be explicitly
+        declared with an EXTRN when A86 is producing a linkable
+        .OBJ file.  This switch has no effect when A86 is making
+        a .COM file.  Without the switch, A86 will, when
+        assembling to an .OBJ file, quietly assume that all
+        undefined names are valid external references.
+                                                              3-4
+
+-G      causes A86 to revert to its default for all the above
+options.
+
++H  n      causes A86 to produce n extra listing lines, as
+    necessary, containing excess hex bytes of object code
+    produced by each source line.  Without this switch, A86
+    produces extra hex lines only if it producing extra lines
+    anyway to display excess source code.
+
++I  n       controls the indentation of the source line within an
+    A86 listing line (and thus the amount of room allocated for
+    the hex object display).  You may have any indentation up to
+    127.  The default value is 34, which gives room for 6 hex
+    object bytes.  You may add or subtract 3 to that value, to
+    increase or decrease the hex object bytes.  If you add 128 to
+    the value of n, the listing of the line number is suppressed
+    (so you can subtract 6 from the indentation to get the same
+    number of hex digits).
+
++L  n       causes A86 to produce a listing file of the assembly.
+    The n is optional, and controls what will be included in the
+    listing.  You add numbers from the following table to produce
+    an n which specifies the combination of elements you want:
+
+    Use at most one of the following three values:
+
+         * Use 1 if you want A86 to eliminate all conditional
+            assembly control lines (#IF, #ENDIF, etc.) and all
+            conditionally skipped code from the listing.
+
+         * Use 2 if you want A86 to include the control lines but
+            not the skipped code.
+
+         * Use 3 if you want A86 to include both control lines
+            and skipped code.
+
+    4   causes A86 to include the lines produced by macro
+       expansions.  Otherwise, only the macro call line is
+       listed.
+
+    8   causes listing control lines (TITLE, SUBTTL, PAGE) to be
+       listed.
+
+    16  causes the hex output object pointer to be included on
+       all listing lines, whether they have produced hex object
+       bytes or not.  Otherwise, the 4-digit pointer is included
+       only on lines producing object bytes; on other lines, the
+       field is blank (but the line itself is listed!).
+
+    32  causes a symbol-table listing to be produced at the end
+       of the listing file.
+                                                              3-5
+
+    If n is not given after +L, a value of 39 is assumed: symbol
+    table, hex pointer only if there are object bytes, no listing
+    control lines, and macro expansion lines, conditional control
+    lines, and skipped lines are all listed.  If +L is not given
+    at all, then a listing file will be produced only if it is
+    explicitly named on the invocation line.
+
++O     causes A86 to produce a linkable .OBJ file when the output
+    file name extension is not explicitly given.
+
+-O     causes A86 to produce an executable .COM file when the
+    output file name extension is not explicitly given.
+
++P  n      controls which processor A86 is assembling for.  You
+    choose one of the following values for n, for the level of
+    Intel processor support you wish:
+
+          * Choose 0 for the base 8086/8086 instruction set only.
+            Use this value if you want your programs to run on
+            all machines.
+
+          * Choose 1 for instructions up through the 186.
+
+          * Choose 2 for instructions up through the 286.  Use
+            this value if you are assembling for a more recent
+            processor (386, 486, etc.), until A386 is available.
+
+    In addition, you may add the value 32 to n if you wish the
+    NEC-specific instructions to be assembled.  Since the NEC
+    processor include the 186 instructions, you specify +P33 to
+    assemble for a NEC processor; use +P35 if you wish to allow
+    all possible instructions (which is what older versions of
+    A86 allowed).
+
+    The switch setting +P64 specifies assembly of the base-level
+    8086/8088 instruction set, but with special handling of a few
+    of the later instruction forms, to generate compatible code.
+    Specifically: all shift and rotate instructions with an
+    immediate shift value greater than 1 will generate that many
+    repetitions of the 1-value instruction form; e.g., ROL BL,3
+    will generate 3 copies of ROL BL,1.  The mnemonics PUSHA and
+    POPA will be honored, generating appropriate sequences of
+    multiple PUSHes and POPs.
+
+    The default setting for this switch is for A86 to assemble
+    for the processor on which it is currently running; +P64 if
+    that processor is an 8086 or 8088.
+
++S     suppresses the creation of the symbol table (.SYM) file.
+    This is overridden if you give an explicit symbols file name
+    in the invocation line.
+
++T  n     controls various options conerning the titling and
+    pagination of listing files.  You add together your selection
+    of options from the following list, to produce a value of n
+    containing the combination you want:
+                                                              3-6
+
+    The following values control the automatic incrementing of
+    section numbers in an A86 listing.  The section number
+    appears to the left of the hyphen in a page number.  Use at
+    most one of the following three values:
+
+          * Use 1 if you want A86 to refrain from incrementing
+            the section number whenever there is a change to the
+            source file.  If you choose this option, and you
+            don't manually increment the section number in a PAGE
+            directive, then page numbers will be single numbers
+            without any hyphenation.
+
+          * Use 2 if you want A86 to increment the section number
+            for each new main source file, but not for INCLUDE
+            files.
+
+          * Use 3 if you want A86 to increment the section number
+            for all source files, INCLUDE files, and returns from
+            INCLUDE.
+
+    4   causes A86 to automatically issue a page break at
+       reasonable places in the code (file breaks, and gaps of
+       consecutive blank lines of various lengths occurring near
+       the end of a page).  This is described in more detail in
+       Chapter 13.
+
+    8   causes A86 to issue the page-ending formfeed instead of
+       the last linefeed, rather than in addition to it.  The
+       advantage of this is that you can specify one more line on
+       a page for many printers. The disadvantage is that some
+       editors and file-viewing programs will not display such a
+       file correctly; e.g. LIST will not show the last line of a
+       page.
+
+    16   causes A86 to use the current source-file name as a
+       default TITLE if there has been no TITLE directive in the
+       program; as an implicit SUBTTL at the beginning of each
+       file if there is a TITLE explicitly given.
+
+    32   causes A86 to output a 2-line gap, followed by a line
+       containing the name of the source file, every time the
+       source file changes in the listing.
+
+    If -T (or +T0) is specified, then no titling or pagination is
+    done at all.  If the switch is not specified at all, a
+    default value of 52 (auto-paging, auto-titling, and source
+    file line, but no auto-section and no FF instead of LF).  Of
+    course, if there is no listing file the T switch has no
+    effect.
+
++W   n       controls the characteristics of wide lines in the
+    A86 listing file.  You add together your selection of options
+    from the following list, to produce a value of n containing
+    the combination you want:
+                                                              3-7
+
+    0--3    (at most one value!) determines the indentation from
+       the beginning of the source line for wrapped-around source
+       code on subsequent lines.  The indentation will be 5
+       spaces times the number given: 0,5,10,15 spaces
+       respectively.
+
+    4   causes A86 to truncate lines that exceed the page width.
+       Exception: if A86 is outputting a line with trailing hex
+       bytes anyway (via the H switch), any wrapped-around source
+       will be shown on those lines.
+
+    8   causes A86 to start with a listing line width of 79.
+       Without this option, the width is 131.  The width can be
+       set to other values in the source code via the PAGE
+       directive, described in Chapter 13.
+
+    16   causes the title lines at the head of the page not to
+       exceed 79 bytes in width, even if the other listing lines
+       are longer.  This option is handy if you are viewing a
+       listing on the screen, with a viewing program that
+       truncates long lines: the page headers will still be
+       visible during normal scrolling.
+
++X      causes A86 to produce a cross-reference file (the same
+    file that was produced by the XREF utility in earlier
+    versions of A86).
+
+Unless otherwise stated, the default setting for all the switches
+is "minus".  Multiple switches can be specified with a single
+sign; e.g. +OG15L55 is the same as +O+G15+L55.
+
+
+
+The A86 Environment Variable
+
+To allow you to customize A86, the assembler examines the MS-DOS
+environment variable named "A86" when it is invoked.  If there is
+such a variable, its contents are inserted before the invocation
+command tail, as if you had typed them yourself.
+
+For example, if you execute the command SET A86=+O while in DOS
+(typically in the AUTOEXEC.BAT file run when the computer is
+started), then the O switch will be "plus", unless overridden
+with a "minus" setting in the command line.
+
+You may also include one or more file names in the A86
+environment variable.  Those files will always be assembled
+first, before the files you specify on the command line.  This
+allows you to set up a library of macro definitions, which will
+always be automatically available to your programs.  Thus, for
+example, the DOS command  SET A86=C:\A86\MACDEF.8 +O  will cause
+both the O switch to default ON, but will also cause the file
+MACDEF.8 of subdirectory A86 of drive C to always be assembled.
+                                                              3-8
+
+Using Standard Input as a Command Tail
+
+The following feature is a bit advanced.  If you're not familiar
+with the practice of redirecting standard input, you may safely
+skip this section.
+
+A86 can also be configured to take its command arguments from
+standard input, in addition to the invocation command tail or the
+A86 environment variable.  This allows A86 to be used in those
+menu-driven systems that don't generate command tails for
+programs.  It also allows other programs to create lists of files
+to be assembled, then "pipe" the list to A86.
+
+Here's how the feature works: when the command argument A86 is an
+ampersand &, A86 will prompt for standard input.  If the
+ampersand is seen but there are other things following it, the
+ampersand is ignored.
+
+For example, you can place a list of file names and switch
+settings into a file called FILELIST.  You can then invoke the
+assembler via
+
+A86 <FILELIST &
+
+which will cause the contents of the FILELIST file to be used as
+a command line.
+
+You may place an ampersand at the end of your A86 environment
+variable.  If you do so, then A86 will prompt for file names
+whenever it is invoked without any command arguments (you type
+A86 followed immediately by the ENTER key to the MS-DOS prompt).
+This is the mode used if you have a menu system that can't
+generate an invocation command tail.
+
+Note: when you redirect standard input so that it comes from a
+file, A86 will read all the lines of the file (up to a limit of
+1023 bytes), and substitute spaces for the line breaks.  Thus you
+may give the file names on individual lines, for readability.
+However, if the feature is invoked manually (no redirection), so
+that you are typing in the line after the prompt, A86 will take
+the first line only.  You need to give all your switches and
+files on that one line.
+
+
+
+Strategies for Source File Maintenance
+
+A86 encourages modular programming, by letting you break your
+source into separate files, with complete impunity.  A86 has no
+concern whatsoever for file breaks-- it treats the sequence of
+files as a single source code stream.
+
+You should consider one or more of the following strategies,
+which I have adopted in my source file management:
+                                                              3-9
+
+1. I name all my A86 source files with the same extension, which
+   is found on no other files. The particular extension I have
+   chosen is ".8". I did not choose the more common .ASM, because
+   I have a few source files designed for MSDOS's assembler.  If
+   you don't like .8, I would suggest .A86.
+
+2. I keep a separate subdirectory on my hard disk for each
+   multi-source-file A86 program I have.  Then the simple command
+   "A86 *.8" performs the assembly for the current directory's
+   program.
+
+3. I exploit the fact that A86 expands wild cards into
+   alphabetical order.  Whenever I want a source file to be
+   assembled first (e.g., when it contains variable
+   declarations), I append a decimal digit to the start of the
+   file name: 0 for the first file, 1 for the second, etc., for
+   however many files that need to be explicitly ordered.  If a
+   file needs to come last, I append a "Z" to the start of the
+   file name.
+
+   To accommodate this strategy, I have programmed A86 to a
+   somewhat complicated algorithm for determining the default
+   output file name.  I use the name of the first source file;
+   but I truncate the first character if it is a decimal digit.
+   However, you may have a general-purpose file that must come
+   first; so I have provided the following exception: if you have
+   a source file whose name begins with the digit "9", that name
+   (without the 9) is used.  If you don't like this, you can
+   always explicitly give the program name you want: "A86 *.8
+   MYPROG".
+
+
+System Requirements for A86
+
+A86 requires MS-DOS V2.00 or later.  No BIOS or lower-level calls
+are made by A86, so A86 should run on any MS-DOS machine.  Please
+let me know if you find this not to be the case.
+
+A86 itself is a small program, and it is fairly flexible about
+the memory it uses.  You can assemble with only 32K bytes of
+memory beyond the program itself, which in the current version is
+under 31K bytes-- a total of 63K bytes beyond the operating
+system.  There is no longer any limit on the size of source files
+assembled under A86.  The more memory you have, the more capacity
+A86 has, in symbol table size and output file size.  If it can,
+A86 will use up to 400K bytes of memory.
+
+

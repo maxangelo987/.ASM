@@ -1,0 +1,28 @@
+; This is a file of macro definitions included for compatibility with
+; MASM 5.0 or later.
+
+dosseg equ .dosseg
+align equ even
+
+.model MACRO
+DGROUP GROUP _DATA,STACK
+##if ('#1' = 'medium') or ('#1' = 'large')
+  PROC EQU FAR
+##else
+  PROC EQU NEAR
+##endif
+#em
+
+.code MACRO
+SEGMENT WORD PUBLIC 'CODE'      ; enter the default "outermost" segment
+#em
+
+.data MACRO
+_DATA SEGMENT WORD PUBLIC 'DATA'
+#em
+
+.stack MACRO
+STACK SEGMENT PARA STACK 'STACK'
+ORG 0400H
+#em
+

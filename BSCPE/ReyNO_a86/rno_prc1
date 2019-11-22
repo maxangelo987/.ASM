@@ -1,0 +1,16 @@
+.model small
+.code
+.org 100h
+
+
+main proc near
+        mov ah, 02h
+        mov dl, "%"
+        int 21
+
+        mov ax, 4c00h
+        int 21
+
+main endp
+end main
+

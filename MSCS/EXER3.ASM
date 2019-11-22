@@ -1,0 +1,99 @@
+;Code for Program to Print the Fibonacci series in Assembly Language
+
+.MODEL SMALL
+.STACK 64
+.DATA
+        VAL1    DB      01H
+        VAL2    DB      01H
+        LP      DB      00H
+        V1      DB      00H
+        V2      DB      00H
+        NL      DB      00H,20H,'$' ; 00h null
+.CODE
+
+
+plist1 label byte
+maxlen db 59
+actlen db ?
+kybd db 60 dup ('$'),0ah,0dh
+
+
+MAIN PROC
+
+       
+	mov ah, 0ah		      ; SCANNING 
+	lea dx, plist1
+  	int 21h
+
+
+        MOV AL, kybd                  ; MOVING KYBD TO AL
+;       INT 21H
+
+
+        MOV CL,AL
+        SUB CL,30H                   ; minus 48
+        SUB CL,1                     ; minus 1
+
+
+	MOV AH,09H
+        LEA DX,  NL                   ; print space 
+        INT 21H		
+
+	
+	MOV AH,02H
+        MOV DL,VAL1                   ;print 1st digit
+        ADD DL,30H
+        INT 21H
+
+
+        MOV AH,02H
+        MOV DL,VAL2                   ;print 2nd digit
+        ADD DL,30H
+        INT 21H
+
+        MOV AH,09H
+        LEA DX,NL                      ; print space 
+        INT 21H
+
+
+
+DISP:
+        MOV BL,VAL1
+        ADD BL,VAL2
+
+        MOV AH,00H
+        MOV AL,BL
+        MOV LP,CL
+        MOV CL,10
+        DIV CL
+        MOV CL,LP
+
+        MOV V1,AL
+        MOV V2,AH
+
+        MOV DL,V1
+        ADD DL,30H
+        MOV AH,02H
+        INT 21H
+
+        MOV DL,V2
+        ADD DL,30H
+        MOV AH,02H
+        INT 21H
+
+        MOV DL,VAL2
+        MOV VAL1,DL
+        MOV VAL2,BL
+
+        MOV AH,09H
+        LEA DX,NL
+        INT 21H
+
+
+        LOOP DISP
+
+        MOV AH,4CH
+        INT 21H
+
+MAIN ENDP
+END MAIN

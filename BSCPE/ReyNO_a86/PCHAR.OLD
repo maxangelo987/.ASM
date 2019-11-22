@@ -1,0 +1,45 @@
+.model small
+.code
+org 100h
+;===========
+jmp main
+;===========
+input db 'LASER-12 SYSTEMS','$'
+;===========
+main proc near
+;===========
+        LEA ax,input
+        MOV di,ax
+        MOV cx,15
+;===========
+procedure:
+
+        cmp [di],41H
+        JAE nextproc
+        JMP increment
+;===========
+nextproc:
+
+        cmp [di],5AH
+        JBE nextproc2
+        JMP increment
+;===========
+nextproc2:
+        
+        XOR [di],20H
+;===========
+increment:
+        INC di
+        DEC cx
+        JNZ procedure
+;===========
+exit:
+        MOV ah,09H
+        LEA dx,input
+        int 21H
+;===========
+        MOV ax,4c00H
+        int 21H
+;===========
+main endp
+end main

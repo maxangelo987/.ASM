@@ -1,0 +1,130 @@
+.model small
+.code
+org 100H
+JMP main 
+;----------------
+pkbl    db      '                                         '
+        db      '                                         '
+        db      '  00      00  000000  000000000 0000000  ' 
+        db      '  00      00 000  000 000000000 000      ' 
+        db      '  000    000 000  000      000  00000    ' 
+        db      '  0000  0000 00000000     000   00000    ' 
+        db      '  0000000000 00000000    000    000      ' 
+        db      '  00  00  00 000  000  0000     000      ' 
+        db      '  00      00 000  000 000000000 0000000  '  
+        db      '  00      00 00    00 000000000 0000000  '
+        db      '                                         '
+        db      '                                         ','$'
+
+main	proc	near
+
+        MOV     cl,     15
+        JMP     strtup1
+Gref2:
+        MOV     ax,     cx
+        PUSH    ax
+        JMP     cont1
+Gref3:
+        POP     ax
+        MOV     cx,     ax
+        JMP     cont2
+Gref:
+	MOV	cl,	10
+	INC	ch
+        JMP     GBck
+
+cint10s9:
+        JMP      Gref2
+cont1:
+        PICK    cx
+        MOV     bl,     cl
+        CALL    int10s9
+        
+cont2:
+        JMP     GBck1
+
+
+strtup1:
+        PUSH    cx
+strtup:
+	MOV	cl,	10
+	MOV	ch,	5
+	LEA	di,	pkbl
+
+GenLoop:
+        CALL    crsr
+	MOV	al,	'0'
+	CMP	[di],	al
+        JE      cint10s9
+GBck1:
+        CMP     cl,     51
+	JE	GRef
+GBck:
+	MOV	al,	'$'
+	CMP	[di],	al
+        JNE     GNxt
+        JMP     endstrtup1
+GNxt:
+        INC     cl
+        INC     di
+        JMP     GenLoop     
+endstrtup1:
+        POP     cx
+        DEC     cl
+        MOV     ch,     0
+        CMP     cl,     ch        
+        JNE     strtup1
+
+exit:
+	MOV	ax,	4c00h
+	INT	21H
+
+main endp
+;=============================
+;+++++++++++++++++++++++++++++
+crsr    proc    near
+
+        MOV     dh,     ch 
+        MOV     dl,     cl 
+        MOV     ah,     02
+        INT     10H
+
+        RET
+
+        crsr    endp
+;============================
+;++++++++++++++++++++++++++++
+
+int10s9 proc near
+	MOV	ah,	09H
+		PUSH	cx	
+	MOV	cx,	01
+        MOV     al,     [di]
+	INT	10H	
+		POP	cx
+	RET
+;============================
+;++++++++++++++++++++++++++++
+
+delay   proc    near
+        PUSH    cx
+        MOV     cx,     02FFH
+
+delay1:
+        PUSH    cx
+        MOV     cx,     0FFFH
+
+delay2:
+        LOOP    delay2
+
+        POP     cx
+
+        LOOP    delay1
+
+        POP    cx
+
+        delay   endp
+
+;============================
+end main
+

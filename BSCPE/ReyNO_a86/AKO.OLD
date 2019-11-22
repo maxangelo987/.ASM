@@ -1,0 +1,53 @@
+.model small
+.code
+org 100h
+jmp main
+;----------------------------
+parlist  label  byte
+max       db     20
+act       db     ?
+src       db     21 dup(' ')
+des       db     21 dup('$')
+;----------------------------
+main proc near
+
+        mov ah,0ah
+        lea dx,parlist
+        int 21h
+
+        lea si,src
+        lea di,des
+        mov cl,act
+        mov al,act
+        mov bl,2
+
+a10:
+        mov ah,[si]
+        mov [di],ah
+        inc di
+        loop a10
+
+        inc si
+        inc bl
+        dec al
+
+        mov ah,02h
+        mov bh,00h
+        mov dh,bl
+        mov dl,00h
+        int 10h
+
+        mov ah,09h
+        lea dx,des
+        int 21h
+
+        mov kbname[di],20h
+        cmp al,0
+        mov cl,act
+        jne a10
+
+        mov ax,4c00h
+        int 21h
+
+main endp      
+        end main
